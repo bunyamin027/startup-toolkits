@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../core/analytics.dart';
 import '../../core/theme/app_tokens.dart';
 
 Future<void> copyText(BuildContext context, String text) async {
@@ -38,14 +42,16 @@ void showMessage(BuildContext context, String message) {
 
 /// Bottom bar of calculators and generators: the "copy or save" half of
 /// "enter, see the result, copy or save".
-class ToolActionBar extends StatelessWidget {
+class ToolActionBar extends ConsumerWidget {
   const ToolActionBar({
     super.key,
+    required this.toolId,
     required this.text,
     required this.subject,
     this.onSaveToProject,
   });
 
+  final String toolId;
   final String text;
   final String subject;
 
@@ -53,7 +59,13 @@ class ToolActionBar extends StatelessWidget {
   final VoidCallback? onSaveToProject;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final analytics = ref.read(analyticsProvider);
+    void copy() {
+      analytics.log(AnalyticsEvent.outputCopied, {'tool': toolId});
+      unawaited(copyText(context, text));
+    }
+
     final t = context.tokens;
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -82,24 +94,25 @@ class ToolActionBar extends StatelessWidget {
               else
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: () => copyText(context, text),
+                    onPressed: copy,
                     icon: const Icon(Icons.copy),
                     label: const Text('Copy'),
                   ),
                 ),
               const SizedBox(width: AppSpace.gapS),
               if (onSaveToProject != null)
-                _SquareButton(
-                  icon: Icons.copy,
-                  label: 'Copy',
-                  onPressed: () => copyText(context, text),
-                ),
+                _SquareButton(icon: Icons.copy, label: 'Copy', onPressed: copy),
               const SizedBox(width: AppSpace.gapS),
               Builder(
                 builder: (context) => _SquareButton(
                   icon: Icons.ios_share,
                   label: 'Share',
-                  onPressed: () => shareText(context, text, subject: subject),
+                  onPressed: () {
+                    analytics.log(AnalyticsEvent.outputShared, {
+                      'tool': toolId,
+                    });
+                    unawaited(shareText(context, text, subject: subject));
+                  },
                 ),
               ),
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/analytics.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/motion.dart';
 import '../../project/project.dart';
@@ -45,6 +46,15 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     }
     if (_oneLiner.text.trim().isNotEmpty) {
       project.setField(ProjectField.oneLiner, _oneLiner.text.trim());
+    }
+    final analytics = ref.read(analyticsProvider);
+    if (_goal != null) {
+      analytics.log(AnalyticsEvent.onboardingGoalSelected, {
+        'goal': _goal!.name,
+      });
+    }
+    if (_name.text.trim().isNotEmpty) {
+      analytics.log(AnalyticsEvent.projectCreated);
     }
     ref.read(onboardingDoneProvider.notifier).complete();
   }

@@ -96,6 +96,7 @@ class CalcToolView extends ConsumerWidget {
           ),
         ),
         ToolActionBar(
+          toolId: tool.id,
           text: _summary(result, values),
           subject: tool.name,
           onSaveToProject: saveToProjectAction(context, ref, tool),

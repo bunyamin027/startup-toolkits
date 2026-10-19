@@ -1,57 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:startup_toolkits/billing/entitlement.dart';
-import 'package:startup_toolkits/core/bootstrap.dart';
-import 'package:startup_toolkits/core/storage/key_value_store.dart';
-import 'package:startup_toolkits/main.dart';
 
-/// Full app on an iPhone-sized screen with Reduce Motion on (endless pulses
-/// would keep pumpAndSettle from finishing).
-Future<MemoryKeyValueStore> pumpRoot(
-  WidgetTester tester, {
-  MemoryKeyValueStore? kv,
-}) async {
-  tester.view.physicalSize = const Size(1179, 2556);
-  tester.view.devicePixelRatio = 3;
-  tester.platformDispatcher.accessibilityFeaturesTestValue =
-      const FakeAccessibilityFeatures(disableAnimations: true);
-  addTearDown(tester.view.reset);
-  addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
-
-  final store = kv ?? MemoryKeyValueStore();
-  final overrides = await loadAppState(store, DateTime.now());
-  await tester.pumpWidget(AppRoot(kv: store, overrides: overrides));
-  await tester.pumpAndSettle();
-  return store;
-}
-
-Future<void> onboard(WidgetTester tester, {String name = 'Rocketly'}) async {
-  await tester.tap(find.text('Raise funding'));
-  await tester.pump();
-  await tester.tap(find.text('Continue'));
-  await tester.pumpAndSettle();
-  await tester.enterText(find.widgetWithText(TextField, 'Startup name'), name);
-  await tester.enterText(
-    find.widgetWithText(TextField, 'One-line description'),
-    'Fundraising copilot for first-time founders',
-  );
-  await tester.pump();
-  await tester.tap(find.text('Start building'));
-  await tester.pumpAndSettle();
-}
-
-/// Scrolls the visible tab's list until [finder] is built and on screen.
-Future<void> scrollTo(WidgetTester tester, Finder finder) =>
-    tester.scrollUntilVisible(
-      finder,
-      300,
-      scrollable: find
-          .descendant(
-            of: find.byType(ListView).hitTestable(),
-            matching: find.byType(Scrollable),
-          )
-          .first,
-    );
+import 'helpers.dart';
 
 void main() {
   testWidgets('onboarding fills the project and personalizes Home', (

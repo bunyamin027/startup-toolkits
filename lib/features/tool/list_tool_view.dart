@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/analytics.dart';
 import '../../core/format.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/motion.dart';
@@ -365,7 +366,7 @@ class _Empty extends StatelessWidget {
   }
 }
 
-class _CopyBar extends StatelessWidget {
+class _CopyBar extends ConsumerWidget {
   const _CopyBar({required this.tool, required this.items});
 
   final ToolDef tool;
@@ -386,7 +387,8 @@ class _CopyBar extends StatelessWidget {
   ].join('\n');
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final analytics = ref.read(analyticsProvider);
     final t = context.tokens;
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -399,14 +401,21 @@ class _CopyBar extends StatelessWidget {
           child: Row(
             children: [
               TextButton.icon(
-                onPressed: () => copyText(context, _text),
+                onPressed: () {
+                  analytics.log(AnalyticsEvent.outputCopied, {'tool': tool.id});
+                  copyText(context, _text);
+                },
                 icon: const Icon(Icons.copy, size: 18),
                 label: const Text('Copy list'),
               ),
               Builder(
                 builder: (context) => TextButton.icon(
-                  onPressed: () =>
-                      shareText(context, _text, subject: tool.name),
+                  onPressed: () {
+                    analytics.log(AnalyticsEvent.outputShared, {
+                      'tool': tool.id,
+                    });
+                    shareText(context, _text, subject: tool.name);
+                  },
                   icon: const Icon(Icons.ios_share, size: 18),
                   label: const Text('Share'),
                 ),

@@ -124,6 +124,7 @@ class _DocToolViewState extends ConsumerState<DocToolView> {
           },
         ),
         ToolActionBar(
+          toolId: tool.id,
           text: output,
           subject: tool.name,
           onSaveToProject: saveToProjectAction(context, ref, tool),

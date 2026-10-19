@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../tools/tool_def.dart';
-import '../tool/tool_screen.dart';
+import '../tool/open_tool.dart';
 
 /// Tool row used by Home, Discover, My tools and Project.
-class ToolTile extends StatelessWidget {
+class ToolTile extends ConsumerWidget {
   const ToolTile({super.key, required this.tool, this.subtitle, this.trailing});
 
   final ToolDef tool;
@@ -16,9 +17,10 @@ class ToolTile extends StatelessWidget {
   final Widget? trailing;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = context.tokens;
     final text = Theme.of(context).textTheme;
+    final locked = isToolLocked(ref, tool.id);
     return Material(
       color: t.surface1,
       shape: RoundedRectangleBorder(
@@ -27,7 +29,7 @@ class ToolTile extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => Navigator.push(context, ToolScreen.route(tool.id)),
+        onTap: () => openTool(context, ref, tool.id),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
@@ -49,7 +51,12 @@ class ToolTile extends StatelessWidget {
                   ],
                 ),
               ),
-              trailing ?? Icon(Icons.chevron_right, color: t.muted),
+              trailing ??
+                  Icon(
+                    locked ? Icons.lock_outline : Icons.chevron_right,
+                    color: t.muted,
+                    semanticLabel: locked ? 'Locked on the free plan' : null,
+                  ),
             ],
           ),
         ),

@@ -14,7 +14,8 @@ import '../../tools/catalog/goal_picks.dart';
 import '../../tools/tool_providers.dart';
 import '../catalog/catalog_screen.dart';
 import '../common/tool_tile.dart';
-import '../tool/tool_screen.dart';
+import '../paywall/paywall_screen.dart';
+import '../tool/open_tool.dart';
 
 /// "Mission control": where the user is on the launch path and what to do
 /// next.
@@ -82,6 +83,14 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 18),
+          if (ref.watch(
+            entitlementProvider.select(
+              (e) => e.level(ref.read(clockProvider)()) == AccessLevel.free,
+            ),
+          )) ...[
+            rise(const _FreePlanBanner()),
+            const SizedBox(height: AppSpace.gapL),
+          ],
           rise(const _SearchField()),
           const SizedBox(height: 18),
           rise(LaunchPathCard(project: project, usedTools: used)),
@@ -137,7 +146,10 @@ class HomeScreen extends ConsumerWidget {
 
 /// "Trial · 12 days left", "Free plan" or "Pro".
 class PlanBadge extends ConsumerWidget {
-  const PlanBadge({super.key});
+  const PlanBadge({super.key, this.tappable = true});
+
+  /// Opens the paywall on tap (except for subscribers).
+  final bool tappable;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -152,7 +164,7 @@ class PlanBadge extends ConsumerWidget {
       AccessLevel.free => ('Free plan', t.muted),
       AccessLevel.subscriber => ('Pro', t.accent),
     };
-    return Container(
+    final badge = Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
         color: t.surface2,
@@ -166,6 +178,16 @@ class PlanBadge extends ConsumerWidget {
           fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
+      ),
+    );
+    if (!tappable || e.level(now) == AccessLevel.subscriber) return badge;
+    return Semantics(
+      button: true,
+      hint: 'See plans',
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.chip),
+        onTap: () => Navigator.push(context, PaywallScreen.route()),
+        child: badge,
       ),
     );
   }
@@ -374,13 +396,13 @@ class _StepNode extends StatelessWidget {
   }
 }
 
-class _NextStepCard extends StatelessWidget {
+class _NextStepCard extends ConsumerWidget {
   const _NextStepCard({required this.next});
 
   final NextStep? next;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = context.tokens;
     final text = Theme.of(context).textTheme;
     final next = this.next;
@@ -404,7 +426,7 @@ class _NextStepCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => Navigator.push(context, ToolScreen.route(tool.id)),
+        onTap: () => openTool(context, ref, tool.id),
         child: Padding(
           padding: const EdgeInsets.all(18),
           child: Row(
@@ -445,6 +467,48 @@ class _NextStepCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Shown once the trial is over: explains the free plan and offers Pro.
+class _FreePlanBanner extends StatelessWidget {
+  const _FreePlanBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final text = Theme.of(context).textTheme;
+    return AppCard(
+      color: t.surface2,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your trial has ended',
+                  style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Open one tool a day for free, or unlock them all.',
+                  style: text.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpace.gapM),
+          FilledButton(
+            onPressed: () => Navigator.push(context, PaywallScreen.route()),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size(0, AppSpace.minTouch),
+            ),
+            child: const Text('See plans'),
+          ),
+        ],
       ),
     );
   }
