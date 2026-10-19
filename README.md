@@ -15,7 +15,7 @@ flutter run
 
 ## Layout
 
-```
+```text
 lib/
   core/       theme tokens (theme/), number formatting, key-value storage
   engines/    CalcEngine (8 formulas), DocEngine (templates + {=expr}), ListEngine
@@ -29,7 +29,7 @@ lib/
 ## Defaults taken for open decisions (plan §14)
 
 | # | Decision | Default used | Where |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | App name | **Startup Toolkits** (given). Icon still open | Info.plist, AndroidManifest |
 | 3 | Trial type | In-app 14-day trial from first launch, as in the prototype. Switching to a store trial means setting `Entitlement.trialLength` to zero | `lib/billing/entitlement.dart` |
 | 4 | Free plan | One tool per day, resets at local midnight | `lib/billing/entitlement.dart` |
@@ -37,6 +37,7 @@ lib/
 | 6 | Platforms | iOS and Android together (cross-platform) | project setup |
 
 Other choices:
+
 - Bundle id: `com.startuptoolkits.startup_toolkits` (placeholder).
 - Tracker items are stored in shared_preferences as JSON (`ListStore`), not Hive/Isar; the store can be swapped without touching callers.
 - Number formatting is en-US until localization lands.
