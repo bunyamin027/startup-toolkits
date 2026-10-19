@@ -117,6 +117,8 @@ void main() {
       await tester.tap(find.byTooltip('Move to Committed'));
       await tester.pumpAndSettle();
       expect(find.byTooltip('Move to Committed'), findsNothing);
+      // Committed is an outcome: no arrow on to Passed.
+      expect(find.byTooltip('Move to Passed'), findsNothing);
       final maya = container
           .read(listItemsProvider('investorTracker'))
           .value!

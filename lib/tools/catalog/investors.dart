@@ -164,6 +164,7 @@ Contact: {email}''',
     goals: {Goal.raiseFunding},
     itemLabel: 'Investor',
     stages: ['To contact', 'Contacted', 'Meeting', 'Committed', 'Passed'],
+    endStages: {'Committed'},
     totalField: 'amount',
     fields: [
       text('firm', 'Firm', 'Angel'),
@@ -181,7 +182,7 @@ Contact: {email}''',
         'amount': 50000,
         'next': 'Send SAFE',
       }),
-      const SampleItem('Seedcamp-style fund', 'To contact', {
+      const SampleItem('Harbor Pre-seed Fund', 'To contact', {
         'firm': 'Pre-seed fund',
         'amount': 150000,
         'next': 'Ask Jordan for intro',

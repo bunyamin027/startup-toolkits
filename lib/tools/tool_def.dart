@@ -125,6 +125,7 @@ class ToolDef {
     this.itemLabel = 'Item',
     this.totalField,
     this.samples = const [],
+    this.endStages = const {},
   });
 
   final String id;
@@ -155,6 +156,13 @@ class ToolDef {
 
   /// List: rows the tracker is seeded with on first open.
   final List<SampleItem> samples;
+
+  /// List: outcome stages items do not advance from (Committed / Passed,
+  /// Won / Lost). The last stage is always an end stage.
+  final Set<String> endStages;
+
+  bool isEndStage(String stage) =>
+      stage == stages.last || endStages.contains(stage);
 
   FieldDef? field(String key) {
     for (final f in fields) {
@@ -201,6 +209,9 @@ class ToolDef {
           if (!stages.contains(sample.stage)) {
             return '$id: sample "${sample.title}" has unknown stage';
           }
+        }
+        if (!stages.toSet().containsAll(endStages)) {
+          return '$id: unknown end stage';
         }
         if (totalField != null && field(totalField!)?.isNumeric != true) {
           return '$id: totalField must be a numeric field';

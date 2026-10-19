@@ -16,6 +16,7 @@ final salesTools = <ToolDef>[
     goals: {Goal.firstCustomers},
     itemLabel: 'Lead',
     stages: ['Lead', 'Contacted', 'Demo', 'Won', 'Lost'],
+    endStages: {'Won'},
     totalField: 'value',
     fields: [
       text('company', 'Company', 'Studio North', autofill: false),
@@ -130,6 +131,7 @@ This offer is valid until {valid}.
     goals: {Goal.firstCustomers, Goal.launchApp},
     itemLabel: 'Feedback',
     stages: ['New', 'Planned', 'Done', 'Won\'t do'],
+    endStages: {'Done'},
     fields: [text('from', 'From', 'Customer'), text('votes', 'Mentions', '1')],
     samples: [
       const SampleItem('Export to CSV', 'Planned', {

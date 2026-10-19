@@ -99,7 +99,7 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
                             item: item,
                             showStage: _stage == null,
                             onTap: () => _openEditor(context, item),
-                            onAdvance: item.stage == tool.stages.last
+                            onAdvance: tool.isEndStage(item.stage)
                                 ? null
                                 : () => notifier.advance(item.id),
                           ),
@@ -108,9 +108,9 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
                     },
                   ),
           ),
-          _CopyBar(tool: tool, items: items),
         ],
       ),
+      bottomNavigationBar: _CopyBar(tool: tool, items: items),
     );
   }
 

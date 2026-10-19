@@ -125,8 +125,12 @@ class ListItemsNotifier extends AsyncNotifier<List<ListItem>> {
   void restore(ListItem item, int index) =>
       _apply((l) => [...l]..insert(index.clamp(0, l.length), item));
 
-  void advance(String id) =>
-      _apply((l) => ListEngine.advance(l, id, tool.stages));
+  /// Moves an item one stage on, unless it already reached an outcome.
+  void advance(String id) => _apply(
+    (l) => l.any((i) => i.id == id && tool.isEndStage(i.stage))
+        ? l
+        : ListEngine.advance(l, id, tool.stages),
+  );
 
   void _apply(List<ListItem> Function(List<ListItem>) change) {
     final current = state.value;

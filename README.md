@@ -19,10 +19,11 @@ flutter run
 lib/
   core/       theme tokens (theme/), number formatting, key-value storage
   engines/    CalcEngine (8 formulas), DocEngine (templates + {=expr}), ListEngine
-  tools/      ToolDef / FieldDef, favorites and tracker storage
-  project/    Project (13 fields), FieldMapper (auto-fill), ProjectStore
+  core/widgets/  AppCard, RiseIn, CountUp, RingGauge (respect Reduce Motion)
+  tools/      ToolDef / FieldDef, catalog/ (45 tools), providers, stores
+  project/    Project (13 fields), FieldMapper (auto-fill), providers, store
   billing/    Entitlement (trial, one tool per day, subscriber) and its store
-  features/   screens (Sprint 2–3)
+  features/   tool/ (one screen for all tools), catalog/ (temporary home)
   l10n/       .arb files (with localization work)
 ```
 
@@ -41,3 +42,12 @@ Other choices:
 - Bundle id: `com.startuptoolkits.startup_toolkits` (placeholder).
 - Tracker items are stored in shared_preferences as JSON (`ListStore`), not Hive/Isar; the store can be swapped without touching callers.
 - Number formatting is en-US until localization lands.
+- Tool texts (names, labels, templates) live in the catalog in English; they
+  move to .arb files with localization.
+- Example data uses a fictional startup, Nimbly (bookkeeping for freelancers).
+
+## Known issue: building from an iCloud-synced folder
+
+If Desktop is synced with iCloud Drive, iOS builds fail with
+"resource fork, Finder information, or similar detritus not allowed".
+Move the project to a folder outside iCloud (for example `~/Developer`).
