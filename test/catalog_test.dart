@@ -155,8 +155,9 @@ void main() {
       for (final id in ids) {
         final tool = toolById(id);
         expect(tool, isNotNull, reason: id);
-        if (goal != null)
+        if (goal != null) {
           expect(tool!.goals, contains(goal), reason: '$goal $id');
+        }
       }
     });
   });
