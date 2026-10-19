@@ -20,7 +20,7 @@ void main() {
     String r(String t, Object? v) => DocEngine.render(t, {'k': v});
     expect(r('{k|cap}ly', 'rocket'), 'Rocketly');
     expect(r('{k|tag}', 'rocket ship!'), 'RocketShip');
-    expect(r('{k|slug}', ' My App, v2 '), 'my-app-v2');
+    expect(r('{k|slug}', ' My App, v2! '), 'my-app-v2');
     expect(r('{k|upper}', 'ab'), 'AB');
     expect(r('{k|first}', 'Seed round'), 'Seed');
     expect(r('{k|bullets}', 'a\n\n b '), '• a\n• b');

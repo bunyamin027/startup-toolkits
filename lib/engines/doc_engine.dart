@@ -77,7 +77,7 @@ abstract final class DocEngine {
         value
             .toLowerCase()
             .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
-            .replaceAll(RegExp(r'^-|-\$'), ''),
+            .replaceAll(RegExp(r'^-|-$'), ''),
       'first' => words.first,
       'bullets' =>
         value
