@@ -50,3 +50,23 @@ class ListStore {
   Future<void> save(String toolId, List<ListItem> items) =>
       _kv.writeJson(_key(toolId), [for (final i in items) i.toJson()]);
 }
+
+/// Last values entered in a calculator or generator, so a tool reopens
+/// where the user left it.
+class ToolValuesStore {
+  ToolValuesStore(this._kv);
+
+  final KeyValueStore _kv;
+
+  String _key(String toolId) => 'values.$toolId.v1';
+
+  Future<Map<String, Object?>?> load(String toolId) async {
+    final json = await _kv.readJson(_key(toolId));
+    return json is Map<String, Object?> ? json : null;
+  }
+
+  Future<void> save(String toolId, Map<String, Object?> values) =>
+      _kv.writeJson(_key(toolId), values);
+
+  Future<void> clear(String toolId) => _kv.delete(_key(toolId));
+}

@@ -123,6 +123,10 @@ abstract final class AppMotion {
   static const bar = Duration(milliseconds: 1100);
   static const pulse = Duration(milliseconds: 2000);
   static const sheet = Duration(milliseconds: 700);
+
+  /// True when the user asked the OS to reduce motion.
+  static bool reduced(BuildContext context) =>
+      MediaQuery.maybeDisableAnimationsOf(context) ?? false;
 }
 
 extension AppTokensContext on BuildContext {

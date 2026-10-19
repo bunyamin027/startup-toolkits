@@ -95,6 +95,58 @@ abstract final class AppTheme {
         inactiveTrackColor: t.surface2,
         thumbColor: t.accent,
       ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: t.surface2,
+        labelStyle: TextStyle(color: t.muted),
+        hintStyle: TextStyle(color: t.muted),
+        helperStyle: TextStyle(color: t.muted, fontSize: 12),
+        prefixStyle: TextStyle(color: t.muted, fontSize: 16),
+        suffixStyle: TextStyle(color: t.muted, fontSize: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.iconBox),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.iconBox),
+          borderSide: BorderSide(color: t.accent, width: 1.5),
+        ),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: t.bg,
+        foregroundColor: t.text,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: t.text,
+        ),
+      ),
+      segmentedButtonTheme: SegmentedButtonThemeData(
+        style: ButtonStyle(
+          minimumSize: const WidgetStatePropertyAll(Size(0, AppSpace.minTouch)),
+          backgroundColor: WidgetStateProperty.resolveWith(
+            (s) => s.contains(WidgetState.selected) ? t.accent : t.surface1,
+          ),
+          foregroundColor: WidgetStateProperty.resolveWith(
+            (s) => s.contains(WidgetState.selected) ? t.onAccent : t.text,
+          ),
+          side: WidgetStatePropertyAll(BorderSide(color: t.border)),
+        ),
+      ),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: t.surface2,
+        contentTextStyle: TextStyle(color: t.text),
+        actionTextColor: t.accent,
+      ),
+      dividerColor: t.border,
       materialTapTargetSize: MaterialTapTargetSize.padded,
     );
   }
