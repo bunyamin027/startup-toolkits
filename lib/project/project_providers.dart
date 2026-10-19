@@ -40,3 +40,19 @@ class ProjectNotifier extends Notifier<Project> {
     unawaited(ProjectStore(ref.read(keyValueStoreProvider)).save(project));
   }
 }
+
+final initialOnboardingDoneProvider = Provider<bool>((ref) => false);
+
+final onboardingDoneProvider = NotifierProvider<OnboardingNotifier, bool>(
+  OnboardingNotifier.new,
+);
+
+class OnboardingNotifier extends Notifier<bool> {
+  @override
+  bool build() => ref.read(initialOnboardingDoneProvider);
+
+  void complete() {
+    state = true;
+    unawaited(OnboardingStore(ref.read(keyValueStoreProvider)).save(true));
+  }
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../billing/entitlement_providers.dart';
 import '../../project/field_mapper.dart';
 import '../../tools/catalog/catalog.dart';
 import '../../tools/tool_def.dart';
@@ -11,7 +12,7 @@ import 'list_tool_view.dart';
 import 'tool_actions.dart';
 
 /// One screen for all 45 tools; the body depends on the tool's engine.
-class ToolScreen extends ConsumerWidget {
+class ToolScreen extends ConsumerStatefulWidget {
   const ToolScreen({super.key, required this.toolId});
 
   final String toolId;
@@ -20,7 +21,25 @@ class ToolScreen extends ConsumerWidget {
       MaterialPageRoute(builder: (_) => ToolScreen(toolId: toolId));
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ToolScreen> createState() => _ToolScreenState();
+}
+
+class _ToolScreenState extends ConsumerState<ToolScreen> {
+  String get toolId => widget.toolId;
+
+  @override
+  void initState() {
+    super.initState();
+    // Providers cannot change during build; record the open right after.
+    Future.microtask(() {
+      if (!mounted || toolById(toolId) == null) return;
+      ref.read(recentToolsProvider.notifier).record(toolId);
+      ref.read(entitlementProvider.notifier).open(toolId);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final tool = toolById(toolId);
     if (tool == null) {
       return Scaffold(

@@ -70,3 +70,27 @@ class ToolValuesStore {
 
   Future<void> clear(String toolId) => _kv.delete(_key(toolId));
 }
+
+/// When each tool was last opened. Feeds "Recently used" and the Launch
+/// path steps that ask for a tool to be used.
+class RecentToolsStore {
+  RecentToolsStore(this._kv);
+
+  static const _key = 'recent.v1';
+
+  final KeyValueStore _kv;
+
+  Future<Map<String, DateTime>> load() async {
+    final json = await _kv.readJson(_key);
+    if (json is! Map) return {};
+    return {
+      for (final e in json.entries)
+        if (e.value case final String iso)
+          e.key as String: ?DateTime.tryParse(iso),
+    };
+  }
+
+  Future<void> save(Map<String, DateTime> recent) => _kv.writeJson(_key, {
+    for (final e in recent.entries) e.key: e.value.toIso8601String(),
+  });
+}

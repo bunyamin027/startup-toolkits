@@ -26,7 +26,16 @@ Future<ProviderContainer> pumpApp(
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(theme: AppTheme.dark, home: home),
+      child: MaterialApp(
+        theme: AppTheme.dark,
+        home: home,
+        // Tests run with Reduce Motion so endless pulses let pumpAndSettle
+        // finish and numbers show their final value at once.
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(disableAnimations: true),
+          child: child!,
+        ),
+      ),
     ),
   );
   await tester.pumpAndSettle();

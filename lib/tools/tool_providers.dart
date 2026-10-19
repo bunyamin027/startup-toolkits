@@ -140,3 +140,29 @@ class ListItemsNotifier extends AsyncNotifier<List<ListItem>> {
     unawaited(_store.save(toolId, next));
   }
 }
+
+/// Last-opened time per tool; loaded before the first frame.
+final initialRecentToolsProvider = Provider<Map<String, DateTime>>(
+  (ref) => const {},
+);
+
+final recentToolsProvider =
+    NotifierProvider<RecentToolsNotifier, Map<String, DateTime>>(
+      RecentToolsNotifier.new,
+    );
+
+class RecentToolsNotifier extends Notifier<Map<String, DateTime>> {
+  @override
+  Map<String, DateTime> build() => ref.read(initialRecentToolsProvider);
+
+  void record(String toolId, [DateTime? at]) {
+    state = {...state, toolId: at ?? DateTime.now()};
+    unawaited(RecentToolsStore(ref.read(keyValueStoreProvider)).save(state));
+  }
+
+  /// Tool ids, most recent first.
+  List<String> get ordered =>
+      (state.entries.toList()..sort((a, b) => b.value.compareTo(a.value)))
+          .map((e) => e.key)
+          .toList();
+}

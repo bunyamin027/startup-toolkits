@@ -18,12 +18,15 @@ class AppCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: color ?? t.surface1,
+    // Material (not DecoratedBox) so ink splashes of rows inside stay
+    // visible and are clipped to the card.
+    return Material(
+      color: color ?? t.surface1,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.card),
-        border: Border.all(color: t.border),
+        side: BorderSide(color: t.border),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Padding(padding: padding, child: child),
     );
   }

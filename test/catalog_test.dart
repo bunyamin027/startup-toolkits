@@ -4,6 +4,7 @@ import 'package:startup_toolkits/engines/doc_engine.dart';
 import 'package:startup_toolkits/project/field_mapper.dart';
 import 'package:startup_toolkits/project/project.dart';
 import 'package:startup_toolkits/tools/catalog/catalog.dart';
+import 'package:startup_toolkits/tools/catalog/goal_picks.dart';
 import 'package:startup_toolkits/tools/tool_def.dart';
 
 void main() {
@@ -145,5 +146,18 @@ void main() {
           for (final f in t.fields) ?FieldMapper.match(f),
     };
     expect(reached, containsAll(ProjectField.values));
+  });
+
+  test('Start here picks exist and fit their goal', () {
+    expect(goalPicks.keys, containsAll([...Goal.values, null]));
+    goalPicks.forEach((goal, ids) {
+      expect(ids.toSet(), hasLength(ids.length));
+      for (final id in ids) {
+        final tool = toolById(id);
+        expect(tool, isNotNull, reason: id);
+        if (goal != null)
+          expect(tool!.goals, contains(goal), reason: '$goal $id');
+      }
+    });
   });
 }

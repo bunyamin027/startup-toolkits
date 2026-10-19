@@ -9,6 +9,9 @@ abstract interface class KeyValueStore {
   Future<String?> read(String key);
   Future<void> write(String key, String value);
   Future<void> delete(String key);
+
+  /// Removes every key this app stored.
+  Future<void> clear();
 }
 
 extension JsonKeyValueStore on KeyValueStore {
@@ -42,6 +45,9 @@ class PrefsKeyValueStore implements KeyValueStore {
 
   @override
   Future<void> delete(String key) => _prefs.remove(key);
+
+  @override
+  Future<void> clear() => _prefs.clear();
 }
 
 class MemoryKeyValueStore implements KeyValueStore {
@@ -55,4 +61,7 @@ class MemoryKeyValueStore implements KeyValueStore {
 
   @override
   Future<void> delete(String key) async => data.remove(key);
+
+  @override
+  Future<void> clear() async => data.clear();
 }

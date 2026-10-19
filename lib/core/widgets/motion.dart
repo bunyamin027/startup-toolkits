@@ -134,3 +134,52 @@ class _RingPainter extends CustomPainter {
   bool shouldRepaint(_RingPainter old) =>
       old.progress != progress || old.color != color || old.track != track;
 }
+
+/// Slow, continuous breathing (scale and glow) for "you are here" markers
+/// (§7.3: 1.8–2.2 s). Static when motion is reduced.
+class Pulse extends StatefulWidget {
+  const Pulse({super.key, required this.child, this.scale = 0.12});
+
+  final Widget child;
+
+  /// Extra size at the peak, as a fraction.
+  final double scale;
+
+  @override
+  State<Pulse> createState() => _PulseState();
+}
+
+class _PulseState extends State<Pulse> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    vsync: this,
+    duration: AppMotion.pulse,
+  );
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (AppMotion.reduced(context)) {
+      _controller.stop();
+    } else if (!_controller.isAnimating) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (AppMotion.reduced(context)) return widget.child;
+    return ScaleTransition(
+      scale: Tween(
+        begin: 1.0,
+        end: 1 + widget.scale,
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut)),
+      child: widget.child,
+    );
+  }
+}
