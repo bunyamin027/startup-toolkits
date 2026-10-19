@@ -9,6 +9,9 @@ import 'inputs.dart';
 /// Template syntax:
 /// - `{key}`: the field value. Empty values render as `[Label]` so gaps are
 ///   visible in the output instead of silently disappearing.
+/// - `{key|filter}`: cap, lower, upper, tag (no spaces, words capitalized),
+///   slug (url-safe), first (first word), bullets (one "• " per line),
+///   money, number.
 /// - `{=expr}` / `{=expr|format}`: arithmetic over numeric fields, e.g.
 ///   `{=qty1 * price1 + qty2 * price2|money}`. Supports + - * / ( ),
 ///   unary minus and round(x), min(a, b), max(a, b).
@@ -45,9 +48,69 @@ abstract final class DocEngine {
     return template.replaceAllMapped(_placeholder, (m) {
       final body = m[2]!.trim();
       if (m[1] == '=') return _evaluate(body, inputs);
-      final value = values[body]?.toString().trim() ?? '';
-      return value.isEmpty ? '[${labels[body] ?? body}]' : value;
+      final pipe = body.indexOf('|');
+      final key = pipe < 0 ? body : body.substring(0, pipe).trim();
+      final value = _text(values[key]);
+      if (value.isEmpty) return '[${labels[key] ?? key}]';
+      return pipe < 0
+          ? value
+          : applyFilter(body.substring(pipe + 1).trim(), value);
     });
+  }
+
+  static String _text(Object? raw) {
+    if (raw is double && raw == raw.roundToDouble()) {
+      return raw.toInt().toString();
+    }
+    return raw?.toString().trim() ?? '';
+  }
+
+  static String applyFilter(String filter, String value) {
+    final words = value.split(RegExp(r'\s+')).where((w) => w.isNotEmpty);
+    String cap(String w) => w[0].toUpperCase() + w.substring(1);
+    return switch (filter) {
+      'cap' => cap(value),
+      'lower' => value.toLowerCase(),
+      'upper' => value.toUpperCase(),
+      'tag' => words.map(cap).join().replaceAll(RegExp(r'[^\w]'), ''),
+      'slug' =>
+        value
+            .toLowerCase()
+            .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
+            .replaceAll(RegExp(r'^-|-\$'), ''),
+      'first' => words.first,
+      'bullets' =>
+        value
+            .split('\n')
+            .map((l) => l.trim())
+            .where((l) => l.isNotEmpty)
+            .map((l) => '• $l')
+            .join('\n'),
+      'money' => Fmt.money(Inputs.toNumber(value) ?? 0),
+      'number' => Fmt.number(Inputs.toNumber(value) ?? 0),
+      _ => throw FormatException('Unknown filter "$filter"'),
+    };
+  }
+
+  /// Keys referenced by `{key}` / `{key|filter}` placeholders, for catalog
+  /// tests that check every placeholder has a field.
+  static Set<String> placeholderKeys(String template) => {
+    for (final m in _placeholder.allMatches(template))
+      if (m[1] != '=') m[2]!.split('|').first.trim(),
+  };
+
+  /// Variables referenced by `{=expr}` placeholders.
+  static Set<String> expressionVariables(String template) {
+    const functions = {'round', 'min', 'max'};
+    final out = <String>{};
+    for (final m in _placeholder.allMatches(template)) {
+      if (m[1] != '=') continue;
+      final expr = m[2]!.split('|').first;
+      for (final v in RegExp(r'[A-Za-z_]\w*').allMatches(expr)) {
+        if (!functions.contains(v[0])) out.add(v[0]!);
+      }
+    }
+    return out;
   }
 
   static String _evaluate(String body, Inputs inputs) {

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:startup_toolkits/engines/doc_engine.dart';
 import 'package:startup_toolkits/engines/inputs.dart';
@@ -13,6 +14,26 @@ void main() {
       );
       expect(out, 'Hi Ada, [Company] solves [problem].');
     });
+  });
+
+  test('filters', () {
+    String r(String t, Object? v) => DocEngine.render(t, {'k': v});
+    expect(r('{k|cap}ly', 'rocket'), 'Rocketly');
+    expect(r('{k|tag}', 'rocket ship!'), 'RocketShip');
+    expect(r('{k|slug}', ' My App, v2 '), 'my-app-v2');
+    expect(r('{k|upper}', 'ab'), 'AB');
+    expect(r('{k|first}', 'Seed round'), 'Seed');
+    expect(r('{k|bullets}', 'a\n\n b '), '• a\n• b');
+    expect(r('{k|money}', 4500), r'$4,500');
+    expect(r('{k}', 1000.0), '1000');
+    expect(r('{k|cap}', ''), '[k]');
+    expect(() => r('{k|nope}', 'x'), throwsFormatException);
+  });
+
+  test('placeholder and expression keys', () {
+    const t = 'Hi {name|cap} {=qty * price|money} {=round(tax)}';
+    expect(DocEngine.placeholderKeys(t), {'name'});
+    expect(DocEngine.expressionVariables(t), {'qty', 'price', 'tax'});
   });
 
   group('expressions', () {
@@ -72,6 +93,7 @@ void main() {
       category: ToolCategory.legal,
       kind: ToolKind.doc,
       description: '',
+      icon: Icons.build,
       legalDisclaimer: true,
       templateField: 'law',
       templates: {

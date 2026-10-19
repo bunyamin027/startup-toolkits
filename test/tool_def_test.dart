@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:startup_toolkits/tools/tool_def.dart';
 
@@ -9,6 +10,7 @@ void main() {
       category: ToolCategory.finance,
       kind: ToolKind.calc,
       description: '',
+      icon: Icons.build,
       formula: 'runway',
       fields: [
         FieldDef(
@@ -31,6 +33,7 @@ void main() {
       category: ToolCategory.finance,
       kind: ToolKind.calc,
       description: '',
+      icon: Icons.build,
     );
     expect(noFormula.validate(), contains('formula'));
 
@@ -40,6 +43,7 @@ void main() {
       category: ToolCategory.legal,
       kind: ToolKind.doc,
       description: '',
+      icon: Icons.build,
       templateField: 'law',
       templates: {'GDPR': '...'},
       fields: [
@@ -59,6 +63,7 @@ void main() {
       category: ToolCategory.sales,
       kind: ToolKind.list,
       description: '',
+      icon: Icons.build,
     );
     expect(noStages.validate(), contains('stages'));
   });

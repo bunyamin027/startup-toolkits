@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 /// The three engines every tool runs on (master plan §2, §9).
 enum ToolKind { calc, doc, list }
@@ -86,11 +86,24 @@ class FieldDef {
   };
 }
 
+/// Example row a tracker opens with (UX principle 4: no empty screens).
+@immutable
+class SampleItem {
+  const SampleItem(this.title, this.stage, [this.fields = const {}]);
+
+  final String title;
+  final String stage;
+  final Map<String, Object?> fields;
+}
+
 /// A tool is pure data; the engine for its [kind] does the work.
 ///
 /// - calc: [formula] names a function registered in `CalcEngine`.
 /// - doc: [template], or [templates] picked by the value of [templateField].
-/// - list: [stages] are the columns items move through.
+/// - list: [stages] are the columns items move through; [fields] are the
+///   item's extra columns and [itemLabel] names one item ("Investor").
+///
+/// A numeric field with both min and max renders as a slider.
 @immutable
 class ToolDef {
   const ToolDef({
@@ -99,6 +112,7 @@ class ToolDef {
     required this.category,
     required this.kind,
     required this.description,
+    required this.icon,
     this.fields = const [],
     this.goals = const {},
     this.formula,
@@ -107,6 +121,10 @@ class ToolDef {
     this.templateField,
     this.stages = const [],
     this.legalDisclaimer = false,
+    this.heroOutput,
+    this.itemLabel = 'Item',
+    this.totalField,
+    this.samples = const [],
   });
 
   final String id;
@@ -114,6 +132,7 @@ class ToolDef {
   final ToolCategory category;
   final ToolKind kind;
   final String description;
+  final IconData icon;
   final List<FieldDef> fields;
   final Set<Goal> goals;
   final String? formula;
@@ -124,6 +143,18 @@ class ToolDef {
 
   /// Appends the "template only, not legal advice" notice to output (§3.7).
   final bool legalDisclaimer;
+
+  /// Calc: output key shown large at the top; defaults to the first output.
+  final String? heroOutput;
+
+  /// List: singular name of one item, also the label of its title field.
+  final String itemLabel;
+
+  /// List: numeric field summed per stage in the header (e.g. amount).
+  final String? totalField;
+
+  /// List: rows the tracker is seeded with on first open.
+  final List<SampleItem> samples;
 
   FieldDef? field(String key) {
     for (final f in fields) {
@@ -166,6 +197,14 @@ class ToolDef {
         }
       case ToolKind.list:
         if (stages.isEmpty) return '$id: list tool needs stages';
+        for (final sample in samples) {
+          if (!stages.contains(sample.stage)) {
+            return '$id: sample "${sample.title}" has unknown stage';
+          }
+        }
+        if (totalField != null && field(totalField!)?.isNumeric != true) {
+          return '$id: totalField must be a numeric field';
+        }
     }
     return null;
   }

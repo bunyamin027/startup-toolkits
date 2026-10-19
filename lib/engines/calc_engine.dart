@@ -166,6 +166,7 @@ abstract final class CalcEngine {
         ? (4, 8)
         : (3, 6);
     return CalcResult([
+      CalcOutput('mid', 'Midpoint', arr * (low + high) / 2, ValueFormat.money),
       CalcOutput('low', 'Low', arr * low, ValueFormat.money),
       CalcOutput('high', 'High', arr * high, ValueFormat.money),
       CalcOutput(

@@ -7,7 +7,7 @@ abstract final class FieldMapper {
   /// Checked in order; first match wins. Phrases match whole words inside the
   /// lowercased label.
   static const _rules = <(ProjectField, List<String>)>[
-    (ProjectField.contactEmail, ['contact', 'support email', 'email']),
+    (ProjectField.contactEmail, ['contact email', 'support email', 'email']),
     (
       ProjectField.targetCustomer,
       ['customer segment', 'target customer', 'target audience'],
@@ -65,6 +65,14 @@ abstract final class FieldMapper {
     ...prefill(tool, project),
   };
 
+  /// Project fields are text; whole numbers lose the ".0" sliders produce.
+  static String asText(Object? value) {
+    if (value is double && value == value.roundToDouble()) {
+      return value.toInt().toString();
+    }
+    return value?.toString().trim() ?? '';
+  }
+
   /// Writes non-empty mapped values from a tool back into the project
   /// (two-way sync).
   static Project writeBack(
@@ -76,7 +84,7 @@ abstract final class FieldMapper {
     var result = project;
     for (final f in tool.fields) {
       final target = match(f);
-      final value = values[f.key]?.toString().trim() ?? '';
+      final value = asText(values[f.key]);
       if (target != null && value.isNotEmpty && value != project[target]) {
         result = result.withValue(target, value);
       }

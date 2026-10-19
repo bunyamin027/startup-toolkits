@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:startup_toolkits/project/field_mapper.dart';
 import 'package:startup_toolkits/project/project.dart';
@@ -50,6 +51,7 @@ void main() {
     category: ToolCategory.investors,
     kind: ToolKind.doc,
     description: '',
+    icon: Icons.build,
     template: '',
     fields: [
       FieldDef(
@@ -98,6 +100,7 @@ void main() {
       category: ToolCategory.sales,
       kind: ToolKind.list,
       description: '',
+      icon: Icons.build,
       stages: ['Lead'],
       fields: [
         FieldDef(key: 'company', label: 'Company', type: FieldType.text),
