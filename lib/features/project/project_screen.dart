@@ -84,21 +84,22 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                     ),
                   ),
                   const SizedBox(height: 14),
+                  ActionChip(
+                    avatar: Icon(
+                      project.goal == null
+                          ? Icons.flag_outlined
+                          : goalIcon(project.goal!),
+                      size: 18,
+                      color: t.accent,
+                    ),
+                    label: Text(project.goal?.label ?? 'Set a goal'),
+                    onPressed: () => showSheet(context, const GoalSheet()),
+                  ),
+                  const SizedBox(height: AppSpace.gapS),
                   Wrap(
                     spacing: AppSpace.gapS,
                     runSpacing: AppSpace.gapS,
                     children: [
-                      ActionChip(
-                        avatar: Icon(
-                          project.goal == null
-                              ? Icons.flag_outlined
-                              : goalIcon(project.goal!),
-                          size: 18,
-                          color: t.accent,
-                        ),
-                        label: Text(project.goal?.label ?? 'Set a goal'),
-                        onPressed: () => showSheet(context, const GoalSheet()),
-                      ),
                       for (final step in launchPath)
                         Chip(
                           avatar: Icon(
