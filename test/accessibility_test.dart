@@ -138,4 +138,54 @@ void main() {
       });
     }
   });
+
+  group('VoiceOver', () {
+    testWidgets('sliders announce their field and formatted value', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      await pumpApp(tester, const ToolScreen(toolId: 'runway'));
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Cash in bank').last),
+        matchesSemantics(
+          label: 'Cash in bank',
+          value: r'$120,000',
+          increasedValue: r'$125,000',
+          decreasedValue: r'$115,000',
+          isSlider: true,
+          isEnabled: true,
+          isFocusable: true,
+          hasEnabledState: true,
+          hasIncreaseAction: true,
+          hasDecreaseAction: true,
+          hasFocusAction: true,
+        ),
+      );
+      handle.dispose();
+    });
+
+    testWidgets('calculator result is read as one phrase', (tester) async {
+      final handle = tester.ensureSemantics();
+      await pumpApp(tester, const ToolScreen(toolId: 'runway'));
+      expect(find.bySemanticsLabel('Runway: 11.4 months'), findsOneWidget);
+      handle.dispose();
+    });
+  });
+
+  group('Reduce Motion', () {
+    // Test helpers turn Reduce Motion on, like the iOS setting.
+    testWidgets('home has no running animations', (tester) async {
+      await pumpRoot(tester, kv: await onboardedStore());
+      expect(tester.binding.hasScheduledFrame, isFalse);
+    });
+
+    testWidgets('paywall has no running animations', (tester) async {
+      await pumpApp(
+        tester,
+        const PaywallScreen(),
+        overrides: [billingServiceProvider.overrideWithValue(FakeBilling())],
+      );
+      expect(tester.binding.hasScheduledFrame, isFalse);
+    });
+  });
 }

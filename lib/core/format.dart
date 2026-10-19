@@ -17,9 +17,11 @@ abstract final class Fmt {
   /// 10500 -> "$10,500". Whole amounts drop cents; others show two decimals.
   static String money(num value, {String symbol = r'$'}) {
     if (value.isNaN || value.isInfinite) return '—';
-    final decimals = value == value.roundToDouble() ? 0 : 2;
-    final body = number(value.abs(), decimals: decimals);
-    return value < 0 ? '-$symbol$body' : '$symbol$body';
+    // Round to cents first so float noise (114999.99999) reads as whole.
+    final cents = (value * 100).round() / 100;
+    final decimals = cents == cents.roundToDouble() ? 0 : 2;
+    final body = number(cents.abs(), decimals: decimals);
+    return cents < 0 ? '-$symbol$body' : '$symbol$body';
   }
 
   /// [ratio] 0.3333 -> "33.3%". Pass a ratio, not a percentage.

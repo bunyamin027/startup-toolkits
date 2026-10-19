@@ -180,14 +180,21 @@ class _SliderInput extends StatelessWidget {
         ),
         if (f.hint != null)
           Text(f.hint!, style: Theme.of(context).textTheme.bodySmall),
-        Slider(
-          value: n.clamp(f.min!, f.max!),
-          min: f.min!,
-          max: f.max!,
-          divisions: divisions,
-          label: formatFieldValue(f, n),
-          onChanged: (v) =>
-              onChanged(step != null && step >= 1 ? v.roundToDouble() : v),
+        // One VoiceOver element: "Cash in bank, $120,000". The value is
+        // already shown above the track, so no value-indicator label.
+        MergeSemantics(
+          child: Semantics(
+            label: f.label,
+            child: Slider(
+              value: n.clamp(f.min!, f.max!),
+              min: f.min!,
+              max: f.max!,
+              divisions: divisions,
+              semanticFormatterCallback: (v) => formatFieldValue(f, v),
+              onChanged: (v) =>
+                  onChanged(step != null && step >= 1 ? v.roundToDouble() : v),
+            ),
+          ),
         ),
       ],
     );
