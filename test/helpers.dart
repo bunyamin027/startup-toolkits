@@ -8,6 +8,20 @@ import 'package:startup_toolkits/core/bootstrap.dart';
 import 'package:startup_toolkits/core/theme/app_theme.dart';
 import 'package:startup_toolkits/main.dart';
 
+/// Logical screen sizes (points).
+const iPhone15 = Size(393, 852);
+const iPhoneSE = Size(375, 667);
+
+/// Sets the test view to [screen] at 3× and the system text size to
+/// [textScale] (Dynamic Type), resetting both after the test.
+void setScreen(WidgetTester tester, Size screen, double textScale) {
+  tester.view.devicePixelRatio = 3;
+  tester.view.physicalSize = screen * 3;
+  tester.platformDispatcher.textScaleFactorTestValue = textScale;
+  addTearDown(tester.view.reset);
+  addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+}
+
 /// Pumps [home] inside the app theme with in-memory storage, on an
 /// iPhone-sized screen. Returns the container for reading providers.
 Future<ProviderContainer> pumpApp(
@@ -15,10 +29,10 @@ Future<ProviderContainer> pumpApp(
   Widget home, {
   KeyValueStore? kv,
   List<dynamic> overrides = const [],
+  Size screen = iPhone15,
+  double textScale = 1,
 }) async {
-  tester.view.physicalSize = const Size(1179, 2556);
-  tester.view.devicePixelRatio = 3;
-  addTearDown(tester.view.reset);
+  setScreen(tester, screen, textScale);
 
   final container = ProviderContainer.test(
     overrides: [
@@ -51,12 +65,12 @@ Future<MemoryKeyValueStore> pumpRoot(
   WidgetTester tester, {
   MemoryKeyValueStore? kv,
   List<Override> services = const [],
+  Size screen = iPhone15,
+  double textScale = 1,
 }) async {
-  tester.view.physicalSize = const Size(1179, 2556);
-  tester.view.devicePixelRatio = 3;
+  setScreen(tester, screen, textScale);
   tester.platformDispatcher.accessibilityFeaturesTestValue =
       const FakeAccessibilityFeatures(disableAnimations: true);
-  addTearDown(tester.view.reset);
   addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
 
   final store = kv ?? MemoryKeyValueStore();

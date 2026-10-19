@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../billing/entitlement.dart';
 import '../../billing/entitlement_providers.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/theme/text_scale.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/motion.dart';
 import '../../project/launch_path.dart';
@@ -47,40 +48,25 @@ class HomeScreen extends ConsumerWidget {
         ),
         children: [
           rise(
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
+            // Large Dynamic Type stacks the badge under the title so
+            // neither gets squeezed.
+            largeText(context)
+                ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'MISSION CONTROL',
-                        style: text.labelSmall?.copyWith(letterSpacing: 1.4),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        name.isEmpty ? 'Your startup' : name,
-                        style: text.displaySmall,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (oneLiner.isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          oneLiner,
-                          style: text.bodySmall,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
+                      _header(text, name, oneLiner),
+                      const SizedBox(height: AppSpace.gapS),
+                      const PlanBadge(),
+                    ],
+                  )
+                : Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _header(text, name, oneLiner)),
+                      const SizedBox(width: AppSpace.gapS),
+                      const PlanBadge(),
                     ],
                   ),
-                ),
-                const SizedBox(width: AppSpace.gapS),
-                const PlanBadge(),
-              ],
-            ),
           ),
           const SizedBox(height: 18),
           if (ref.watch(
@@ -140,6 +126,34 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _header(TextTheme text, String name, String oneLiner) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'MISSION CONTROL',
+          style: text.labelSmall?.copyWith(letterSpacing: 1.4),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          name.isEmpty ? 'Your startup' : name,
+          style: text.displaySmall,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        if (oneLiner.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            oneLiner,
+            style: text.bodySmall,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ],
     );
   }
 }
@@ -210,18 +224,22 @@ class _SearchField extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppRadius.iconBox),
           onTap: () =>
               Navigator.push(context, CatalogScreen.route(autofocus: true)),
-          child: SizedBox(
-            height: 50,
-            child: Row(
-              children: [
-                const SizedBox(width: 14),
-                Icon(Icons.search, color: t.muted),
-                const SizedBox(width: 10),
-                Text(
-                  'Search ${allTools.length} tools',
-                  style: TextStyle(color: t.muted, fontSize: 16),
-                ),
-              ],
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 50),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              child: Row(
+                children: [
+                  Icon(Icons.search, color: t.muted),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Search ${allTools.length} tools',
+                      style: TextStyle(color: t.muted, fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

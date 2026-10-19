@@ -50,7 +50,8 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SizedBox(
-            height: 52,
+            height:
+                56 * MediaQuery.textScalerOf(context).scale(1).clamp(1, 1.6),
             child: ListView(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: AppSpace.edge),
@@ -203,7 +204,6 @@ class _StageChip extends StatelessWidget {
           label: Text('$label  $count'),
           selected: selected,
           showCheckmark: false,
-          visualDensity: VisualDensity.compact,
           labelPadding: const EdgeInsets.symmetric(horizontal: 4),
           selectedColor: t.accent,
           labelStyle: TextStyle(color: selected ? t.onAccent : t.text),
@@ -398,7 +398,7 @@ class _CopyBar extends ConsumerWidget {
         top: false,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
+          child: Wrap(
             children: [
               TextButton.icon(
                 onPressed: () {

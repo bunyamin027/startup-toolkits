@@ -86,12 +86,15 @@ class _FreeLimitSheetState extends ConsumerState<FreeLimitSheet> {
                 label:
                     '$hours hours $minutes minutes until your next free tool',
                 excludeSemantics: true,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('${hours}h ${minutes}m', style: text.titleLarge),
-                    Text('to reset', style: text.bodySmall),
-                  ],
+                // Scales down inside the fixed ring at large text sizes.
+                child: FittedBox(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('${hours}h ${minutes}m', style: text.titleLarge),
+                      Text('to reset', style: text.bodySmall),
+                    ],
+                  ),
                 ),
               ),
             ),

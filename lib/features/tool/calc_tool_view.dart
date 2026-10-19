@@ -205,9 +205,13 @@ class _ResultRow extends StatelessWidget {
         child: Row(
           children: [
             Expanded(child: Text(output.label, style: text.bodyMedium)),
-            Text(
-              output.display,
-              style: text.titleLarge?.copyWith(fontSize: 17),
+            const SizedBox(width: AppSpace.gapS),
+            Flexible(
+              child: Text(
+                output.display,
+                textAlign: TextAlign.end,
+                style: text.titleLarge?.copyWith(fontSize: 17),
+              ),
             ),
           ],
         ),

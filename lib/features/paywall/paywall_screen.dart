@@ -11,6 +11,7 @@ import '../../billing/billing_service.dart';
 import '../../billing/entitlement_providers.dart';
 import '../../core/analytics.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/theme/text_scale.dart';
 import '../../core/widgets/app_card.dart';
 import '../../tools/catalog/catalog.dart';
 import '../tool/tool_actions.dart';
@@ -104,6 +105,15 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 final selected =
                     offers.where((o) => o.period == _period).firstOrNull ??
                     offers.firstOrNull;
+                // At large text sizes the button and terms scroll with the
+                // page; a sticky footer would leave no room for the plans.
+                final scrollFooter = largeText(context);
+                final footer = _Footer(
+                  offer: selected,
+                  busy: _busy,
+                  onBuy: selected == null ? null : () => _buy(selected),
+                  onRestore: _billing.available ? _restore : null,
+                );
                 return Column(
                   children: [
                     Align(
@@ -166,15 +176,11 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                               textAlign: TextAlign.center,
                               style: text.bodySmall?.copyWith(color: t.blue),
                             ),
+                          if (scrollFooter) footer,
                         ],
                       ),
                     ),
-                    _Footer(
-                      offer: selected,
-                      busy: _busy,
-                      onBuy: selected == null ? null : () => _buy(selected),
-                      onRestore: _billing.available ? _restore : null,
-                    ),
+                    if (!scrollFooter) footer,
                   ],
                 );
               },
