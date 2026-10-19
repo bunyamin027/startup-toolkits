@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../billing/billing_config.dart';
 import '../../billing/entitlement.dart';
 import '../../billing/entitlement_providers.dart';
+import '../../core/app_info.dart';
 import '../../core/bootstrap.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
@@ -146,8 +147,8 @@ class ProfileScreen extends ConsumerWidget {
               ),
               const _Row(
                 icon: Icons.info_outline,
-                title: 'Startup Toolkits',
-                value: 'Version 0.1.0',
+                title: AppInfo.name,
+                value: 'Version ${AppInfo.version}',
               ),
             ],
           ),

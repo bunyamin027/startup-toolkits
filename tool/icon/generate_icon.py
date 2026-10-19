@@ -20,10 +20,11 @@ import os
 from PIL import Image, ImageDraw, ImageFilter
 
 BG = (11, 16, 32)          # bg #0B1020
-SURFACE = (31, 39, 68)     # surface-2 #1F2744
 BORDER = (42, 51, 85)      # border #2A3355
 LIME = (184, 244, 106)     # accent #B8F46A
-BLUE = (108, 147, 255)     # blue #6C93FF
+# Grid tiles a step lighter than surface-2 (#1F2744) so they stay visible at 60 px.
+TILE = (50, 62, 104)
+TILE_EDGE = (70, 84, 136)
 
 SS = 4                     # supersampling for smooth edges
 SIZE = 1024
@@ -60,8 +61,8 @@ def draw_mark(draw, cx, cy, scale):
             draw.rounded_rectangle(
                 [x, y, x + tile, y + tile],
                 radius=radius,
-                fill=LIME if lime else SURFACE,
-                outline=None if lime else BORDER,
+                fill=LIME if lime else TILE,
+                outline=None if lime else TILE_EDGE,
                 width=int(6 * scale),
             )
 

@@ -13,6 +13,14 @@ flutter test
 flutter run
 ```
 
+## Release
+
+- `docs/release/checklist.md`: what is done, what needs accounts or
+  decisions, build commands and the internal test script.
+- `docs/store/`: listing text, privacy labels, screenshots.
+- `docs/legal/`: privacy policy and terms drafts (placeholders marked).
+- App icon: edit and run `python3 -I tool/icon/generate_icon.py`.
+
 ## Subscriptions and legal links
 
 Keys and URLs are passed at build time, never committed:
