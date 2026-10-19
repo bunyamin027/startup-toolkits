@@ -21,9 +21,11 @@ lib/
   engines/    CalcEngine (8 formulas), DocEngine (templates + {=expr}), ListEngine
   core/widgets/  AppCard, RiseIn, CountUp, RingGauge (respect Reduce Motion)
   tools/      ToolDef / FieldDef, catalog/ (45 tools), providers, stores
-  project/    Project (13 fields), FieldMapper (auto-fill), providers, store
-  billing/    Entitlement (trial, one tool per day, subscriber) and its store
-  features/   tool/ (one screen for all tools), catalog/ (temporary home)
+  core/bootstrap.dart  loads all state before the first frame; delete all data
+  project/    Project (13 fields), FieldMapper, launch_path (Home steps), store
+  billing/    Entitlement (trial, one tool per day, subscriber), providers
+  features/   onboarding, shell (tabs), home, project, favorites (My tools),
+              profile, catalog (Discover/search), tool (one screen, 45 tools)
   l10n/       .arb files (with localization work)
 ```
 
