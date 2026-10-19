@@ -460,14 +460,14 @@ class _FloatingIconsState extends State<_FloatingIcons>
     duration: const Duration(seconds: 63),
   );
 
+  // Between the status bar and the headline, right of the close button,
+  // so neither text nor controls are covered.
   static const _spots = [
-    (0.08, 0.06, 5.0),
-    (0.30, 0.02, 7.0),
-    (0.55, 0.07, 9.0),
-    (0.80, 0.03, 6.0),
-    (0.18, 0.17, 8.0),
-    (0.68, 0.16, 5.5),
-    (0.88, 0.13, 7.5),
+    (0.22, 0.062, 5.0),
+    (0.40, 0.085, 7.0),
+    (0.57, 0.058, 9.0),
+    (0.73, 0.082, 6.0),
+    (0.88, 0.06, 7.5),
   ];
 
   @override
@@ -490,15 +490,7 @@ class _FloatingIconsState extends State<_FloatingIcons>
   Widget build(BuildContext context) {
     final t = context.tokens;
     final icons = [
-      for (final id in [
-        'runway',
-        'pitchDeck',
-        'crm',
-        'nda',
-        'leanCanvas',
-        'abTest',
-        'storeListing',
-      ])
+      for (final id in ['runway', 'pitchDeck', 'crm', 'nda', 'storeListing'])
         toolById(id)!.icon,
     ];
     return ExcludeSemantics(

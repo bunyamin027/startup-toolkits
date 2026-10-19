@@ -13,6 +13,33 @@ flutter test
 flutter run
 ```
 
+## Subscriptions and legal links
+
+Keys and URLs are passed at build time, never committed:
+
+```sh
+flutter run \
+  --dart-define=RC_APPLE_KEY=appl_xxx \
+  --dart-define=RC_GOOGLE_KEY=goog_xxx \
+  --dart-define=TERMS_URL=https://example.com/terms \
+  --dart-define=PRIVACY_URL=https://example.com/privacy
+```
+
+- RevenueCat setup: entitlement `pro`; a current offering with a monthly
+  and an annual package; a 2-week free trial as the introductory offer.
+- Without a key, debug builds use a **preview store** (placeholder prices,
+  fake purchases, labelled on the paywall); release builds disable
+  purchases and the paywall says subscriptions are unavailable.
+- Missing Terms/Privacy URLs show "This link is added before release".
+- First iOS build after adding RevenueCat may need
+  `cd ios && pod install --repo-update`.
+
+## Analytics
+
+`lib/core/analytics.dart` defines the funnel events from the plan. Until a
+backend (Firebase or PostHog) is picked, events are printed in debug builds
+and dropped in release; nothing leaves the device.
+
 ## Layout
 
 ```text
@@ -34,7 +61,7 @@ lib/
 | # | Decision | Default used | Where |
 | --- | --- | --- | --- |
 | 1 | App name | **Startup Toolkits** (given). Icon still open | Info.plist, AndroidManifest |
-| 3 | Trial type | In-app 14-day trial from first launch, as in the prototype. Switching to a store trial means setting `Entitlement.trialLength` to zero | `lib/billing/entitlement.dart` |
+| 3 | Trial type | In-app 14-day trial from first launch, as in the prototype. The paywall also offers the store's intro trial when the user is eligible (its button text comes from the store). Switching to store-only means setting `Entitlement.trialLength` to zero | `lib/billing/entitlement.dart`, `lib/features/paywall/` |
 | 4 | Free plan | One tool per day, resets at local midnight | `lib/billing/entitlement.dart` |
 | 5 | Light theme | Placeholder values under the same token names; app is forced to dark | `lib/core/theme/app_tokens.dart`, `lib/main.dart` |
 | 6 | Platforms | iOS and Android together (cross-platform) | project setup |
