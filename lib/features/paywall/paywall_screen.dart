@@ -318,9 +318,10 @@ class _PlanCard extends StatelessWidget {
                       perPeriod(context.l10n, offer),
                       style: text.titleLarge?.copyWith(fontSize: 17),
                     ),
-                    if (offer.monthlyEquivalent != null)
+                    if (offer.monthlyEquivalentIn(context.fmt)
+                        case final monthly?)
                       Text(
-                        context.l10n.paywallPerMonth(offer.monthlyEquivalent!),
+                        context.l10n.paywallPerMonth(monthly),
                         style: text.bodySmall,
                       ),
                   ],

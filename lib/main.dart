@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 
@@ -10,10 +11,12 @@ import 'billing/revenuecat_billing.dart';
 import 'core/bootstrap.dart';
 import 'core/storage/key_value_store.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_providers.dart';
 import 'features/onboarding/welcome_screen.dart';
 import 'features/shell/app_shell.dart';
 import 'project/project_providers.dart';
 import 'l10n/l10n.dart';
+import 'l10n/locale_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -91,22 +94,53 @@ class _AppRootState extends State<AppRoot> {
   }
 }
 
-class StartupToolkitsApp extends ConsumerWidget {
+class StartupToolkitsApp extends ConsumerStatefulWidget {
   const StartupToolkitsApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StartupToolkitsApp> createState() => _StartupToolkitsAppState();
+}
+
+class _StartupToolkitsAppState extends ConsumerState<StartupToolkitsApp>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// System language changed while the app runs (no Profile choice made).
+  @override
+  void didChangeLocales(List<Locale>? locales) {
+    if (locales != null) {
+      ref.read(systemLocalesProvider.notifier).update(locales);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ref.watch(billingSyncProvider);
     final onboarded = ref.watch(onboardingDoneProvider);
     return MaterialApp(
       onGenerateTitle: (context) => context.l10n.appName,
+      locale: ref.watch(appLocaleProvider),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      // Dark is the designed theme; light stays a placeholder until drawn.
-      themeMode: ThemeMode.dark,
+      themeMode: ref.watch(themeModeProvider),
+      // Tab screens have no app bar, so the status bar style is set here.
+      builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+        value: AppTheme.overlayStyle(Theme.of(context).brightness),
+        child: child!,
+      ),
       home: onboarded ? const AppShell() : const WelcomeScreen(),
     );
   }

@@ -40,18 +40,19 @@ class AppTokens extends ThemeExtension<AppTokens> {
     blue: Color(0xFF6C93FF),
   );
 
-  // PLACEHOLDER: light theme is not designed yet (open decision #5).
-  // Values are a neutral inversion so the app stays readable until then.
+  /// Same roles on light surfaces. The lime accent darkens to a deep green
+  /// so it still reads as text and carries white labels; every text color
+  /// clears WCAG AA (4.5:1) on every surface, checked in theme_test.dart.
   static const light = AppTokens(
-    bg: Color(0xFFF6F7FB),
+    bg: Color(0xFFF4F6FB),
     surface1: Color(0xFFFFFFFF),
-    surface2: Color(0xFFE9ECF5),
-    border: Color(0xFFD5DAE8),
+    surface2: Color(0xFFEBEEF5),
+    border: Color(0xFFD3D8E6),
     text: Color(0xFF0B1020),
-    muted: Color(0xFF5A6380),
-    accent: Color(0xFF5E9E1A),
+    muted: Color(0xFF525B78),
+    accent: Color(0xFF3D7A0E),
     onAccent: Color(0xFFFFFFFF),
-    blue: Color(0xFF3D6BEB),
+    blue: Color(0xFF2D5BD6),
   );
 
   @override

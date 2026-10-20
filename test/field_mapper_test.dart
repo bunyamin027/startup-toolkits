@@ -117,7 +117,7 @@ void main() {
     final p = const Project()
         .withValue(ProjectField.startupName, 'Rocketly')
         .withValue(ProjectField.problem, 'Too many tools');
-    expect(p.brief, 'Startup name: Rocketly\nProblem: Too many tools');
+    expect(p.brief(), 'Startup name: Rocketly\nProblem: Too many tools');
     expect(p.completion, closeTo(2 / 13, 1e-9));
   });
 }

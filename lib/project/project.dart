@@ -55,10 +55,11 @@ class Project {
 
   Project withGoal(Goal? goal) => Project(values: values, goal: goal);
 
-  /// Plain-text summary for "Copy project brief" (§5).
-  String get brief => [
+  /// Plain-text summary for "Copy project brief" (§5), with field names
+  /// from [label] (the screen's language; English by default).
+  String brief([String Function(ProjectField)? label]) => [
     for (final f in ProjectField.values)
-      if (isFilled(f)) '${f.label}: ${this[f].trim()}',
+      if (isFilled(f)) '${label?.call(f) ?? f.label}: ${this[f].trim()}',
   ].join('\n');
 
   Map<String, Object?> toJson() => {

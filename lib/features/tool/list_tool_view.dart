@@ -45,7 +45,9 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
         backgroundColor: t.accent,
         foregroundColor: t.onAccent,
         icon: const Icon(Icons.add),
-        label: Text(context.l10n.listAddItem(tool.itemLabel.toLowerCase())),
+        label: Text(
+          context.l10n.listAddItem(nounIn(tool.itemLabel, tool.language)),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,7 +67,7 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
                 ),
                 for (final s in tool.stages)
                   _StageChip(
-                    label: s,
+                    label: tool.stageLabel(s),
                     count: counts[s]!,
                     selected: _stage == s,
                     onTap: () => setState(() => _stage = s),
@@ -178,7 +180,7 @@ String itemDetails(ToolDef tool, ListItem item) => [
   for (final f in tool.fields)
     if (fieldText(item.fields[f.key]).trim().isNotEmpty)
       f.isNumeric
-          ? formatFieldValue(f, item.fields[f.key])
+          ? formatFieldValue(f, item.fields[f.key], Fmt.of(tool.language))
           : fieldText(item.fields[f.key]),
 ].join(' · ');
 
@@ -228,7 +230,8 @@ class _Totals extends StatelessWidget {
     final parts = [
       for (final s in tool.stages)
         if (ListEngine.inStage(items, s).isNotEmpty)
-          '$s ${Fmt.money(ListEngine.total(items, field.key, stage: s))}',
+          '${tool.stageLabel(s)} '
+              '${Fmt.of(tool.language).money(ListEngine.total(items, field.key, stage: s))}',
     ];
     if (parts.isEmpty) return const SizedBox.shrink();
     return Padding(
@@ -299,7 +302,7 @@ class _ItemCard extends StatelessWidget {
                     if (showStage) ...[
                       const SizedBox(height: 6),
                       Text(
-                        item.stage.toUpperCase(),
+                        upperIn(tool.stageLabel(item.stage), tool.language),
                         style: text.labelSmall?.copyWith(color: t.blue),
                       ),
                     ],
@@ -308,7 +311,7 @@ class _ItemCard extends StatelessWidget {
               ),
               if (next != null)
                 IconButton(
-                  tooltip: context.l10n.listMoveTo(next),
+                  tooltip: context.l10n.listMoveTo(tool.stageLabel(next)),
                   onPressed: onAdvance,
                   icon: Icon(Icons.arrow_forward_rounded, color: t.accent),
                 )
@@ -339,7 +342,10 @@ class _DeleteBackground extends StatelessWidget {
         color: Theme.of(context).colorScheme.error,
         borderRadius: BorderRadius.circular(AppRadius.chip),
       ),
-      child: const Icon(Icons.delete_outline, color: Colors.white),
+      child: Icon(
+        Icons.delete_outline,
+        color: Theme.of(context).colorScheme.onError,
+      ),
     );
   }
 }
@@ -358,7 +364,7 @@ class _Empty extends StatelessWidget {
         child: Text(
           stage == null
               ? context.l10n.listEmpty
-              : context.l10n.listEmptyStage(stage!),
+              : context.l10n.listEmptyStage(tool.stageLabel(stage!)),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall,
         ),
@@ -374,11 +380,11 @@ class _CopyBar extends ConsumerWidget {
   final List<ListItem> items;
 
   String get _text => [
-    tool.name.toUpperCase(),
+    upperIn(tool.name, tool.language),
     for (final s in tool.stages)
       if (ListEngine.inStage(items, s).isNotEmpty) ...[
         '',
-        s.toUpperCase(),
+        upperIn(tool.stageLabel(s), tool.language),
         for (final i in ListEngine.inStage(items, s))
           [
             '• ${i.title}',
@@ -494,6 +500,7 @@ class _ItemEditorState extends State<_ItemEditor> {
       label: context.l10n.listStage,
       type: FieldType.choice,
       options: tool.stages,
+      optionLabels: tool.stageLabels,
     );
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
@@ -509,8 +516,12 @@ class _ItemEditorState extends State<_ItemEditor> {
           children: [
             Text(
               editing
-                  ? context.l10n.listEditItem(tool.itemLabel.toLowerCase())
-                  : context.l10n.listNewItem(tool.itemLabel.toLowerCase()),
+                  ? context.l10n.listEditItem(
+                      nounIn(tool.itemLabel, tool.language),
+                    )
+                  : context.l10n.listNewItem(
+                      nounIn(tool.itemLabel, tool.language),
+                    ),
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontSize: 22),
@@ -533,6 +544,7 @@ class _ItemEditorState extends State<_ItemEditor> {
                   label: f.label,
                   type: f.type,
                   options: f.options,
+                  optionLabels: f.optionLabels,
                   hint:
                       f.hint ??
                       context.l10n.commonExample(fieldText(f.defaultValue)),

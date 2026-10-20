@@ -21,10 +21,11 @@ class MyToolsScreen extends ConsumerWidget {
     ref.watch(recentToolsProvider);
     final recent = ref.read(recentToolsProvider.notifier).ordered.take(8);
     // Catalog order keeps favorites stable while starring and unstarring.
-    final favTools = allTools
+    final tools = context.tools;
+    final favTools = tools.tools
         .where((tool) => favorites.contains(tool.id))
         .toList();
-    final recentTools = [for (final id in recent) ?toolById(id)];
+    final recentTools = [for (final id in recent) ?tools.byId(id)];
 
     return SafeArea(
       bottom: false,

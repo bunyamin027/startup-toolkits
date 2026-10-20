@@ -8,6 +8,7 @@ import 'package:startup_toolkits/core/bootstrap.dart';
 import 'package:startup_toolkits/core/theme/app_theme.dart';
 import 'package:startup_toolkits/main.dart';
 import 'package:startup_toolkits/l10n/l10n.dart';
+import 'package:startup_toolkits/l10n/locale_providers.dart';
 
 /// Logical screen sizes (points).
 const iPhone15 = Size(393, 852);
@@ -33,30 +34,39 @@ Future<ProviderContainer> pumpApp(
   Size screen = iPhone15,
   double textScale = 1,
   TextDirection? direction,
+  Locale? locale,
+  ThemeData? theme,
 }) async {
   setScreen(tester, screen, textScale);
 
   final container = ProviderContainer.test(
     overrides: [
       keyValueStoreProvider.overrideWithValue(kv ?? MemoryKeyValueStore()),
+      if (locale != null) initialLocaleProvider.overrideWithValue(locale),
       ...overrides.cast(),
     ],
   );
   await tester.pumpWidget(
     UncontrolledProviderScope(
       container: container,
-      child: MaterialApp(
-        theme: AppTheme.dark,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: home,
-        // Tests run with Reduce Motion so endless pulses let pumpAndSettle
-        // finish and numbers show their final value at once.        // [direction] forces RTL before an RTL language ships.
-        builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(context).copyWith(disableAnimations: true),
-          child: Directionality(
-            textDirection: direction ?? Directionality.of(context),
-            child: child!,
+      // The language comes from the providers, as in the app, so tests can
+      // switch it while a screen is open.
+      child: Consumer(
+        builder: (context, ref, _) => MaterialApp(
+          theme: theme ?? AppTheme.dark,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: ref.watch(appLocaleProvider),
+          home: home,
+          // Tests run with Reduce Motion so endless pulses let pumpAndSettle
+          // finish and numbers show their final value at once.
+          // [direction] forces RTL before an RTL language ships.
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(disableAnimations: true),
+            child: Directionality(
+              textDirection: direction ?? Directionality.of(context),
+              child: child!,
+            ),
           ),
         ),
       ),

@@ -1,18 +1,40 @@
 import 'package:flutter/widgets.dart';
 
+import '../core/format.dart';
 import '../project/launch_path.dart';
 import '../project/project.dart';
+import '../tools/catalog/catalog.dart';
 import '../tools/tool_def.dart';
 import 'app_localizations.dart';
 
 export 'app_localizations.dart';
 
-/// UI strings live in `app_*.arb` (master plan §9). Domain enums keep an
-/// English `label` for copied text and tests; screens show the localized
-/// names below.
+/// UI strings live in `app_*.arb` (master plan §9), tool text in
+/// `tools/l10n/`. Domain enums keep an English `label` for tests; screens
+/// and copied text use the localized names below.
 extension L10nContext on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this);
+
+  /// The 45 tools in the current language. Reading it subscribes the widget
+  /// to locale changes, so tool text switches with the language at once.
+  ToolCatalog get tools =>
+      ToolCatalog.of(Localizations.localeOf(this).languageCode);
+
+  /// Number formatting in the current language.
+  Fmt get fmt => Fmt.of(Localizations.localeOf(this).languageCode);
 }
+
+/// [text] in capitals, with Turkish dotted and dotless i kept apart.
+String upperIn(String text, String language) => language == 'tr'
+    ? text.replaceAll('i', 'İ').replaceAll('ı', 'I').toUpperCase()
+    : text.toUpperCase();
+
+/// A noun inside a sentence ("Add investor"). German keeps its capital.
+String nounIn(String noun, String language) => switch (language) {
+  'de' => noun,
+  'tr' => noun.replaceAll('I', 'ı').replaceAll('İ', 'i').toLowerCase(),
+  _ => noun.toLowerCase(),
+};
 
 extension DomainLabels on AppLocalizations {
   String goal(Goal g) => switch (g) {

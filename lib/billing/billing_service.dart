@@ -23,20 +23,23 @@ class PlanOffer {
   final PlanPeriod period;
   final double price;
 
-  /// Localized full price, e.g. "$79.99".
+  /// Localized full price, e.g. "$49.99".
   final String priceString;
   final String currencyCode;
 
   /// Length of the free intro offer, when the user is eligible for it.
   final int? freeTrialDays;
 
-  /// Monthly equivalent price of a yearly plan ("$6.67"), shown smaller
+  /// Monthly equivalent price of a yearly plan ("$4.17"), shown smaller
   /// than the billed amount. Formatted with the currency code because the
   /// store does not localize derived prices.
-  String? get monthlyEquivalent {
+  String? get monthlyEquivalent => monthlyEquivalentIn(Fmt.en);
+
+  /// [monthlyEquivalent] with the number in the language of [fmt].
+  String? monthlyEquivalentIn(Fmt fmt) {
     if (period != PlanPeriod.yearly) return null;
     return '${currencyCode == 'USD' ? r'$' : '$currencyCode '}'
-        '${Fmt.number(price / 12, decimals: 2)}';
+        '${fmt.number(price / 12, decimals: 2)}';
   }
 }
 
@@ -107,7 +110,7 @@ class UnavailableBillingService extends BillingService {
   Future<bool> restore() async => false;
 }
 
-/// Debug-only store with the plan's assumed prices ($9.99 / $79.99, 14-day
+/// Debug-only store with the launch prices ($6.99 / $49.99, 14-day
 /// trial), so the paywall can be built and tested before App Store Connect
 /// products exist. Purchases succeed after a short delay and live in memory.
 class PreviewBillingService extends BillingService {
@@ -131,16 +134,16 @@ class PreviewBillingService extends BillingService {
     PlanOffer(
       id: 'preview_yearly',
       period: PlanPeriod.yearly,
-      price: 79.99,
-      priceString: r'$79.99',
+      price: 49.99,
+      priceString: r'$49.99',
       currencyCode: 'USD',
       freeTrialDays: 14,
     ),
     PlanOffer(
       id: 'preview_monthly',
       period: PlanPeriod.monthly,
-      price: 9.99,
-      priceString: r'$9.99',
+      price: 6.99,
+      priceString: r'$6.99',
       currencyCode: 'USD',
       freeTrialDays: 14,
     ),

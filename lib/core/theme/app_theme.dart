@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app_tokens.dart';
 
@@ -7,6 +8,12 @@ import 'app_tokens.dart';
 abstract final class AppTheme {
   static ThemeData get dark => _build(AppTokens.dark, Brightness.dark);
   static ThemeData get light => _build(AppTokens.light, Brightness.light);
+
+  /// Status bar icons that stay visible on the theme's background.
+  static SystemUiOverlayStyle overlayStyle(Brightness brightness) =>
+      brightness == Brightness.dark
+      ? SystemUiOverlayStyle.light
+      : SystemUiOverlayStyle.dark;
 
   static ThemeData _build(AppTokens t, Brightness brightness) {
     final scheme = ColorScheme(
@@ -19,7 +26,11 @@ abstract final class AppTheme {
       onSurface: t.text,
       surfaceContainerHighest: t.surface2,
       outline: t.border,
-      error: const Color(0xFFFF6B6B),
+      // Light red on dark, deeper red on light; both pass 4.5:1 as text and
+      // with onError (the accent's label color) on top.
+      error: brightness == Brightness.dark
+          ? const Color(0xFFFF6B6B)
+          : const Color(0xFFC62F2F),
       onError: t.onAccent,
     );
 
@@ -117,6 +128,7 @@ abstract final class AppTheme {
         ),
       ),
       appBarTheme: AppBarTheme(
+        systemOverlayStyle: overlayStyle(brightness),
         backgroundColor: t.bg,
         foregroundColor: t.text,
         elevation: 0,

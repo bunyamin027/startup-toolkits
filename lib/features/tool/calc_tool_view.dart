@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/format.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../core/widgets/motion.dart';
@@ -29,6 +30,7 @@ class CalcToolView extends ConsumerWidget {
 
     final notifier = ref.read(toolValuesProvider(tool.id).notifier);
     final result = CalcEngine.run(tool.formula!, values);
+    final fmt = Fmt.of(tool.language);
     final heroKey = tool.heroOutput ?? result.outputs.first.key;
     final hero = result.outputs.firstWhere((o) => o.key == heroKey);
     final rest = result.outputs.where((o) => o.key != heroKey).toList();
@@ -46,7 +48,14 @@ class CalcToolView extends ConsumerWidget {
             children: [
               RiseIn(
                 index: 0,
-                child: _Hero(output: hero, verdict: result.verdict),
+                child: _Hero(
+                  output: hero,
+                  label: tool.outputLabel(hero.key, hero.label),
+                  fmt: fmt,
+                  verdict: result.verdict == null
+                      ? null
+                      : tool.verdict(result.verdict!),
+                ),
               ),
               const SizedBox(height: AppSpace.gapL),
               if (rest.isNotEmpty)
@@ -62,7 +71,10 @@ class CalcToolView extends ConsumerWidget {
                         for (var i = 0; i < rest.length; i++) ...[
                           if (i > 0)
                             Divider(height: 1, color: context.tokens.border),
-                          _ResultRow(output: rest[i]),
+                          _ResultRow(
+                            label: tool.outputLabel(rest[i].key, rest[i].label),
+                            value: rest[i].formatIn(fmt),
+                          ),
                         ],
                       ],
                     ),
@@ -98,7 +110,7 @@ class CalcToolView extends ConsumerWidget {
         ),
         ToolActionBar(
           toolId: tool.id,
-          text: _summary(result, values),
+          text: _summary(result, values, fmt),
           subject: tool.name,
           onSaveToProject: saveToProjectAction(context, ref, tool),
         ),
@@ -106,35 +118,42 @@ class CalcToolView extends ConsumerWidget {
     );
   }
 
-  String _summary(CalcResult result, Map<String, Object?> values) {
+  String _summary(CalcResult result, Map<String, Object?> values, Fmt fmt) {
     final lines = [
-      tool.name.toUpperCase(),
+      upperIn(tool.name, tool.language),
       '',
       for (final f in tool.fields)
-        '${f.label}: ${formatFieldValue(f, values[f.key])}',
+        '${f.label}: ${formatFieldValue(f, values[f.key], fmt)}',
       '',
-      for (final o in result.outputs) '${o.label}: ${o.display}',
-      if (result.verdict != null) ...['', result.verdict!],
+      for (final o in result.outputs)
+        '${tool.outputLabel(o.key, o.label)}: ${o.formatIn(fmt)}',
+      if (result.verdict != null) ...['', tool.verdict(result.verdict!)],
     ];
     return lines.join('\n');
   }
 }
 
 class _Hero extends StatelessWidget {
-  const _Hero({required this.output, this.verdict});
+  const _Hero({
+    required this.output,
+    required this.label,
+    required this.fmt,
+    this.verdict,
+  });
 
   final CalcOutput output;
+  final String label;
+  final Fmt fmt;
   final String? verdict;
 
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
     final text = Theme.of(context).textTheme;
-    String format(double v) =>
-        CalcOutput(output.key, output.label, v, output.format).display;
+    String format(double v) => output.formatValue(v, fmt);
 
     final number = Semantics(
-      label: '${output.label}: ${output.display}',
+      label: '$label: ${output.formatIn(fmt)}',
       excludeSemantics: true,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -147,7 +166,7 @@ class _Hero extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(output.label, style: text.bodySmall),
+          Text(label, style: text.bodySmall),
         ],
       ),
     );
@@ -193,9 +212,10 @@ class _Hero extends StatelessWidget {
 }
 
 class _ResultRow extends StatelessWidget {
-  const _ResultRow({required this.output});
+  const _ResultRow({required this.label, required this.value});
 
-  final CalcOutput output;
+  final String label;
+  final String value;
 
   @override
   Widget build(BuildContext context) {
@@ -205,11 +225,11 @@ class _ResultRow extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 48),
         child: Row(
           children: [
-            Expanded(child: Text(output.label, style: text.bodyMedium)),
+            Expanded(child: Text(label, style: text.bodyMedium)),
             const SizedBox(width: AppSpace.gapS),
             Flexible(
               child: Text(
-                output.display,
+                value,
                 textAlign: TextAlign.end,
                 style: text.titleLarge?.copyWith(fontSize: 17),
               ),

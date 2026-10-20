@@ -27,8 +27,11 @@ class _CatalogScreenState extends State<CatalogScreen> {
   bool _matches(ToolDef t) {
     final q = _query.trim().toLowerCase();
     if (q.isEmpty) return true;
+    // English names match too, so "NDA" or "runway" work in any language.
+    final english = toolById(t.id)!;
     return t.name.toLowerCase().contains(q) ||
         t.description.toLowerCase().contains(q) ||
+        english.name.toLowerCase().contains(q) ||
         context.l10n.category(t.category).toLowerCase().contains(q);
   }
 
@@ -36,7 +39,10 @@ class _CatalogScreenState extends State<CatalogScreen> {
   Widget build(BuildContext context) {
     final sections = [
       for (final c in ToolCategory.values)
-        (context.l10n.category(c), toolsIn(c).where(_matches).toList()),
+        (
+          context.l10n.category(c),
+          context.tools.inCategory(c).where(_matches).toList(),
+        ),
     ].where((s) => s.$2.isNotEmpty).toList();
 
     return Scaffold(

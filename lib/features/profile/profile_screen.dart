@@ -11,6 +11,7 @@ import '../../billing/entitlement_providers.dart';
 import '../../core/app_info.dart';
 import '../../core/bootstrap.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../core/theme/theme_providers.dart';
 import '../../core/widgets/app_card.dart';
 import '../../project/project_providers.dart';
 import '../home/home_screen.dart';
@@ -18,6 +19,7 @@ import '../paywall/paywall_screen.dart';
 import '../tool/tool_actions.dart';
 import '../project/project_sheets.dart';
 import '../../l10n/l10n.dart';
+import '../../l10n/locale_providers.dart';
 import '../../tools/catalog/catalog.dart';
 
 /// Plan, preferences, legal links and local data.
@@ -31,6 +33,8 @@ class ProfileScreen extends ConsumerWidget {
     final e = ref.watch(entitlementProvider);
     final now = ref.watch(clockProvider)();
     final goal = ref.watch(projectProvider.select((p) => p.goal));
+    final picked = ref.watch(localeProvider);
+    final themeMode = ref.watch(themeModeProvider);
     final l = context.l10n;
 
     final planText = switch (e.level(now)) {
@@ -93,14 +97,41 @@ class ProfileScreen extends ConsumerWidget {
               _Row(
                 icon: Icons.language,
                 title: l.profileLanguage,
-                value: l.profileLanguageValue,
-                note: l.profileLanguageNote,
+                value: picked == null
+                    ? l.profileLanguageSystem
+                    : languageNames[picked.languageCode],
+                onTap: () => showSheet(
+                  context,
+                  _PickSheet<String?>(
+                    title: l.profileLanguage,
+                    options: [
+                      (null, l.profileLanguageSystem),
+                      for (final MapEntry(:key, :value)
+                          in languageNames.entries)
+                        (key, value),
+                    ],
+                    current: picked?.languageCode,
+                    onPick: (code) => ref
+                        .read(localeProvider.notifier)
+                        .set(code == null ? null : Locale(code)),
+                  ),
+                ),
               ),
               _Row(
                 icon: Icons.dark_mode_outlined,
                 title: l.profileAppearance,
-                value: l.profileAppearanceValue,
-                note: l.profileAppearanceNote,
+                value: _appearance(l, themeMode),
+                onTap: () => showSheet(
+                  context,
+                  _PickSheet<ThemeMode>(
+                    title: l.profileAppearance,
+                    options: [
+                      for (final m in ThemeMode.values) (m, _appearance(l, m)),
+                    ],
+                    current: themeMode,
+                    onPick: ref.read(themeModeProvider.notifier).set,
+                  ),
+                ),
               ),
               _Row(
                 icon: Icons.motion_photos_off_outlined,
@@ -164,6 +195,13 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
+  static String _appearance(AppLocalizations l, ThemeMode mode) =>
+      switch (mode) {
+        ThemeMode.system => l.profileAppearanceSystem,
+        ThemeMode.dark => l.profileAppearanceDark,
+        ThemeMode.light => l.profileAppearanceLight,
+      };
+
   static String get _manageUrl =>
       defaultTargetPlatform == TargetPlatform.android
       ? 'https://play.google.com/store/account/subscriptions'
@@ -214,6 +252,62 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
     if (ok == true) await ref.read(deleteAllDataProvider)();
+  }
+}
+
+/// One-choice sheet for Profile settings (language, appearance).
+class _PickSheet<T> extends StatelessWidget {
+  const _PickSheet({
+    required this.title,
+    required this.options,
+    required this.current,
+    required this.onPick,
+  });
+
+  final String title;
+  final List<(T, String)> options;
+  final T current;
+  final ValueChanged<T> onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          AppSpace.edge,
+          20,
+          AppSpace.edge,
+          12,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              title,
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontSize: 22),
+            ),
+            const SizedBox(height: 12),
+            for (final (value, label) in options)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(label),
+                selected: value == current,
+                trailing: value == current
+                    ? Icon(Icons.check_rounded, color: t.accent)
+                    : null,
+                onTap: () {
+                  onPick(value);
+                  Navigator.pop(context);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -273,8 +367,21 @@ class _Row extends StatelessWidget {
           : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Capped so long translations wrap instead of crowding
+                // out the title.
                 if (value != null)
-                  Text(value!, style: TextStyle(color: t.muted, fontSize: 15)),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.sizeOf(context).width * 0.4,
+                    ),
+                    child: Text(
+                      value!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: TextStyle(color: t.muted, fontSize: 15),
+                    ),
+                  ),
                 if (onTap != null && !danger)
                   Icon(Icons.chevron_right, color: t.muted),
               ],

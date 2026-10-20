@@ -57,6 +57,8 @@ class FieldDef {
     this.step,
     this.options = const [],
     this.autofill = true,
+    this.baseLabel,
+    this.optionLabels = const {},
   });
 
   /// Identifier used in templates (`{key}`) and formulas.
@@ -76,6 +78,37 @@ class FieldDef {
 
   /// False opts this field out of project auto-fill even if its label matches.
   final bool autofill;
+
+  /// English label of a translated field; the field mapper matches on it.
+  final String? baseLabel;
+
+  /// Translated names of [options]. Values stay English, since templates
+  /// and saved inputs refer to them.
+  final Map<String, String> optionLabels;
+
+  String get mappingLabel => baseLabel ?? label;
+
+  String optionLabel(String option) => optionLabels[option] ?? option;
+
+  FieldDef copyWith({
+    String? label,
+    String? hint,
+    Object? defaultValue,
+    Map<String, String>? optionLabels,
+  }) => FieldDef(
+    key: key,
+    label: label ?? this.label,
+    type: type,
+    defaultValue: defaultValue ?? this.defaultValue,
+    hint: hint ?? this.hint,
+    min: min,
+    max: max,
+    step: step,
+    options: options,
+    autofill: autofill,
+    baseLabel: label == null ? baseLabel : mappingLabel,
+    optionLabels: optionLabels ?? this.optionLabels,
+  );
 
   bool get isNumeric => switch (type) {
     FieldType.number ||
@@ -126,6 +159,10 @@ class ToolDef {
     this.totalField,
     this.samples = const [],
     this.endStages = const {},
+    this.language = 'en',
+    this.stageLabels = const {},
+    this.outputLabels = const {},
+    this.verdictLabels = const {},
   });
 
   final String id;
@@ -160,6 +197,63 @@ class ToolDef {
   /// List: outcome stages items do not advance from (Committed / Passed,
   /// Won / Lost). The last stage is always an end stage.
   final Set<String> endStages;
+
+  /// Language of the visible text below; see `tools/l10n/`.
+  final String language;
+
+  /// Translated stage names. Stages stay English in saved items.
+  final Map<String, String> stageLabels;
+
+  /// Calc: translated output labels by output key, and verdicts by their
+  /// English text.
+  final Map<String, String> outputLabels;
+  final Map<String, String> verdictLabels;
+
+  String stageLabel(String stage) => stageLabels[stage] ?? stage;
+
+  String outputLabel(String key, String fallback) =>
+      outputLabels[key] ?? fallback;
+
+  String verdict(String english) => verdictLabels[english] ?? english;
+
+  /// Same tool with translated text; ids, numbers and logic are kept.
+  ToolDef translated({
+    required String language,
+    required String name,
+    required String description,
+    required List<FieldDef> fields,
+    String? template,
+    Map<String, String>? templates,
+    String? itemLabel,
+    List<SampleItem>? samples,
+    Map<String, String> stageLabels = const {},
+    Map<String, String> outputLabels = const {},
+    Map<String, String> verdictLabels = const {},
+  }) => ToolDef(
+    id: id,
+    name: name,
+    category: category,
+    kind: kind,
+    description: description,
+    icon: icon,
+    fields: fields,
+    goals: goals,
+    formula: formula,
+    template: template ?? this.template,
+    templates: templates ?? this.templates,
+    templateField: templateField,
+    stages: stages,
+    legalDisclaimer: legalDisclaimer,
+    heroOutput: heroOutput,
+    itemLabel: itemLabel ?? this.itemLabel,
+    totalField: totalField,
+    samples: samples ?? this.samples,
+    endStages: endStages,
+    language: language,
+    stageLabels: stageLabels,
+    outputLabels: outputLabels,
+    verdictLabels: verdictLabels,
+  );
 
   bool isEndStage(String stage) =>
       stage == stages.last || endStages.contains(stage);

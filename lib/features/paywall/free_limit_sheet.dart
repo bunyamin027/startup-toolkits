@@ -7,7 +7,6 @@ import '../../billing/entitlement.dart';
 import '../../billing/entitlement_providers.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/motion.dart';
-import '../../tools/catalog/catalog.dart';
 import 'paywall_screen.dart';
 import '../../l10n/l10n.dart';
 
@@ -70,7 +69,7 @@ class _FreeLimitSheetState extends ConsumerState<FreeLimitSheet> {
     final minutes = left.inMinutes % 60;
     final today = widget.todaysToolId == null
         ? null
-        : toolById(widget.todaysToolId!);
+        : context.tools.byId(widget.todaysToolId!);
 
     return SingleChildScrollView(
       padding: const EdgeInsetsDirectional.fromSTEB(

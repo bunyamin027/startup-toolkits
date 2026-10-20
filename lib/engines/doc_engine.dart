@@ -20,14 +20,45 @@ abstract final class DocEngine {
   static const legalNotice =
       'Template only, not legal advice. Have a lawyer review it before use.';
 
+  static const _legalNotices = {
+    'en': legalNotice,
+    'tr':
+        'Yalnızca şablondur, hukuki tavsiye değildir. Kullanmadan önce bir avukata inceletin.',
+    'fr':
+        'Modèle uniquement, pas un conseil juridique. Faites-le relire par un avocat avant usage.',
+    'es':
+        'Solo es una plantilla, no asesoramiento legal. Haz que un abogado la revise antes de usarla.',
+    'de':
+        'Nur eine Vorlage, keine Rechtsberatung. Lass sie vor der Nutzung von einer Anwältin oder einem Anwalt prüfen.',
+  };
+
+  /// [legalNotice] in [language]; English when there is no translation.
+  static String legalNoticeIn(String language) =>
+      _legalNotices[language] ?? legalNotice;
+
   static final _placeholder = RegExp(r'\{(=?)([^{}]+)\}');
 
-  /// Picks the template for the tool's current choice and renders it.
+  /// Picks the template for the tool's current choice and renders it in
+  /// the tool's language.
   static String renderTool(ToolDef tool, Map<String, Object?> values) {
     final template = templateFor(tool, values);
     final labels = {for (final f in tool.fields) f.key: f.label};
-    final body = render(template, values, labels: labels);
-    return tool.legalDisclaimer ? '$body\n\n$legalNotice' : body;
+    // Choices are stored in English; the text shows them translated.
+    final shown = {
+      ...values,
+      for (final f in tool.fields)
+        if (f.type == FieldType.choice && values[f.key] is String)
+          f.key: f.optionLabel(values[f.key]! as String),
+    };
+    final body = render(
+      template,
+      shown,
+      labels: labels,
+      fmt: Fmt.of(tool.language),
+    );
+    return tool.legalDisclaimer
+        ? '$body\n\n${legalNoticeIn(tool.language)}'
+        : body;
   }
 
   static String templateFor(ToolDef tool, Map<String, Object?> values) {
@@ -43,18 +74,20 @@ abstract final class DocEngine {
     String template,
     Map<String, Object?> values, {
     Map<String, String> labels = const {},
+    Fmt? fmt,
   }) {
     final inputs = Inputs(values);
+    final f = fmt ?? Fmt.en;
     return template.replaceAllMapped(_placeholder, (m) {
       final body = m[2]!.trim();
-      if (m[1] == '=') return _evaluate(body, inputs);
+      if (m[1] == '=') return _evaluate(body, inputs, f);
       final pipe = body.indexOf('|');
       final key = pipe < 0 ? body : body.substring(0, pipe).trim();
       final value = _text(values[key]);
       if (value.isEmpty) return '[${labels[key] ?? key}]';
       return pipe < 0
           ? value
-          : applyFilter(body.substring(pipe + 1).trim(), value);
+          : applyFilter(body.substring(pipe + 1).trim(), value, f);
     });
   }
 
@@ -65,7 +98,8 @@ abstract final class DocEngine {
     return raw?.toString().trim() ?? '';
   }
 
-  static String applyFilter(String filter, String value) {
+  static String applyFilter(String filter, String value, [Fmt? fmt]) {
+    final f = fmt ?? Fmt.en;
     final words = value.split(RegExp(r'\s+')).where((w) => w.isNotEmpty);
     String cap(String w) => w[0].toUpperCase() + w.substring(1);
     return switch (filter) {
@@ -73,11 +107,9 @@ abstract final class DocEngine {
       'lower' => value.toLowerCase(),
       'upper' => value.toUpperCase(),
       'tag' => words.map(cap).join().replaceAll(RegExp(r'[^\w]'), ''),
-      'slug' =>
-        value
-            .toLowerCase()
-            .replaceAll(RegExp(r'[^a-z0-9]+'), '-')
-            .replaceAll(RegExp(r'^-|-$'), ''),
+      'slug' => _ascii(
+        value.toLowerCase(),
+      ).replaceAll(RegExp(r'[^a-z0-9]+'), '-').replaceAll(RegExp(r'^-|-$'), ''),
       'first' => words.first,
       'bullets' =>
         value
@@ -86,11 +118,43 @@ abstract final class DocEngine {
             .where((l) => l.isNotEmpty)
             .map((l) => '• $l')
             .join('\n'),
-      'money' => Fmt.money(Inputs.toNumber(value) ?? 0),
-      'number' => Fmt.number(Inputs.toNumber(value) ?? 0),
+      'money' => f.money(Inputs.toNumber(value) ?? 0),
+      'number' => f.number(Inputs.toNumber(value) ?? 0),
       _ => throw FormatException('Unknown filter "$filter"'),
     };
   }
+
+  static const _accents = {
+    'à': 'a',
+    'á': 'a',
+    'â': 'a',
+    'ä': 'a',
+    'ç': 'c',
+    'è': 'e',
+    'é': 'e',
+    'ê': 'e',
+    'ë': 'e',
+    'ğ': 'g',
+    'ı': 'i',
+    'î': 'i',
+    'ï': 'i',
+    'í': 'i',
+    'ñ': 'n',
+    'ó': 'o',
+    'ô': 'o',
+    'ö': 'o',
+    'ş': 's',
+    'ß': 'ss',
+    'ù': 'u',
+    'ú': 'u',
+    'û': 'u',
+    'ü': 'u',
+    'œ': 'oe',
+  };
+
+  /// Slugs stay readable in every language: "Çiçek" -> "cicek".
+  static String _ascii(String value) =>
+      value.split('').map((c) => _accents[c] ?? c).join();
 
   /// Keys referenced by `{key}` / `{key|filter}` placeholders, for catalog
   /// tests that check every placeholder has a field.
@@ -113,16 +177,16 @@ abstract final class DocEngine {
     return out;
   }
 
-  static String _evaluate(String body, Inputs inputs) {
+  static String _evaluate(String body, Inputs inputs, Fmt fmt) {
     final pipe = body.lastIndexOf('|');
     final expr = pipe < 0 ? body : body.substring(0, pipe);
     final format = pipe < 0 ? 'number' : body.substring(pipe + 1).trim();
     final value = evaluate(expr, inputs);
     return switch (format) {
-      'money' => Fmt.money(value),
-      'percent' => Fmt.percent(value),
-      'int' => Fmt.number(value),
-      'number' => Fmt.number(
+      'money' => fmt.money(value),
+      'percent' => fmt.percent(value),
+      'int' => fmt.number(value),
+      'number' => fmt.number(
         value,
         decimals: value == value.roundToDouble() ? 0 : 2,
       ),

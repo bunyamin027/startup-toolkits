@@ -41,7 +41,7 @@ class _ToolScreenState extends ConsumerState<ToolScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final tool = toolById(toolId);
+    final tool = context.tools.byId(toolId);
     if (tool == null) {
       return Scaffold(
         appBar: AppBar(),

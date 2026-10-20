@@ -8,7 +8,6 @@ import '../../project/field_mapper.dart';
 import '../../project/launch_path.dart';
 import '../../project/project.dart';
 import '../../project/project_providers.dart';
-import '../../tools/catalog/catalog.dart';
 import '../../tools/tool_def.dart';
 import '../../tools/tool_providers.dart';
 import '../common/tool_tile.dart';
@@ -165,7 +164,10 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                         TextButton.icon(
                           onPressed: project.filledCount == 0
                               ? null
-                              : () => copyText(context, project.brief),
+                              : () => copyText(
+                                  context,
+                                  project.brief(context.l10n.field),
+                                ),
                           icon: const Icon(Icons.copy, size: 18),
                           label: Text(context.l10n.projectCopyBrief),
                           style: TextButton.styleFrom(padding: EdgeInsets.zero),
@@ -258,7 +260,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
   /// Tools with project fields, most filled first.
   List<(ToolDef, int, int)> _toolsByFill(Project project) {
     final rows = <(ToolDef, int, int)>[];
-    for (final tool in allTools) {
+    for (final tool in context.tools.tools) {
       if (tool.kind == ToolKind.list) continue;
       final mapped = {for (final f in tool.fields) ?FieldMapper.match(f)};
       if (mapped.isEmpty) continue;

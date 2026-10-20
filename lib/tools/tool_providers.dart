@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/storage/storage_providers.dart';
 import '../engines/list_engine.dart';
+import '../l10n/locale_providers.dart';
 import '../project/field_mapper.dart';
 import '../project/project_providers.dart';
 import 'catalog/catalog.dart';
@@ -34,6 +36,8 @@ class FavoritesNotifier extends Notifier<Set<String>> {
 /// Opening order: example data, then the user's last values, then project
 /// data (the project wins, since edits sync into it as they happen).
 /// Auto-disposed so a reopened tool picks up project changes made elsewhere.
+/// Rebuilds on a language change: saved values that are still an example
+/// (in any language) give way to the example in the new language.
 final toolValuesProvider = AsyncNotifierProvider.autoDispose
     .family<ToolValuesNotifier, Map<String, Object?>, String>(
       ToolValuesNotifier.new,
@@ -44,16 +48,24 @@ class ToolValuesNotifier extends AsyncNotifier<Map<String, Object?>> {
 
   final String toolId;
 
-  ToolDef get tool => toolById(toolId)!;
+  /// The tool in the current language.
+  ToolDef get tool =>
+      ToolCatalog.of(ref.read(appLocaleProvider).languageCode).byId(toolId)!;
 
   ToolValuesStore get _store =>
       ToolValuesStore(ref.read(keyValueStoreProvider));
 
   @override
   Future<Map<String, Object?>> build() async {
-    final saved = await _store.load(toolId);
+    ref.watch(appLocaleProvider);
+    final tool = this.tool;
+    final saved = await _store.load(toolId) ?? const {};
+    final edited = {
+      for (final e in saved.entries)
+        if (!examplesOf(toolId, e.key).contains(e.value)) e.key: e.value,
+    };
     final project = ref.read(projectProvider);
-    return {...tool.defaults, ...?saved, ...FieldMapper.prefill(tool, project)};
+    return {...tool.defaults, ...edited, ...FieldMapper.prefill(tool, project)};
   }
 
   void set(String key, Object? value) {
@@ -83,7 +95,8 @@ class ToolValuesNotifier extends AsyncNotifier<Map<String, Object?>> {
   }
 }
 
-/// Items of a tracker, seeded with the tool's samples on first open.
+/// Items of a tracker, seeded with the tool's samples on first open. Sample
+/// rows the user has not changed follow the language.
 final listItemsProvider =
     AsyncNotifierProvider.family<ListItemsNotifier, List<ListItem>, String>(
       ListItemsNotifier.new,
@@ -95,22 +108,45 @@ class ListItemsNotifier extends AsyncNotifier<List<ListItem>> {
   final String toolId;
   static int _seq = 0;
 
-  ToolDef get tool => toolById(toolId)!;
+  ToolDef get tool =>
+      ToolCatalog.of(ref.read(appLocaleProvider).languageCode).byId(toolId)!;
 
   ListStore get _store => ListStore(ref.read(keyValueStoreProvider));
 
   @override
   Future<List<ListItem>> build() async {
-    return await _store.load(toolId) ??
-        [
-          for (var i = 0; i < tool.samples.length; i++)
-            ListItem(
-              id: 'sample-$i',
-              title: tool.samples[i].title,
-              stage: tool.samples[i].stage,
-              fields: tool.samples[i].fields,
-            ),
-        ];
+    ref.watch(appLocaleProvider);
+    final tool = this.tool;
+    final stored = await _store.load(toolId);
+    if (stored == null) {
+      return [
+        for (var i = 0; i < tool.samples.length; i++)
+          ListItem(
+            id: 'sample-$i',
+            title: tool.samples[i].title,
+            stage: tool.samples[i].stage,
+            fields: tool.samples[i].fields,
+          ),
+      ];
+    }
+    return [for (final item in stored) _inLanguage(item, tool)];
+  }
+
+  /// An untouched sample row in the current language; other rows as saved.
+  ListItem _inLanguage(ListItem item, ToolDef tool) {
+    final index = int.tryParse(item.id.replaceFirst('sample-', ''));
+    if (!item.id.startsWith('sample-') ||
+        index == null ||
+        index >= tool.samples.length) {
+      return item;
+    }
+    final untouched = sampleVariants(
+      toolId,
+      index,
+    ).any((s) => s.title == item.title && mapEquals(s.fields, item.fields));
+    if (!untouched) return item;
+    final sample = tool.samples[index];
+    return item.copyWith(title: sample.title, fields: sample.fields);
   }
 
   static String newId() => '${DateTime.now().microsecondsSinceEpoch}-${_seq++}';

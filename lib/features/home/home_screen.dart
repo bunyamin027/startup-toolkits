@@ -33,7 +33,10 @@ class HomeScreen extends ConsumerWidget {
     final name = project[ProjectField.startupName].trim();
     final oneLiner = project[ProjectField.oneLiner].trim();
     final recentIds = ref.read(recentToolsProvider.notifier).ordered.take(3);
-    final picks = goalPicks[project.goal]!.map((id) => toolById(id)!).toList();
+    final tools = context.tools;
+    final picks = goalPicks[project.goal]!
+        .map((id) => tools.byId(id)!)
+        .toList();
 
     var i = 0;
     Widget rise(Widget child) => RiseIn(index: i++, child: child);
@@ -109,7 +112,7 @@ class HomeScreen extends ConsumerWidget {
                 children: [
                   SectionLabel(context.l10n.homeRecentlyUsed),
                   ToolTileList(
-                    tools: [for (final id in recentIds) ?toolById(id)],
+                    tools: [for (final id in recentIds) ?tools.byId(id)],
                   ),
                 ],
               ),
@@ -445,12 +448,12 @@ class _NextStepCard extends ConsumerWidget {
         child: Text(context.l10n.homePathComplete, style: text.bodyMedium),
       );
     }
-    final tool = toolById(next.toolId)!;
+    final tool = context.tools.byId(next.toolId)!;
     final adds = next.missing.isEmpty
         ? context.l10n.homeNextFinish(context.l10n.stepName(next.step))
         : context.l10n.homeNextAdds(
             next.missing
-                .map((f) => context.l10n.field(f).toLowerCase())
+                .map((f) => nounIn(context.l10n.field(f), tool.language))
                 .join(', '),
           );
     return Material(

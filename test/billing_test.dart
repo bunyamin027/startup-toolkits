@@ -45,9 +45,9 @@ void main() {
   group('offers', () {
     test('yearly savings and monthly equivalent', () async {
       final offers = await PreviewBillingService().offers();
-      expect(yearlySavings(offers), closeTo(0.333, 0.001));
+      expect(yearlySavings(offers), closeTo(0.404, 0.001));
       final yearly = offers.firstWhere((o) => o.period == PlanPeriod.yearly);
-      expect(yearly.monthlyEquivalent, r'$6.67');
+      expect(yearly.monthlyEquivalent, r'$4.17');
       expect(
         offers
             .firstWhere((o) => o.period == PlanPeriod.monthly)
@@ -194,12 +194,12 @@ void main() {
 
       // Paywall: yearly preselected, store prices, required terms and links.
       expect(find.text('Every tool.\nEvery day.'), findsOneWidget);
-      expect(find.text('Save 33%'), findsOneWidget);
-      expect(find.text(r'$79.99/year'), findsOneWidget);
+      expect(find.text('Save 40%'), findsOneWidget);
+      expect(find.text(r'$49.99/year'), findsOneWidget);
       expect(find.text('Start 14-day free trial'), findsOneWidget);
       expect(
         find.textContaining(
-          r'14 days free, then $79.99 per year. Renews automatically',
+          r'14 days free, then $49.99 per year. Renews automatically',
         ),
         findsOneWidget,
       );
@@ -210,7 +210,7 @@ void main() {
       await scrollTo(tester, find.text('Monthly'));
       await tester.tap(find.text('Monthly'));
       await tester.pumpAndSettle();
-      expect(find.textContaining(r'then $9.99 per month'), findsOneWidget);
+      expect(find.textContaining(r'then $6.99 per month'), findsOneWidget);
       await tester.tap(find.text('Yearly'));
       await tester.pumpAndSettle();
 

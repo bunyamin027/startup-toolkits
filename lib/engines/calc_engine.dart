@@ -19,14 +19,18 @@ class CalcOutput {
   final double value;
   final ValueFormat format;
 
-  String get display => switch (format) {
-    ValueFormat.money => Fmt.money(value),
-    ValueFormat.percent => Fmt.percent(value),
-    ValueFormat.months => Fmt.months(value),
-    ValueFormat.number => Fmt.number(value, decimals: 2),
-    ValueFormat.ratio =>
-      value.isInfinite ? '∞' : '${Fmt.number(value, decimals: 1)}×',
-    ValueFormat.count => Fmt.number(value),
+  /// The value in English formatting; screens use [formatIn].
+  String get display => formatIn(Fmt.en);
+
+  String formatIn(Fmt fmt) => formatValue(value, fmt);
+
+  String formatValue(double v, Fmt fmt) => switch (format) {
+    ValueFormat.money => fmt.money(v),
+    ValueFormat.percent => fmt.percent(v),
+    ValueFormat.months => fmt.months(v),
+    ValueFormat.number => fmt.number(v, decimals: 2),
+    ValueFormat.ratio => fmt.ratio(v),
+    ValueFormat.count => fmt.number(v),
   };
 }
 
@@ -58,6 +62,19 @@ abstract final class CalcEngine {
     'abTest': abTest,
     'funnel': funnel,
   };
+
+  /// Every verdict a formula can return; tool translations cover each.
+  static const verdicts = [
+    'Profitable, no burn',
+    'Healthy (3× or more)',
+    'Below the 3× benchmark',
+    'Rough estimate only, not a valuation',
+    'Strong',
+    'Promising',
+    'Weak',
+    'Significant',
+    'Not significant yet',
+  ];
 
   static CalcResult run(String formula, Map<String, Object?> values) {
     final f = formulas[formula];

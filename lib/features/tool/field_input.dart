@@ -41,14 +41,15 @@ String fieldText(Object? value) {
   return value?.toString() ?? '';
 }
 
-/// Display text for a numeric field value ("$14,000", "80%").
-String formatFieldValue(FieldDef field, Object? value) {
+/// Display text for a numeric field value ("$14,000", "80%") in the
+/// language of [fmt].
+String formatFieldValue(FieldDef field, Object? value, Fmt fmt) {
   final n = Inputs.toNumber(value) ?? 0;
+  final decimals = n == n.roundToDouble() ? 0 : 1;
   return switch (field.type) {
-    FieldType.money => Fmt.money(n),
-    FieldType.percent =>
-      '${Fmt.number(n, decimals: n == n.roundToDouble() ? 0 : 1)}%',
-    _ => Fmt.number(n, decimals: n == n.roundToDouble() ? 0 : 1),
+    FieldType.money => fmt.money(n),
+    FieldType.percent => fmt.percent(n / 100, decimals: decimals),
+    _ => fmt.number(n, decimals: decimals),
   };
 }
 
@@ -166,7 +167,7 @@ class _SliderInput extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Center(
                       child: Text(
-                        formatFieldValue(f, n),
+                        formatFieldValue(f, n, context.fmt),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontSize: 17,
                           color: t.accent,
@@ -191,7 +192,8 @@ class _SliderInput extends StatelessWidget {
               min: f.min!,
               max: f.max!,
               divisions: divisions,
-              semanticFormatterCallback: (v) => formatFieldValue(f, v),
+              semanticFormatterCallback: (v) =>
+                  formatFieldValue(f, v, context.fmt),
               onChanged: (v) =>
                   onChanged(step != null && step >= 1 ? v.roundToDouble() : v),
             ),
@@ -264,7 +266,7 @@ class _ChoiceInput extends StatelessWidget {
           children: [
             for (final option in field.options)
               ChoiceChip(
-                label: Text(option),
+                label: Text(field.optionLabel(option)),
                 selected: option == value,
                 selectedColor: t.accent,
                 labelStyle: TextStyle(

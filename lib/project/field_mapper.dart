@@ -2,7 +2,8 @@ import '../tools/tool_def.dart';
 import 'project.dart';
 
 /// Connects tool fields to project fields by label (master plan §5), so data
-/// entered once flows into every tool and back.
+/// entered once flows into every tool and back. Matches the English label in
+/// every language.
 abstract final class FieldMapper {
   /// Checked in order; first match wins. Phrases match whole words inside the
   /// lowercased label.
@@ -37,7 +38,7 @@ abstract final class FieldMapper {
 
   static ProjectField? match(FieldDef field) {
     if (!field.autofill) return null;
-    final label = field.label.toLowerCase();
+    final label = field.mappingLabel.toLowerCase();
     for (final (target, phrases) in _rules) {
       for (final phrase in phrases) {
         if (RegExp('\\b${RegExp.escape(phrase)}\\b').hasMatch(label)) {

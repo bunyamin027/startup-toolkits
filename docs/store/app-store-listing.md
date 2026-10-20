@@ -93,8 +93,8 @@ Subscription group: **Startup Toolkits Pro**
 
 | Reference name | Product ID | Duration | Price (assumption, §6) | Intro offer |
 |---|---|---|---|---|
-| Pro Yearly | [BUNDLE PREFIX].pro.yearly | 1 year | $79.99 | Free, 2 weeks (verify the 2-week option is listed) |
-| Pro Monthly | [BUNDLE PREFIX].pro.monthly | 1 month | $9.99 | Free, 2 weeks |
+| Pro Yearly | [BUNDLE PREFIX].pro.yearly | 1 year | $49.99 | Free, 2 weeks (verify the 2-week option is listed) |
+| Pro Monthly | [BUNDLE PREFIX].pro.monthly | 1 month | $6.99 | Free, 2 weeks |
 
 Localized display name: "Startup Toolkits Pro". Description (≤55):
 "Unlimited access to all 45 founder tools" (40).

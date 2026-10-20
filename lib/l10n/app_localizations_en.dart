@@ -478,19 +478,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileLanguage => 'Language';
 
   @override
-  String get profileLanguageValue => 'English';
-
-  @override
-  String get profileLanguageNote => 'More languages are coming.';
+  String get profileLanguageSystem => 'System default';
 
   @override
   String get profileAppearance => 'Appearance';
 
   @override
-  String get profileAppearanceValue => 'Dark';
+  String get profileAppearanceSystem => 'System default';
 
   @override
-  String get profileAppearanceNote => 'A light theme is coming.';
+  String get profileAppearanceDark => 'Dark';
+
+  @override
+  String get profileAppearanceLight => 'Light';
 
   @override
   String get profileMotion => 'Motion';

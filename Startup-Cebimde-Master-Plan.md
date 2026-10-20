@@ -37,7 +37,7 @@ Referans prototipler: web prototipi (45 araç, çalışıyor) ve 6 ekranlı tık
 | Veri (v1) | Yalnızca cihazda; hesap ve sunucu yok |
 | Görsel yön | Koyu lacivert zemin, limon vurgu, sistem yazı tipi, "Mission control" konsepti |
 
-**Varsayımlar:** aylık 9,99 $, yıllık 79,99 $ (yaklaşık %33 indirim); bölgesel fiyatlandırma sonra.
+**Fiyatlar (karar):** aylık 6,99 $, yıllık 49,99 $ (yaklaşık %40 indirim); bölgesel kademeler mağazalardan.
 
 ---
 
@@ -155,7 +155,7 @@ Kurallar: iki yönlü (araçta değişen alan projeyi günceller); takip listele
 | Deneme sonrası, abone değil | Günde **1 araç**. Günün ilk açılan aracı "bugünün aracı" olur ve gün boyu sınırsız açılır; başka araca dokununca plan ekranı çıkar. Gece yarısı yenilenir |
 | Abone | Hepsi açık |
 
-**Plan ekranı:** Yıllık (varsayılan seçili, "Save 33%"), aylık; "Start 14-day free trial".
+**Plan ekranı:** Yıllık (varsayılan seçili, "Save 40%"), aylık; "Start 14-day free trial".
 **Project sekmesi ve onboarding** her zaman ücretsiz.
 
 **Açık karar (deneme türü):**
@@ -321,12 +321,15 @@ Tarihler tahmindir; Sprint 2 sonunda ilerleme gözden geçirilir, gerekirse baz�
 
 ## 14. Açık kararlar
 
-1. Uygulama adı ve ikon
-2. Fiyatlar (9,99 $ / 79,99 $) rakiplere göre doğrulanacak
-3. Deneme türü (mağaza tabanlı ya da uygulama içi)
-4. Ücretsiz plan kuralı ("1 araç/gün" ya da "hesaplayıcılar ücretsiz")
-5. Açık tema ve eksik ekranların tasarımı
-6. Önce yalnızca iOS mu, iOS ve Android birlikte mi
+Tümü karara bağlandı (20 Ekim 2026):
+
+1. Uygulama adı ve ikon: **Startup Toolkits**, ikon hazır
+2. Fiyatlar: **aylık 6,99 $ / yıllık 49,99 $**, 14 günlük tanıtım teklifi
+3. Deneme türü: **uygulama içi 14 gün** (uygunsa mağaza tanıtım teklifi de sunulur)
+4. Ücretsiz plan kuralı: **günde 1 araç**, yerel gece yarısı sıfırlanır
+5. Açık tema: **tasarlandı**; Profil → Görünüm: Sistem / Koyu / Açık
+6. Platformlar: **iOS ve Android birlikte**
+7. Analitik: **v1'de yok**; veri cihazdan çıkmaz (satın alımlar hariç)
 
 ---
 
