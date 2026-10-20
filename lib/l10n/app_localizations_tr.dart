@@ -531,6 +531,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profileRestore => 'Satın almaları geri yükle';
 
   @override
+  String get profileSupport => 'Destek ve geri bildirim';
+
+  @override
+  String get profileDeveloper => 'Geliştirici';
+
+  @override
   String profileVersion(String version) {
     return 'Sürüm $version';
   }
@@ -549,7 +555,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get restoreNothing => 'Bu hesapta etkin bir abonelik bulunamadı.';
 
   @override
-  String get termsOfUse => 'Kullanım Koşulları';
+  String get termsOfUse => 'Kullanım Koşulları (EULA)';
 
   @override
   String get privacyPolicy => 'Gizlilik Politikası';

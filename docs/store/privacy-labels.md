@@ -31,5 +31,5 @@ Notes:
 - Data shared: none.
 - Data encrypted in transit: Yes.
 - Users can request deletion: Yes (local data via Profile → Delete all
-  data; purchase data via [SUPPORT EMAIL]).
+  data; purchase data via kahramandev01@gmail.com).
 - Account creation: none.

@@ -96,4 +96,4 @@ still apply.
 
 [COMPANY LEGAL NAME]
 [POSTAL ADDRESS]
-[SUPPORT EMAIL]
+kahramandev01@gmail.com

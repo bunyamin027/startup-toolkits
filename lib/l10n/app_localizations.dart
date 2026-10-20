@@ -1022,6 +1022,18 @@ abstract class AppLocalizations {
   /// **'Restore purchases'**
   String get profileRestore;
 
+  /// No description provided for @profileSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Support & feedback'**
+  String get profileSupport;
+
+  /// No description provided for @profileDeveloper.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get profileDeveloper;
+
   /// No description provided for @profileVersion.
   ///
   /// In en, this message translates to:
@@ -1055,7 +1067,7 @@ abstract class AppLocalizations {
   /// No description provided for @termsOfUse.
   ///
   /// In en, this message translates to:
-  /// **'Terms of Use'**
+  /// **'Terms of Use (EULA)'**
   String get termsOfUse;
 
   /// No description provided for @privacyPolicy.

@@ -178,6 +178,25 @@ class ProfileScreen extends ConsumerWidget {
                 onTap: () => _open(context, BillingConfig.privacyUrl),
               ),
               _Row(
+                icon: Icons.mail_outline,
+                title: l.profileSupport,
+                note: AppInfo.supportEmail,
+                onTap: () => _open(
+                  context,
+                  Uri(
+                    scheme: 'mailto',
+                    path: AppInfo.supportEmail,
+                    query:
+                        'subject=${Uri.encodeComponent('${AppInfo.name} ${AppInfo.version}')}',
+                  ).toString(),
+                ),
+              ),
+              _Row(
+                icon: Icons.code,
+                title: l.profileDeveloper,
+                value: AppInfo.developer,
+              ),
+              _Row(
                 icon: Icons.info_outline,
                 title: AppInfo.name,
                 value: l.profileVersion(AppInfo.version),

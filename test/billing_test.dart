@@ -204,7 +204,7 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Restore Purchases'), findsOneWidget);
-      expect(find.text('Terms of Use'), findsOneWidget);
+      expect(find.text('Terms of Use (EULA)'), findsOneWidget);
       expect(find.text('Privacy Policy'), findsOneWidget);
 
       await scrollTo(tester, find.text('Monthly'));

@@ -168,13 +168,15 @@
   "profileDeleteAllBody": "Tu proyecto, los datos de las herramientas, tus listas y favoritas se eliminarán de este dispositivo. No se puede deshacer.",
   "profileAbout": "Acerca de",
   "profileRestore": "Restaurar compras",
+  "profileSupport": "Soporte y comentarios",
+  "profileDeveloper": "Desarrollador",
   "profileVersion": "Versión {version}",
   "profileLegalNote": "Las plantillas legales no constituyen asesoramiento legal.",
   "purchasesUnavailable": "Las compras no están disponibles en este momento.",
   "restoreSuccess": "Suscripción restaurada.",
   "restoreNothing": "No se encontró ninguna suscripción activa para esta cuenta.",
 
-  "termsOfUse": "Condiciones de uso",
+  "termsOfUse": "Condiciones de uso (EULA)",
   "privacyPolicy": "Política de privacidad",
 
   "paywallTitle": "Cada herramienta.\nCada día.",

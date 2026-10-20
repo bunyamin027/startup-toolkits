@@ -4,9 +4,10 @@
 /// flutter run \
 ///   --dart-define=RC_APPLE_KEY=appl_xxx \
 ///   --dart-define=RC_GOOGLE_KEY=goog_xxx \
-///   --dart-define=TERMS_URL=https://example.com/terms \
-///   --dart-define=PRIVACY_URL=https://example.com/privacy
 /// ```
+///
+/// Terms (Apple's standard EULA) and the privacy policy have published
+/// defaults; `--dart-define=TERMS_URL=…` / `PRIVACY_URL=…` override them.
 ///
 /// Without a RevenueCat key, debug builds use a preview store with
 /// placeholder prices and release builds turn purchases off.
@@ -17,6 +18,13 @@ abstract final class BillingConfig {
   /// RevenueCat entitlement that unlocks every tool.
   static const entitlementId = 'pro';
 
-  static const termsUrl = String.fromEnvironment('TERMS_URL');
-  static const privacyUrl = String.fromEnvironment('PRIVACY_URL');
+  static const termsUrl = String.fromEnvironment(
+    'TERMS_URL',
+    defaultValue:
+        'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/',
+  );
+  static const privacyUrl = String.fromEnvironment(
+    'PRIVACY_URL',
+    defaultValue: 'https://www.kahramanapp.com/privacy',
+  );
 }

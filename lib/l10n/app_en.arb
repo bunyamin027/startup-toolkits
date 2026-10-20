@@ -185,6 +185,8 @@
   "profileDeleteAllBody": "Your project, tool inputs, lists and favorites will be removed from this device. This cannot be undone.",
   "profileAbout": "About",
   "profileRestore": "Restore purchases",
+  "profileSupport": "Support & feedback",
+  "profileDeveloper": "Developer",
   "profileVersion": "Version {version}",
   "@profileVersion": {"placeholders": {"version": {"type": "String"}}},
   "profileLegalNote": "Legal templates are not legal advice.",
@@ -192,7 +194,7 @@
   "restoreSuccess": "Subscription restored.",
   "restoreNothing": "No active subscription found for this account.",
 
-  "termsOfUse": "Terms of Use",
+  "termsOfUse": "Terms of Use (EULA)",
   "privacyPolicy": "Privacy Policy",
 
   "paywallTitle": "Every tool.\nEvery day.",

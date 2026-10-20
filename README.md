@@ -28,9 +28,7 @@ Keys and URLs are passed at build time, never committed:
 ```sh
 flutter run \
   --dart-define=RC_APPLE_KEY=appl_xxx \
-  --dart-define=RC_GOOGLE_KEY=goog_xxx \
-  --dart-define=TERMS_URL=https://example.com/terms \
-  --dart-define=PRIVACY_URL=https://example.com/privacy
+  --dart-define=RC_GOOGLE_KEY=goog_xxx
 ```
 
 - RevenueCat setup: entitlement `pro`; a current offering with a monthly
@@ -38,7 +36,10 @@ flutter run \
 - Without a key, debug builds use a **preview store** (placeholder prices,
   fake purchases, labelled on the paywall); release builds disable
   purchases and the paywall says subscriptions are unavailable.
-- Missing Terms/Privacy URLs show "This link is added before release".
+- Legal links default to Apple's standard EULA and
+  https://www.kahramanapp.com/privacy (override with `TERMS_URL` /
+  `PRIVACY_URL`). Support mail and developer name live in
+  `lib/core/app_info.dart`.
 - First iOS build after adding RevenueCat may need
   `cd ios && pod install --repo-update`.
 

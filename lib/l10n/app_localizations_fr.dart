@@ -532,6 +532,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileRestore => 'Restaurer les achats';
 
   @override
+  String get profileSupport => 'Assistance et avis';
+
+  @override
+  String get profileDeveloper => 'Développeur';
+
+  @override
   String profileVersion(String version) {
     return 'Version $version';
   }
@@ -551,7 +557,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get restoreNothing => 'Aucun abonnement actif trouvé pour ce compte.';
 
   @override
-  String get termsOfUse => 'Conditions d’utilisation';
+  String get termsOfUse => 'Conditions d’utilisation (CLUF)';
 
   @override
   String get privacyPolicy => 'Politique de confidentialité';

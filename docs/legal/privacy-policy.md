@@ -74,7 +74,7 @@ Because your content stays on your device, you control it directly: you
 can view, change, export (Copy or Share) and delete it in the App.
 
 For the limited purchase data described above, you can contact us at
-[SUPPORT EMAIL] to ask about access or deletion. Depending on where you
+kahramandev01@gmail.com to ask about access or deletion. Depending on where you
 live (for example the EU/UK under GDPR, California under CCPA/CPRA, or
 Türkiye under KVKK), you may have further rights, including the right to
 complain to your local data protection authority.
@@ -94,4 +94,4 @@ when the change is significant.
 
 [COMPANY LEGAL NAME]
 [POSTAL ADDRESS]
-[SUPPORT EMAIL]
+kahramandev01@gmail.com

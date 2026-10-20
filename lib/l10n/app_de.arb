@@ -168,13 +168,15 @@
   "profileDeleteAllBody": "Dein Projekt, Tool-Eingaben, Listen und Favoriten werden von diesem Gerät entfernt. Das kann nicht rückgängig gemacht werden.",
   "profileAbout": "Über",
   "profileRestore": "Käufe wiederherstellen",
+  "profileSupport": "Support & Feedback",
+  "profileDeveloper": "Entwickler",
   "profileVersion": "Version {version}",
   "profileLegalNote": "Rechtliche Vorlagen sind keine Rechtsberatung.",
   "purchasesUnavailable": "Käufe sind gerade nicht verfügbar.",
   "restoreSuccess": "Abo wiederhergestellt.",
   "restoreNothing": "Für dieses Konto wurde kein aktives Abo gefunden.",
 
-  "termsOfUse": "Nutzungsbedingungen",
+  "termsOfUse": "Nutzungsbedingungen (EULA)",
   "privacyPolicy": "Datenschutzerklärung",
 
   "paywallTitle": "Jedes Tool.\nJeden Tag.",

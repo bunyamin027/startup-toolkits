@@ -168,13 +168,15 @@
   "profileDeleteAllBody": "Votre projet, les saisies des outils, vos listes et vos favoris seront supprimés de cet appareil. Cette action est irréversible.",
   "profileAbout": "À propos",
   "profileRestore": "Restaurer les achats",
+  "profileSupport": "Assistance et avis",
+  "profileDeveloper": "Développeur",
   "profileVersion": "Version {version}",
   "profileLegalNote": "Les modèles juridiques ne constituent pas un conseil juridique.",
   "purchasesUnavailable": "Les achats ne sont pas disponibles pour le moment.",
   "restoreSuccess": "Abonnement restauré.",
   "restoreNothing": "Aucun abonnement actif trouvé pour ce compte.",
 
-  "termsOfUse": "Conditions d’utilisation",
+  "termsOfUse": "Conditions d’utilisation (CLUF)",
   "privacyPolicy": "Politique de confidentialité",
 
   "paywallTitle": "Chaque outil.\nChaque jour.",

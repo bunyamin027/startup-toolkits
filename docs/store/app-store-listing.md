@@ -13,10 +13,10 @@ Character limits checked against App Store Connect. Placeholders in
 | Secondary category | Productivity | |
 | Age rating | 4+ (no objectionable content) | |
 | Price | Free with in-app subscriptions | |
-| Support URL | [SUPPORT URL] | |
+| Support URL | https://www.kahramanapp.com/#contact | |
 | Marketing URL | [MARKETING URL] (optional) | |
-| Privacy Policy URL | [PRIVACY URL] — publish `docs/legal/privacy-policy.md` | |
-| Terms of Use (EULA) | Apple standard EULA, or [TERMS URL] from `docs/legal/terms-of-use.md` | |
+| Privacy Policy URL | https://www.kahramanapp.com/privacy | |
+| Terms of Use (EULA) | Apple standard EULA: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/ | |
 
 ### Keywords (99 / 100)
 
@@ -79,8 +79,8 @@ for renewal within 24 hours before the end of the period. Manage or cancel
 in your App Store account settings. Any unused portion of a free trial is
 forfeited when you purchase a subscription.
 
-Terms of Use: [TERMS URL]
-Privacy Policy: [PRIVACY URL]
+Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacy Policy: https://www.kahramanapp.com/privacy
 
 ### What's New (1.0)
 
