@@ -11,81 +11,91 @@ const productText = <String, Map<String, ToolText>>{
 const _tr = <String, ToolText>{
   'kanban': ToolText(
     name: 'Kanban',
-    description: 'Yapılacak, yapılıyor, bitti.',
+    description: 'Yapılacak, yapılıyor, tamamlandı.',
     itemLabel: 'Görev',
-    stages: {'To do': 'Yapılacak', 'Doing': 'Yapılıyor', 'Done': 'Bitti'},
+    stages: {'To do': 'Yapılacak', 'Doing': 'Yapılıyor', 'Done': 'Tamamlandı'},
     fields: {
       'owner': FieldText('Sorumlu'),
-      'due': FieldText('Bitiş', example: 'Cuma'),
+      'due': FieldText('Teslim', example: 'Cuma'),
     },
     samples: [
-      SampleText('Başlangıç ekranlarını tasarla', {'due': 'Çar'}),
-      SampleText('Banka senkronizasyonu hata yönetimi', {'due': 'Cum'}),
-      SampleText('Analitiği kur', {'due': 'Pzt'}),
+      SampleText('Karşılama ekranlarını tasarla', {'due': 'Çar'}),
+      SampleText('Banka entegrasyonunda hata yönetimi', {'due': 'Cum'}),
+      SampleText('Analitik altyapısını kur', {'due': 'Pzt'}),
     ],
   ),
   'okr': ToolText(
     name: 'OKR takibi',
-    description: 'Çeyrek için hedefler ve anahtar sonuçlar.',
+    description: 'Bu çeyreğin amaçları ve anahtar sonuçları.',
     itemLabel: 'Anahtar sonuç',
     stages: {
       'Not started': 'Başlanmadı',
       'On track': 'Yolunda',
       'At risk': 'Risk altında',
-      'Done': 'Bitti',
+      'Done': 'Tamamlandı',
     },
     fields: {
-      'objective': FieldText('Hedef', example: 'Ürün-pazar uyumunu bul'),
+      'objective': FieldText('Amaç', example: 'Ürün-pazar uyumunu yakala'),
       'progress': FieldText('İlerleme'),
     },
     samples: [
       SampleText('Haftalık 2.000 aktif kullanıcıya ulaş', {
-        'objective': 'Ürün-pazar uyumunu bul',
+        'objective': 'Ürün-pazar uyumunu yakala',
       }),
-      SampleText('Denemeden ücretliye dönüşüm %8’in üzerinde', {
-        'objective': 'Ürün-pazar uyumunu bul',
+      SampleText('Denemeden ücretliye geçişi %8’in üzerine çıkar', {
+        'objective': 'Ürün-pazar uyumunu yakala',
       }),
-      SampleText('Pre-seed turunu kapat', {
-        'objective': 'Önümüzdeki 18 ayı finanse et',
+      SampleText('Pre-seed yatırım turunu tamamla', {
+        'objective': 'Önümüzdeki 18 ayın finansmanını sağla',
       }),
     ],
   ),
   'roadmap': ToolText(
     name: 'Yol haritası',
-    description: 'Şimdi, sonra, daha sonra.',
+    description: 'Şimdi, sıradaki, ileride.',
     itemLabel: 'Özellik',
-    stages: {'Now': 'Şimdi', 'Next': 'Sonra', 'Later': 'Daha sonra'},
-    fields: {'why': FieldText('Neden önemli', example: 'En çok istenen')},
+    stages: {'Now': 'Şimdi', 'Next': 'Sıradaki', 'Later': 'İleride'},
+    fields: {
+      'why': FieldText('Neden önemli', example: 'En çok istenen özellik'),
+    },
     samples: [
-      SampleText('Fotoğrafla fiş kaydı', {
-        'why': 'Görüşmelerde en çok istenen',
+      SampleText('Fişleri fotoğrafla kaydetme', {
+        'why': 'Görüşmelerde en çok istenen özellik',
       }),
-      SampleText('Android uygulaması', {'why': 'Bekleme listesinin %40’ı'}),
-      SampleText('Mali müşavirle paylaşım', {'why': 'Tavsiye kanalını açar'}),
+      SampleText('Android uygulaması', {
+        'why': 'Bekleme listesindekilerin %40’ı Android kullanıyor',
+      }),
+      SampleText('Mali müşavirle paylaşım', {
+        'why': 'Yeni bir yönlendirme kanalı açar',
+      }),
     ],
   ),
   'userStory': ToolText(
     name: 'Kullanıcı hikâyesi ve PRD',
-    description: 'Kabul kriterleriyle bir kullanıcı hikâyesi ve kısa bir PRD.',
+    description:
+        'Kabul kriterleriyle bir kullanıcı hikâyesi ve kısa bir ürün gereksinim belgesi (PRD).',
     fields: {
       'feature': FieldText('Özellik adı', example: 'Fiş kaydı'),
-      'user': FieldText('Kim olarak…', example: 'serbest çalışan'),
+      'user': FieldText('Kullanıcı (… olarak)', example: 'serbest çalışan'),
       'want': FieldText(
-        'Ne istiyorum…',
+        'İstek (… istiyorum)',
         example: 'bir fişin fotoğrafını çekmek',
       ),
-      'benefit': FieldText('Böylece…', example: 'gider yazmadan kaydedilsin'),
+      'benefit': FieldText(
+        'Fayda (böylece…)',
+        example: 'gider elle yazılmadan kaydedilsin',
+      ),
       'criteria': FieldText(
         'Kabul kriterleri',
         example:
-            'Fotoğraf 5 saniye içinde okunur\nTutar, tarih ve satıcı doldurulur\nKullanıcı her alanı düzeltebilir\nÇevrimdışı çalışır, sonra senkronize olur',
+            'Fotoğraf 5 saniye içinde okunur\nTutar, tarih ve satıcı otomatik doldurulur\nKullanıcı her alanı düzeltebilir\nİnternetsiz çalışır, bağlantı gelince eşitlenir',
       ),
       'outOfScope': FieldText(
         'Kapsam dışı',
-        example: 'Çok sayfalı faturalar\nDöviz çevirisi',
+        example: 'Çok sayfalı faturalar\nDöviz kuru dönüşümü',
       ),
       'metric': FieldText(
-        'Başarı metriği',
+        'Başarı ölçütü',
         example: '30 gün içinde giderlerin %50’si fotoğrafla eklenir',
       ),
     },
@@ -100,22 +110,22 @@ KABUL KRİTERLERİ
 KAPSAM DIŞI
 {outOfScope|bullets}
 
-BAŞARI METRİĞİ
+BAŞARI ÖLÇÜTÜ
 {metric}
 
 AÇIK SORULAR
-• Hangi uç durumlar tasarım gerektiriyor?
-• Başarı metriğini izlemek için hangi verilere ihtiyacımız var?''',
+• Hangi uç durumlar için tasarım gerekiyor?
+• Başarı ölçütünü takip etmek için hangi verilere ihtiyacımız var?''',
   ),
   'standup': ToolText(
-    name: 'Günlük toplantı notları',
+    name: 'Günlük stand-up notları',
     description: 'Dün, bugün, engeller.',
     itemLabel: 'Not',
     stages: {'Yesterday': 'Dün', 'Today': 'Bugün', 'Blocker': 'Engel'},
     fields: {'who': FieldText('Kim')},
     samples: [
-      SampleText('Fiş kaydı betası yayınlandı'),
-      SampleText('3 kullanıcı görüşmesi'),
+      SampleText('Fiş kaydının beta sürümü yayınlandı'),
+      SampleText('3 kullanıcı görüşmesi yapılacak'),
       SampleText('Banka API anahtarları bekleniyor'),
     ],
   ),

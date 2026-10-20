@@ -10,8 +10,8 @@ const financeText = <String, Map<String, ToolText>>{
 
 const _tr = <String, ToolText>{
   'runway': ToolText(
-    name: 'Pist ve yakım hızı',
-    description: 'Para bitene kadar kaç ay kaldığı.',
+    name: 'Nakit ömrü ve nakit yakma hızı',
+    description: 'Paranızın kaç ay daha yeteceğini görün.',
     fields: {
       'cash': FieldText('Bankadaki nakit'),
       'monthlyExpenses': FieldText('Aylık giderler'),
@@ -20,51 +20,54 @@ const _tr = <String, ToolText>{
   ),
   'unitEconomics': ToolText(
     name: 'Birim ekonomisi',
-    description: 'Bir müşteri için LTV, CAC ve geri ödeme süresi.',
+    description: 'Tek bir müşteri için LTV, CAC ve geri kazanım süresi.',
     fields: {
-      'arpu': FieldText('Müşteri başı gelir / ay'),
-      'grossMargin': FieldText('Brüt marj'),
-      'churn': FieldText('Aylık kayıp oranı'),
+      'arpu': FieldText('Müşteri başına aylık gelir'),
+      'grossMargin': FieldText('Brüt kâr marjı'),
+      'churn': FieldText('Aylık müşteri kaybı (churn)'),
       'cac': FieldText('Müşteri edinme maliyeti'),
     },
   ),
   'pricing': ToolText(
     name: 'Fiyat hesaplayıcı',
-    description: 'Maliyet ve hedef marjdan fiyat.',
+    description: 'Birim maliyetten ve hedef kâr marjından fiyatınızı bulun.',
     fields: {
       'unitCost': FieldText('Birim maliyet'),
-      'targetMargin': FieldText('Hedef marj'),
-      'competitorPrice': FieldText('Rakip fiyatı'),
+      'targetMargin': FieldText('Hedef kâr marjı'),
+      'competitorPrice': FieldText('Rakibin fiyatı'),
     },
   ),
   'invoice': ToolText(
     name: 'Fatura oluşturucu',
-    description: 'Toplamları ve vergisiyle temiz bir fatura.',
+    description: 'Ara toplamı ve KDV’si hesaplanmış düzenli bir fatura.',
     fields: {
       'company': FieldText('Şirket adı', example: 'Nimbly A.Ş.'),
       'email': FieldText('İletişim e-postası'),
       'client': FieldText('Müşteri', example: 'Studio North Ltd. Şti.'),
       'number': FieldText('Fatura numarası'),
-      'date': FieldText('Düzenleme tarihi', example: '19 Ekim 2026'),
+      'date': FieldText('Fatura tarihi', example: '19 Ekim 2026'),
       'due': FieldText('Son ödeme tarihi', example: '18 Kasım 2026'),
-      'item1': FieldText('Kalem 1', example: 'Başlangıç atölyesi'),
-      'qty1': FieldText('Kalem 1 adet'),
-      'price1': FieldText('Kalem 1 birim fiyat'),
-      'item2': FieldText('Kalem 2', example: 'Yıllık abonelik koltukları'),
-      'qty2': FieldText('Kalem 2 adet'),
-      'price2': FieldText('Kalem 2 birim fiyat'),
+      'item1': FieldText('1. kalem', example: 'Kurulum eğitimi'),
+      'qty1': FieldText('1. kalem miktarı'),
+      'price1': FieldText('1. kalem birim fiyatı'),
+      'item2': FieldText(
+        '2. kalem',
+        example: 'Yıllık abonelik (kullanıcı başına)',
+      ),
+      'qty2': FieldText('2. kalem miktarı'),
+      'price2': FieldText('2. kalem birim fiyatı'),
       'tax': FieldText('KDV oranı'),
       'payment': FieldText(
         'Ödeme bilgileri',
-        example: 'IBAN TR00 0000 0000 0000 hesabına havale',
+        example: 'TR00 0000 0000 0000 numaralı IBAN’a havale/EFT',
       ),
     },
-    template: r'''FATURA {number}
+    template: r'''FATURA NO: {number}
 
-Düzenleyen: {company} ({email})
+Satıcı: {company} ({email})
 Alıcı: {client}
-Düzenleme: {date}
-Son ödeme: {due}
+Fatura tarihi: {date}
+Son ödeme tarihi: {due}
 
 KALEMLER
 {item1}: {qty1} × {price1|money} = {=qty1 * price1|money}
@@ -72,24 +75,24 @@ KALEMLER
 
 Ara toplam: {=qty1 * price1 + qty2 * price2|money}
 KDV (%{tax}): {=(qty1 * price1 + qty2 * price2) * tax / 100|money}
-ÖDENECEK TOPLAM: {=(qty1 * price1 + qty2 * price2) * (1 + tax / 100)|money}
+GENEL TOPLAM: {=(qty1 * price1 + qty2 * price2) * (1 + tax / 100)|money}
 
 Ödeme: {payment}
 Bizi tercih ettiğiniz için teşekkür ederiz.''',
   ),
   'capTable': ToolText(
-    name: 'Hisse tablosu simülatörü',
-    description: 'Bir turdan sonra sulanma ve hisse fiyatı.',
+    name: 'Ortaklık tablosu (cap table) simülatörü',
+    description: 'Yatırım turu sonrasında hisse sulanması ve hisse fiyatı.',
     fields: {
-      'preMoney': FieldText('Yatırım öncesi değerleme'),
-      'investment': FieldText('Yatırım'),
-      'existingShares': FieldText('Mevcut hisseler'),
+      'preMoney': FieldText('Yatırım öncesi değerleme (pre-money)'),
+      'investment': FieldText('Yatırım tutarı'),
+      'existingShares': FieldText('Mevcut hisse sayısı'),
     },
   ),
   'incomeExpense': ToolText(
-    name: 'Gelir ve gider takibi',
-    description: 'Giren ve çıkan para, bir bakışta.',
-    itemLabel: 'Kayıt',
+    name: 'Gelir-gider takibi',
+    description: 'Giren ve çıkan para, tek bakışta.',
+    itemLabel: 'İşlem',
     stages: {'Income': 'Gelir', 'Expense': 'Gider'},
     fields: {
       'amount': FieldText('Tutar'),
@@ -97,9 +100,15 @@ Bizi tercih ettiğiniz için teşekkür ederiz.''',
       'category': FieldText('Kategori', example: 'Yazılım'),
     },
     samples: [
-      SampleText('Abonelikler (Ekim)', {'date': '31 Eki', 'category': 'Gelir'}),
+      SampleText('Abonelik gelirleri (Ekim)', {
+        'date': '31 Eki',
+        'category': 'Satış geliri',
+      }),
       SampleText('Maaşlar', {'date': '28 Eki', 'category': 'Ekip'}),
-      SampleText('Bulut barındırma', {'date': '3 Eki', 'category': 'Yazılım'}),
+      SampleText('Bulut sunucu gideri', {
+        'date': '3 Eki',
+        'category': 'Yazılım',
+      }),
     ],
   ),
 };

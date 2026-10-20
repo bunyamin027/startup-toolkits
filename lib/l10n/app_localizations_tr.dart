@@ -24,7 +24,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get commonDelete => 'Sil';
 
   @override
-  String get commonDone => 'Bitti';
+  String get commonDone => 'Tamam';
 
   @override
   String get commonBack => 'Geri';
@@ -45,10 +45,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get commonSkip => 'Atla';
 
   @override
-  String get commonContinue => 'Devam';
+  String get commonContinue => 'Devam et';
 
   @override
-  String get commonMore => 'Daha fazla';
+  String get commonMore => 'Diğer';
 
   @override
   String get commonSeePlans => 'Planları gör';
@@ -103,7 +103,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get categorySales => 'Satış ve müşteriler';
 
   @override
-  String get categoryLegal => 'Hukuk ve belgeler';
+  String get categoryLegal => 'Hukuki belgeler';
 
   @override
   String get categoryTeam => 'Ekip ve İK';
@@ -112,7 +112,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get categoryGrowth => 'Büyüme ve analitik';
 
   @override
-  String get categoryMobileApp => 'Mobil uygulama kurucuları';
+  String get categoryMobileApp => 'Mobil uygulama girişimcileri';
 
   @override
   String get fieldStartupName => 'Girişim adı';
@@ -133,10 +133,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get fieldMarketSize => 'Pazar büyüklüğü';
 
   @override
-  String get fieldTraction => 'Çekiş';
+  String get fieldTraction => 'Çekiş gücü';
 
   @override
-  String get fieldAsk => 'Talep';
+  String get fieldAsk => 'İstenen yatırım';
 
   @override
   String get fieldTeam => 'Ekip';
@@ -157,25 +157,26 @@ class AppLocalizationsTr extends AppLocalizations {
   String get hintStartupName => 'ör. Nimbly';
 
   @override
-  String get hintOneLiner => 'Ne yaptığınız ve kimin için, tek cümlede';
+  String get hintOneLiner =>
+      'Ne yaptığınızı ve kimin için yaptığınızı tek cümleyle anlatın';
 
   @override
-  String get hintProblem => 'Müşterilerinizin bugün yaşadığı sıkıntı';
+  String get hintProblem => 'Müşterilerinizin bugün yaşadığı sorun';
 
   @override
-  String get hintSolution => 'Bu sıkıntıyı nasıl ortadan kaldırıyorsunuz';
+  String get hintSolution => 'Bu sorunu nasıl çözüyorsunuz';
 
   @override
-  String get hintTargetCustomer => 'Problemi en çok yaşayan kim';
+  String get hintTargetCustomer => 'Bu sorunu en çok kim yaşıyor';
 
   @override
-  String get hintMarketSize => 'ör. 4 milyar \$ hizmet verilebilir pazar';
+  String get hintMarketSize => 'ör. 4 milyar \$ ulaşılabilir pazar';
 
   @override
-  String get hintTraction => 'Kullanıcı, gelir, büyüme';
+  String get hintTraction => 'Kullanıcı sayısı, gelir, büyüme';
 
   @override
-  String get hintAsk => 'ör. 750 bin \$ pre-seed';
+  String get hintAsk => 'ör. 750 bin \$ pre-seed yatırım';
 
   @override
   String get hintTeam => 'Kurucular ve kilit roller';
@@ -199,13 +200,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get stepValidate => 'Doğrula';
 
   @override
-  String get stepMoney => 'Para';
+  String get stepMoney => 'Finans';
 
   @override
   String get stepPitch => 'Sunum';
 
   @override
-  String get stepLaunch => 'Yayın';
+  String get stepLaunch => 'Lansman';
 
   @override
   String get stepIdeaAction => 'Fikri şekillendir';
@@ -214,7 +215,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get stepValidateAction => 'Müşterilerle konuş';
 
   @override
-  String get stepMoneyAction => 'Pistini bil';
+  String get stepMoneyAction => 'Nakit ömrünü hesapla';
 
   @override
   String get stepPitchAction => 'Hikâyeni anlat';
@@ -235,19 +236,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tabProfile => 'Profil';
 
   @override
-  String get welcomeGoalTitle => 'Neyi hedefliyorsunuz?';
+  String get welcomeGoalTitle => 'Hedefiniz ne?';
 
   @override
   String get welcomeGoalSubtitle =>
-      'Doğru araçları öne çıkaralım. Bunu istediğiniz zaman değiştirebilirsiniz.';
+      'Size uygun araçları öne çıkaralım. Bunu istediğiniz zaman değiştirebilirsiniz.';
 
   @override
   String get welcomeGoalRaiseFunding =>
-      'Sunum, pist, hisse tablosu, yatırımcı listesi';
+      'Yatırımcı sunumu, nakit ömrü, ortaklık tablosu, yatırımcı listesi';
 
   @override
   String get welcomeGoalFirstCustomers =>
-      'Görüşmeler, açılış sayfası, CRM, fiyatlandırma';
+      'Müşteri görüşmeleri, açılış sayfası, CRM, fiyatlandırma';
 
   @override
   String get welcomeGoalSetUpCompany =>
@@ -255,24 +256,24 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get welcomeGoalLaunchApp =>
-      'Mağaza sayfası, ASO anahtar kelimeleri, gizlilik politikası';
+      'Mağaza sayfası, ASO anahtar kelimeleri, uygulama gizlilik politikası';
 
   @override
-  String get welcomeNameTitle => 'Girişiminizi anlatın';
+  String get welcomeNameTitle => 'Girişiminizi tanıtın';
 
   @override
   String get welcomeNameSubtitle =>
-      'Tüm araçlar buradan dolar; yalnızca bir kez yazarsınız.';
+      'Tüm araçlar bu bilgilerle otomatik doldurulur; yalnızca bir kez yazmanız yeterli.';
 
   @override
   String get welcomeOneLinerHint =>
-      'Serbest çalışanlar için kendi kendini yapan muhasebe';
+      'Serbest çalışanlar için kendi kendine işleyen muhasebe';
 
   @override
   String get welcomeSkipForNow => 'Şimdilik atla';
 
   @override
-  String get welcomeStart => 'Başla';
+  String get welcomeStart => 'Başlayalım';
 
   @override
   String get homeMissionControl => 'KONTROL MERKEZİ';
@@ -289,11 +290,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get homeSearchLabel => 'Araçları ara';
 
   @override
-  String get homeLaunchPath => 'Yayın yolu';
+  String get homeLaunchPath => 'Lansman yolu';
 
   @override
   String homeLaunchPathProgress(int percent) {
-    return 'Yayın yolu yüzde $percent tamamlandı';
+    return 'Lansman yolunun yüzde $percent kadarı tamamlandı';
   }
 
   @override
@@ -303,7 +304,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String homeStepCurrent(String step) {
-    return '$step: şu anki adım';
+    return '$step: sıradaki adım';
   }
 
   @override
@@ -312,21 +313,21 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get homeNextBestStep => 'SIRADAKİ EN İYİ ADIM';
+  String get homeNextBestStep => 'SIRADAKİ ADIM';
 
   @override
   String homeNextAdds(String fields) {
-    return 'Ekler: $fields';
+    return 'Eklenecekler: $fields';
   }
 
   @override
   String homeNextFinish(String step) {
-    return '$step adımını bitirmek için açın';
+    return '$step adımını tamamlamak için açın';
   }
 
   @override
   String get homePathComplete =>
-      'Yayın yolu tamamlandı. Büyüdükçe rakamlarınızı ve hikâyenizi güncel tutun.';
+      'Lansman yolu tamamlandı. Büyüdükçe rakamlarınızı ve hikâyenizi güncel tutun.';
 
   @override
   String get homeStartHere => 'Buradan başlayın';
@@ -341,7 +342,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String homeBrowseAll(int count) {
-    return '$count aracın tümüne göz at';
+    return 'Tüm araçlara göz at ($count)';
   }
 
   @override
@@ -349,7 +350,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get homeTrialEndedBody =>
-      'Her gün bir aracı ücretsiz açın ya da hepsinin kilidini açın.';
+      'Her gün bir aracı ücretsiz kullanın ya da tüm araçların kilidini açın.';
 
   @override
   String planTrialBadge(int days) {
@@ -370,7 +371,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String catalogTitle(int count) {
-    return '$count aracın tümü';
+    return 'Tüm araçlar ($count)';
   }
 
   @override
@@ -384,7 +385,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get myToolsFavoritesEmpty =>
-      'Burada tutmak için herhangi bir araçtaki yıldıza dokunun.';
+      'Bir aracı burada görmek için içindeki yıldıza dokunun.';
 
   @override
   String get myToolsRecentEmpty => 'Açtığınız araçlar burada görünür.';
@@ -403,20 +404,21 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String projectFilledSemantics(int filled, int total) {
-    return '$total alanın $filled tanesi dolu';
+    return '$total alandan $filled tanesi dolu';
   }
 
   @override
   String get projectFieldsFilled => 'Dolu alanlar';
 
   @override
-  String get projectFieldsFilledBody => 'Tüm araçlar bu alanlardan dolar.';
+  String get projectFieldsFilledBody =>
+      'Tüm araçlar bu alanlarla otomatik doldurulur.';
 
   @override
   String get projectCopyBrief => 'Proje özetini kopyala';
 
   @override
-  String get projectUnlockMore => 'Daha fazlası için ekleyin';
+  String get projectUnlockMore => 'Ekledikçe daha fazlası açılır';
 
   @override
   String get projectDetails => 'Proje ayrıntıları';
@@ -426,7 +428,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String projectToolFill(int filled, int total) {
-    return '$total alanın $filled tanesi projenizden';
+    return '$total alandan $filled tanesi projenizden geliyor';
   }
 
   @override
@@ -457,10 +459,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get profilePlanFree =>
-      'Ücretsiz plan: günde bir araç. Proje ve başlangıç adımları ücretsiz kalır.';
+      'Ücretsiz plan: günde bir araç. Proje ve ilk kurulum her zaman ücretsiz.';
 
   @override
-  String get profilePlanPro => 'Pro: her araç, her gün.';
+  String get profilePlanPro => 'Pro: tüm araçlar, her gün.';
 
   @override
   String get profileManageSubscription => 'Aboneliği yönet';
@@ -496,11 +498,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profileMotion => 'Hareket';
 
   @override
-  String get profileMotionValue => 'Sistemi izler';
+  String get profileMotionValue => 'Sistem ayarını izler';
 
   @override
   String get profileMotionNote =>
-      'Animasyonları durdurmak için sistem ayarlarında Hareketi Azalt\'ı açın.';
+      'Animasyonları durdurmak için sistem ayarlarında Hareketi Azalt seçeneğini açın.';
 
   @override
   String get profileYourData => 'Verileriniz';
@@ -510,7 +512,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get profileStoredOnDeviceNote =>
-      'Hesap yok, sunucu yok. Uygulamayı silmek verilerinizi de siler.';
+      'Hesap yok, sunucu yok. Uygulamayı silerseniz verileriniz de silinir.';
 
   @override
   String get profileDeleteAll => 'Tüm verileri sil';
@@ -520,13 +522,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get profileDeleteAllBody =>
-      'Projeniz, araç girdileriniz, listeleriniz ve favorileriniz bu cihazdan kaldırılacak. Bu işlem geri alınamaz.';
+      'Projeniz, araçlara girdiğiniz bilgiler, listeleriniz ve favorileriniz bu cihazdan silinecek. Bu işlem geri alınamaz.';
 
   @override
   String get profileAbout => 'Hakkında';
 
   @override
-  String get profileRestore => 'Satın alımları geri yükle';
+  String get profileRestore => 'Satın almaları geri yükle';
 
   @override
   String profileVersion(String version) {
@@ -534,16 +536,17 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get profileLegalNote => 'Hukuki şablonlar hukuki tavsiye değildir.';
+  String get profileLegalNote =>
+      'Hukuki şablonlar hukuki danışmanlık yerine geçmez.';
 
   @override
-  String get purchasesUnavailable => 'Satın alımlar şu anda kullanılamıyor.';
+  String get purchasesUnavailable => 'Satın alma şu anda kullanılamıyor.';
 
   @override
   String get restoreSuccess => 'Abonelik geri yüklendi.';
 
   @override
-  String get restoreNothing => 'Bu hesap için etkin abonelik bulunamadı.';
+  String get restoreNothing => 'Bu hesapta etkin bir abonelik bulunamadı.';
 
   @override
   String get termsOfUse => 'Kullanım Koşulları';
@@ -552,16 +555,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get privacyPolicy => 'Gizlilik Politikası';
 
   @override
-  String get paywallTitle => 'Her araç.\nHer gün.';
+  String get paywallTitle => 'Tüm araçlar.\nHer gün.';
 
   @override
   String paywallBenefitAll(int count) {
-    return '$count aracın tümü, sınırsız';
+    return '$count aracın tamamı, sınırsız';
   }
 
   @override
   String get paywallBenefitAutofill =>
-      'Projenizden kendiliğinden dolan sunumlar, belgeler ve rakamlar';
+      'Projenizdeki bilgilerle otomatik dolan sunumlar, belgeler ve hesaplar';
 
   @override
   String get paywallBenefitPrivate => 'Verileriniz cihazınızda kalır';
@@ -572,7 +575,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get paywallPreview =>
-      'Önizleme mağazası: örnek fiyatlar, gerçek satın alım yok.';
+      'Önizleme mağazası: örnek fiyatlar, gerçek ödeme alınmaz.';
 
   @override
   String get paywallYearly => 'Yıllık';
@@ -582,7 +585,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String paywallSave(int percent) {
-    return '%$percent tasarruf';
+    return '%$percent indirim';
   }
 
   @override
@@ -595,7 +598,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String paywallSubscribeFor(String price) {
-    return '$price karşılığında abone ol';
+    return '$price ile abone ol';
   }
 
   @override
@@ -635,18 +638,18 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String paywallTermsRenewal(String store) {
-    return 'Geçerli dönemin bitiminden en az 24 saat önce iptal edilmezse otomatik olarak yenilenir. $store hesap ayarlarınızdan istediğiniz zaman yönetebilir veya iptal edebilirsiniz.';
+    return 'Abonelik, geçerli dönemin bitiminden en az 24 saat önce iptal edilmezse otomatik olarak yenilenir. Aboneliğinizi istediğiniz zaman $store hesap ayarlarınızdan yönetebilir veya iptal edebilirsiniz.';
   }
 
   @override
-  String get paywallRestore => 'Satın Alımları Geri Yükle';
+  String get paywallRestore => 'Satın Almaları Geri Yükle';
 
   @override
-  String get paywallSuccess => 'Tüm araçların kilidi açıldı. Keyfini çıkarın!';
+  String get paywallSuccess => 'Tüm araçların kilidi açıldı. İyi çalışmalar!';
 
   @override
   String get paywallFailed =>
-      'Satın alım tamamlanamadı. Lütfen tekrar deneyin.';
+      'Satın alma tamamlanamadı. Lütfen tekrar deneyin.';
 
   @override
   String limitCountdown(int hours, int minutes) {
@@ -655,29 +658,29 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String limitCountdownSemantics(int hours, int minutes) {
-    return 'Sonraki ücretsiz araca $hours saat $minutes dakika';
+    return 'Sıradaki ücretsiz araca $hours saat $minutes dakika var';
   }
 
   @override
-  String get limitToReset => 'sonra sıfırlanır';
+  String get limitToReset => 'sonra yenilenir';
 
   @override
   String get limitTitle => 'Bugünkü ücretsiz aracınızı kullandınız';
 
   @override
   String get limitBody =>
-      'Ücretsiz plan günde bir araç açar. Projeniz ücretsiz kalır.';
+      'Ücretsiz planda günde bir araç açılır. Projeniz her zaman ücretsiz.';
 
   @override
   String limitBodyTool(String tool) {
-    return '$tool gün boyunca açık kalır. Ücretsiz plan günde bir araç açar; projeniz ücretsiz kalır.';
+    return '$tool gün boyunca açık kalır. Ücretsiz planda günde bir araç açılır; projeniz her zaman ücretsiz.';
   }
 
   @override
-  String get limitGoUnlimited => 'Sınırsıza geç';
+  String get limitGoUnlimited => 'Sınırsız kullan';
 
   @override
-  String get limitTomorrow => 'Yarın tekrar gel';
+  String get limitTomorrow => 'Yarın tekrar gelin';
 
   @override
   String get toolLocked => 'Ücretsiz planda kilitli';
@@ -689,7 +692,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get toolResetDone => 'Örnek verilere dönüldü';
 
   @override
-  String get toolReset => 'Örneğe sıfırla';
+  String get toolReset => 'Örnek verilere dön';
 
   @override
   String get toolFavoriteAdd => 'Favorilere ekle';
@@ -725,38 +728,38 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String listAddItem(String item) {
-    return 'Ekle: $item';
+    return '$item ekle';
   }
 
   @override
   String listNewItem(String item) {
-    return 'Yeni: $item';
+    return 'Yeni $item';
   }
 
   @override
   String listEditItem(String item) {
-    return 'Düzenle: $item';
+    return '$item kaydını düzenle';
   }
 
   @override
   String listDeleted(String title) {
-    return '\"$title\" silindi';
+    return '“$title” silindi';
   }
 
   @override
   String listMoveTo(String stage) {
-    return 'Taşı: $stage';
+    return '$stage aşamasına taşı';
   }
 
   @override
   String get listFinalStage => 'Son aşama';
 
   @override
-  String get listEmpty => 'Henüz bir şey yok. Başlamak için Ekle\'ye dokunun.';
+  String get listEmpty => 'Henüz kayıt yok. Başlamak için Ekle’ye dokunun.';
 
   @override
   String listEmptyStage(String stage) {
-    return '$stage aşamasında bir şey yok.';
+    return '$stage aşamasında kayıt yok.';
   }
 
   @override

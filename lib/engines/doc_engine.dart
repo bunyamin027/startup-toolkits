@@ -23,7 +23,7 @@ abstract final class DocEngine {
   static const _legalNotices = {
     'en': legalNotice,
     'tr':
-        'Yalnızca şablondur, hukuki tavsiye değildir. Kullanmadan önce bir avukata inceletin.',
+        'Bu metin yalnızca bir şablondur ve hukuki danışmanlık yerine geçmez. Kullanmadan önce bir avukata inceletin.',
     'fr':
         'Modèle uniquement, pas un conseil juridique. Faites-le relire par un avocat avant usage.',
     'es':

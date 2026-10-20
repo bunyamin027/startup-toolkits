@@ -11,72 +11,74 @@ const salesText = <String, Map<String, ToolText>>{
 const _tr = <String, ToolText>{
   'crm': ToolText(
     name: 'Mini CRM',
-    description: 'İlk temastan kazanılana ya da kaybedilene kadar adaylar.',
-    itemLabel: 'Aday',
+    description: 'Müşteri adaylarını ilk temastan satışa kadar izleyin.',
+    itemLabel: 'Müşteri adayı',
     stages: {
-      'Lead': 'Aday',
-      'Contacted': 'Ulaşıldı',
+      'Lead': 'Yeni aday',
+      'Contacted': 'İletişime geçildi',
       'Demo': 'Demo',
       'Won': 'Kazanıldı',
       'Lost': 'Kaybedildi',
     },
     fields: {
       'company': FieldText('Şirket'),
-      'value': FieldText('Anlaşma değeri'),
-      'next': FieldText('Sonraki adım', example: 'Demo ayarla'),
+      'value': FieldText('Satış tutarı'),
+      'next': FieldText('Sonraki adım', example: 'Demo planla'),
     },
     samples: [
-      SampleText('Priya Patel', {'next': 'Salı 10:00 demo'}),
+      SampleText('Priya Patel', {'next': 'Salı 10:00’da demo'}),
       SampleText('Marco Rossi', {
-        'company': 'Serbest',
-        'next': 'Cuma takip et',
+        'company': 'Serbest çalışan',
+        'next': 'Cuma günü tekrar ara',
       }),
-      SampleText('Hanna Berg', {'next': 'Başlangıç görüşmesi'}),
+      SampleText('Hanna Berg', {'next': 'Kurulum görüşmesi'}),
     ],
   ),
   'proposal': ToolText(
     name: 'Teklif şablonu',
-    description: 'Kapsam, fiyat ve sonraki adımlarla net bir teklif.',
+    description: 'Kapsamı, fiyatı ve sonraki adımları net bir teklif.',
     fields: {
       'company': FieldText('Şirket adı'),
       'client': FieldText('Müşteri'),
       'need': FieldText(
-        'Müşteri ihtiyacı',
+        'Müşterinin ihtiyacı',
         example:
-            'Studio North, 12 serbest çalışanının fiş kaybetmesine son vermek istiyor.',
+            'Studio North, ekibindeki 12 serbest çalışanın fiş kaybetmesinin önüne geçmek istiyor.',
       ),
       'scope': FieldText(
         'Kapsam',
         example:
-            'Bir yıllık 12 Nimbly ekip koltuğu\nBaşlangıç atölyesi\nÖncelikli destek',
+            '12 kullanıcılık Nimbly ekip lisansı (1 yıl)\nKurulum eğitimi\nÖncelikli destek',
       ),
       'price': FieldText('Fiyat'),
       'timeline': FieldText(
-        'Zaman planı',
-        example: 'İmzadan sonraki bir hafta içinde canlıda',
+        'Takvim',
+        example:
+            'Sözleşmenin imzalanmasından sonraki bir hafta içinde kullanıma hazır',
       ),
       'valid': FieldText('Geçerlilik tarihi', example: '30 Kasım 2026'),
       'sender': FieldText('Adınız'),
     },
     template: r'''TEKLİF
-{company} → {client}
+Hazırlayan: {company}
+Müşteri: {client}
 
-İHTİYAÇ
+İHTİYACINIZ
 {need}
 
-NE SUNACAĞIZ
+SUNACAKLARIMIZ
 {scope|bullets}
 
-YATIRIM
+ÜCRET
 {price|money}
 
-ZAMAN PLANI
+TAKVİM
 {timeline}
 
 SONRAKİ ADIMLAR
-1. Onaylamak için yanıtlayın.
-2. Sözleşmeyi ve faturayı gönderelim.
-3. Başlangıç toplantısı.
+1. Onayınızı bu e-postayı yanıtlayarak iletin.
+2. Sözleşmeyi ve faturayı size gönderelim.
+3. Başlangıç toplantısını yapalım.
 
 Bu teklif {valid} tarihine kadar geçerlidir.
 
@@ -85,45 +87,49 @@ Bu teklif {valid} tarihine kadar geçerlidir.
   ),
   'followUps': ToolText(
     name: 'Takip hatırlatıcıları',
-    description: 'Kimseye dönmeyi unutmayın.',
+    description: 'Kimseye dönüş yapmayı unutmayın.',
     itemLabel: 'Takip',
-    stages: {'Due': 'Zamanı geldi', 'Waiting': 'Bekleniyor', 'Done': 'Bitti'},
+    stages: {
+      'Due': 'Zamanı geldi',
+      'Waiting': 'Yanıt bekleniyor',
+      'Done': 'Tamamlandı',
+    },
     fields: {
       'date': FieldText('Ne zaman', example: 'Cuma'),
-      'note': FieldText('Not', example: 'Fiyatları gönder'),
+      'note': FieldText('Not', example: 'Fiyat listesini gönder'),
     },
     samples: [
       SampleText('Priya: demo kaydını gönder', {
         'date': 'Bugün',
-        'note': 'Fiyat sayfasını ekle',
+        'note': 'Fiyatlandırma sayfasının bağlantısını da ekle',
       }),
-      SampleText('Maya: ortak toplantısı notları', {
+      SampleText('Maya: ortaklar toplantısının notları', {
         'date': 'Per',
-        'note': 'Geri bildirim bekleniyor',
+        'note': 'Geri dönüş bekleniyor',
       }),
-      SampleText('Hanna: başlangıç kontrolü', {
+      SampleText('Hanna: kurulum sonrası kontrol görüşmesi', {
         'date': 'Pzt',
         'note': 'Her şey yolunda',
       }),
     ],
   ),
   'feedback': ToolText(
-    name: 'Müşteri geri bildirimi',
-    description: 'İstekleri toplayın ve döngüyü kapatın.',
+    name: 'Müşteri geri bildirimleri',
+    description: 'İstekleri toplayın, müşterilerinize dönüş yapın.',
     itemLabel: 'Geri bildirim',
     stages: {
       'New': 'Yeni',
       'Planned': 'Planlandı',
-      'Done': 'Bitti',
+      'Done': 'Tamamlandı',
       'Won\'t do': 'Yapılmayacak',
     },
     fields: {
       'from': FieldText('Kimden', example: 'Müşteri'),
-      'votes': FieldText('Bahsedilme'),
+      'votes': FieldText('Kaç kez istendi'),
     },
     samples: [
-      SampleText('CSV’ye aktarma'),
-      SampleText('Karanlık mod'),
+      SampleText('CSV olarak dışa aktarma'),
+      SampleText('Koyu tema'),
       SampleText('Daha hızlı fiş tarama', {'from': 'Beta grubu'}),
     ],
   ),

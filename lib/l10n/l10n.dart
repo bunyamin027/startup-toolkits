@@ -29,12 +29,22 @@ String upperIn(String text, String language) => language == 'tr'
     ? text.replaceAll('i', 'İ').replaceAll('ı', 'I').toUpperCase()
     : text.toUpperCase();
 
-/// A noun inside a sentence ("Add investor"). German keeps its capital.
-String nounIn(String noun, String language) => switch (language) {
-  'de' => noun,
-  'tr' => noun.replaceAll('I', 'ı').replaceAll('İ', 'i').toLowerCase(),
-  _ => noun.toLowerCase(),
-};
+/// A noun inside a sentence ("Add investor"). German keeps its capital,
+/// and acronyms such as "KPI" stay as they are.
+String nounIn(String noun, String language) {
+  if (noun.length > 1 && noun == noun.toUpperCase()) return noun;
+  return switch (language) {
+    'de' => noun,
+    'tr' => noun.replaceAll('I', 'ı').replaceAll('İ', 'i').toLowerCase(),
+    _ => noun.toLowerCase(),
+  };
+}
+
+/// [text] with its first letter capitalized, for sentences that start with
+/// a placeholder ("{item} ekle" -> "Görev ekle").
+String sentenceIn(String text, String language) => text.isEmpty
+    ? text
+    : upperIn(text.substring(0, 1), language) + text.substring(1);
 
 extension DomainLabels on AppLocalizations {
   String goal(Goal g) => switch (g) {

@@ -17,21 +17,21 @@ const _tr = <String, ToolText>{
       'problem': FieldText(
         'Problem',
         example:
-            'Serbest çalışanlar ayda 5+ saatini muhasebeye harcıyor.\n'
-            'Vergi indirimlerini kaçırıyorlar.\n'
-            'Üç aylık vergi tahminleri tahminden öteye geçmiyor.',
+            'Serbest çalışanlar her ay muhasebeye 5 saatten fazla zaman harcıyor.\n'
+            'Yararlanabilecekleri vergi indirimlerini kaçırıyorlar.\n'
+            'Geçici vergi tutarını tahmin etmek zor.',
       ),
       'solution': FieldText(
         'Çözüm',
         example:
-            'Otomatik gider kategorili banka senkronizasyonu.\n'
-            'Tek ekranda üç aylık vergi tahmini.\n'
-            'Fotoğrafla fiş kaydı.',
+            'Giderleri otomatik sınıflandıran banka entegrasyonu.\n'
+            'Tek ekranda üç aylık geçici vergi tahmini.\n'
+            'Fişleri fotoğrafla kaydetme.',
       ),
       'uvp': FieldText(
-        'Benzersiz değer önerisi',
+        'Eşsiz değer önerisi',
         example:
-            'Kendi kendini yapan muhasebe; serbest çalışanlar kazandıklarının daha fazlasını cebinde tutar.',
+            'Kendi kendine işleyen muhasebe; serbest çalışanlar kazandıklarının daha fazlasını cebinde tutar.',
       ),
       'segment': FieldText(
         'Müşteri segmenti',
@@ -40,20 +40,21 @@ const _tr = <String, ToolText>{
       'channels': FieldText(
         'Kanallar',
         example:
-            'Serbest çalışan toplulukları\nYouTube eğitimleri\nMali müşavir tavsiyeleri',
+            'Serbest çalışan toplulukları\nYouTube eğitim videoları\nMali müşavir yönlendirmeleri',
       ),
       'revenue': FieldText(
-        'Gelir akışları',
+        'Gelir kaynakları',
         example: r'Abonelik: aylık $12 veya yıllık $99',
       ),
       'costs': FieldText(
         'Maliyet yapısı',
-        example: 'Banka veri API’si\nBulut barındırma\nÜcretli müşteri edinimi',
+        example:
+            'Banka veri API’si\nBulut sunucu giderleri\nReklamla müşteri edinme',
       ),
       'metrics': FieldText(
         'Temel metrikler',
         example:
-            'Haftalık aktif kullanıcı\nDenemeden ücretliye dönüşüm\nAylık kayıp oranı',
+            'Haftalık aktif kullanıcı\nDenemeden ücretliye geçiş oranı\nAylık müşteri kaybı (churn)',
       ),
       'advantage': FieldText(
         'Haksız avantaj',
@@ -69,7 +70,7 @@ const _tr = <String, ToolText>{
 2. MÜŞTERİ SEGMENTİ
 {segment}
 
-3. BENZERSİZ DEĞER ÖNERİSİ
+3. EŞSİZ DEĞER ÖNERİSİ
 {uvp}
 
 4. ÇÖZÜM
@@ -78,7 +79,7 @@ const _tr = <String, ToolText>{
 5. KANALLAR
 {channels|bullets}
 
-6. GELİR AKIŞLARI
+6. GELİR KAYNAKLARI
 {revenue|bullets}
 
 7. MALİYET YAPISI
@@ -97,131 +98,130 @@ const _tr = <String, ToolText>{
       'company': FieldText('Girişim adı'),
       'strengths': FieldText(
         'Güçlü yönler',
-        example: 'Ekipte vergi uzmanlığı\nSade, odaklı ürün\nDüşük fiyat',
+        example: 'Ekipte vergi uzmanlığı\nSade ve odaklı ürün\nUygun fiyat',
       ),
       'weaknesses': FieldText(
         'Zayıf yönler',
         example:
-            'Küçük pazarlama bütçesi\nYalnızca tek pazar\nHenüz mobil uygulama yok',
+            'Kısıtlı pazarlama bütçesi\nYalnızca tek bir pazarda\nHenüz mobil uygulama yok',
       ),
       'opportunities': FieldText(
         'Fırsatlar',
         example:
-            'Serbest çalışan sayısı artmaya devam ediyor\nMali müşavirler sade araçlar önermek istiyor\nYeni e-fatura kuralları',
+            'Serbest çalışan sayısı artmaya devam ediyor\nMali müşavirler müşterilerine sade araçlar önermek istiyor\nYeni e-fatura düzenlemeleri',
       ),
       'threats': FieldText(
         'Tehditler',
         example:
-            'Büyük muhasebe paketleri serbest çalışan planları ekliyor\nBanka API fiyat artışları',
+            'Büyük muhasebe yazılımları serbest çalışanlara özel paketler çıkarıyor\nBanka API’lerinin fiyatları artıyor',
       ),
     },
     template: r'''SWOT ANALİZİ: {company}
 
-GÜÇLÜ YÖNLER (iç, yararlı)
+GÜÇLÜ YÖNLER (iç etken, olumlu)
 {strengths|bullets}
 
-ZAYIF YÖNLER (iç, zararlı)
+ZAYIF YÖNLER (iç etken, olumsuz)
 {weaknesses|bullets}
 
-FIRSATLAR (dış, yararlı)
+FIRSATLAR (dış etken, olumlu)
 {opportunities|bullets}
 
-TEHDİTLER (dış, zararlı)
+TEHDİTLER (dış etken, olumsuz)
 {threats|bullets}
 
 SONRAKİ ADIMLAR
-• Güçlü yönleri şu fırsat için kullanın: {opportunities|first}…
-• Büyümeyi en çok engelleyen zayıflığı giderin.
-• En büyük tehdit gelmeden ona karşı bir plan yapın.''',
+• Güçlü yönlerinizi şu fırsatı değerlendirmek için kullanın: {opportunities|first}…
+• Büyümenizi en çok engelleyen zayıf yönü giderin.
+• En büyük tehdide karşı, o gerçekleşmeden bir plan hazırlayın.''',
   ),
   'competitors': ToolText(
     name: 'Rakip takibi',
-    description: 'Bu problemi başka kim, nasıl çözüyor.',
+    description: 'Bu problemi başka kim, nasıl çözüyor?',
     itemLabel: 'Rakip',
-    stages: {'Direct': 'Doğrudan', 'Indirect': 'Dolaylı', 'Watch': 'İzlenen'},
+    stages: {'Direct': 'Doğrudan', 'Indirect': 'Dolaylı', 'Watch': 'İzlemede'},
     fields: {
       'price': FieldText('Fiyat', example: r'$15/ay'),
-      'strength': FieldText('Güçlü yönü', example: 'Marka'),
+      'strength': FieldText('Güçlü yönü', example: 'Bilinen marka'),
       'weakness': FieldText('Zayıf yönü', example: 'Karmaşık'),
     },
     samples: [
       SampleText('LedgerPro', {
         'price': r'$25/ay',
-        'strength': 'Eksiksiz muhasebe paketi',
+        'strength': 'Kapsamlı muhasebe yazılımı',
         'weakness': 'Tek başına çalışanlar için fazla karmaşık',
       }),
-      SampleText('Tablolar', {
+      SampleText('Excel tabloları', {
         'price': 'Ücretsiz',
-        'strength': 'Esnek, zaten biliniyor',
-        'weakness': 'Elle yapılıyor, hataya açık',
+        'strength': 'Esnek ve herkesin bildiği bir araç',
+        'weakness': 'Her şey elle giriliyor, hataya açık',
       }),
       SampleText('TaxBot', {
         'price': r'$8/ay',
         'strength': 'Ucuz',
-        'weakness': 'Banka senkronizasyonu yok',
+        'weakness': 'Banka entegrasyonu yok',
       }),
     ],
   ),
   'persona': ToolText(
     name: 'Persona oluşturucu',
-    description: 'Ürün geliştirdiğiniz müşterinin net bir resmi.',
+    description: 'Ürününüzü kimin için geliştirdiğinizin net bir resmi.',
     fields: {
-      'name': FieldText('Persona adı', example: 'Tasarımcı Defne'),
+      'name': FieldText('Persona adı', example: 'Defne Yılmaz'),
       'role': FieldText('Rol', example: 'Serbest arayüz tasarımcısı'),
       'age': FieldText('Yaş'),
       'location': FieldText('Konum', example: 'İzmir'),
       'goals': FieldText(
         'Hedefler',
         example:
-            'Gelirini iki katına çıkarmak\nZamanını evrak işine değil tasarıma ayırmak',
+            'Gelirini iki katına çıkarmak\nZamanını evrak işlerine değil tasarıma ayırmak',
       ),
       'pains': FieldText(
-        'En büyük problem',
+        'En büyük sorunu',
         example:
-            'Muhasebeden nefret ediyor ve geciken vergi ödemeleri için ceza ödüyor',
+            'Muhasebeden hiç hoşlanmıyor ve geciken vergi ödemeleri yüzünden gecikme faizi ödüyor',
       ),
       'tools': FieldText(
         'Bugün kullandığı araçlar',
-        example: 'Figma\nNotion\nGiderler için bir tablo',
+        example: 'Figma\nNotion\nGiderler için bir Excel tablosu',
       ),
       'quote': FieldText(
-        'Alıntı',
+        'Kendi sözleriyle',
         example:
-            'Serbest çalışmaya muhasebe yapmak için değil, tasarım yapmak için başladım.',
+            'Serbest çalışmaya muhasebeyle uğraşmak için değil, tasarım yapmak için başladım.',
       ),
       'channels': FieldText(
-        'Onlara nereden ulaşılır',
+        'Bu kişiye nereden ulaşılır',
         example:
-            'Dribbble\nTasarım toplulukları\nSerbest çalışan Slack grupları',
+            'Dribbble\nTasarım toplulukları\nSerbest çalışanların Slack grupları',
       ),
     },
     template: r'''PERSONA: {name}
 
-{role}, {age}, {location}
+{role}, {age} yaşında, {location}
 
 "{quote}"
 
-HEDEFLER
+HEDEFLERİ
 {goals|bullets}
 
-SIKINTILAR
+SORUNLARI
 {pains|bullets}
 
-MEVCUT ARAÇLAR
+KULLANDIĞI ARAÇLAR
 {tools|bullets}
 
-ONLARA NEREDEN ULAŞILIR
+NEREDEN ULAŞILIR
 {channels|bullets}
 
-Nasıl yardım ediyoruz: {name|first} ilk haftada ne kadar zaman ve para kazandığını görsün.''',
+Hedefimiz: {name|first} ilk haftada ne kadar zaman ve para kazandığını görsün.''',
   ),
   'interviewQuestions': ToolText(
     name: 'Görüşme ve anket soruları',
-    description:
-        'Yönlendirici sorulardan kaçınan müşteri görüşmesi senaryoları.',
+    description: 'Yönlendirici sorular içermeyen müşteri görüşmesi rehberleri.',
     options: {
-      'Problem discovery': 'Problem keşfi',
-      'Solution validation': 'Çözüm doğrulama',
+      'Problem discovery': 'Problemi keşfetme',
+      'Solution validation': 'Çözümü doğrulama',
       'Pricing': 'Fiyatlandırma',
     },
     fields: {
@@ -229,79 +229,80 @@ Nasıl yardım ediyoruz: {name|first} ilk haftada ne kadar zaman ve para kazand�
       'segment': FieldText('Hedef müşteri', example: 'Serbest tasarımcılar'),
       'problemArea': FieldText(
         'Problem alanı',
-        example: 'muhasebe ve vergiler',
+        example: 'muhasebe ve vergi işleri',
       ),
       'product': FieldText('Ürün adı'),
     },
     templates: {
-      'Problem discovery': r'''PROBLEM KEŞFİ GÖRÜŞMESİ
+      'Problem discovery': r'''PROBLEMİ KEŞFETME GÖRÜŞMESİ
 Hedef kitle: {segment}
 
 Isınma
-1. Bana işinizden bahseder misiniz? Tipik bir haftanız nasıl geçiyor?
+1. Bana biraz işinizden bahseder misiniz? Sıradan bir haftanız nasıl geçiyor?
 2. Ne zamandır bu işi yapıyorsunuz?
 
 Problem
-3. Bu konuyla en son uğraştığınız zamanı adım adım anlatır mısınız: {problemArea}?
-4. En zor kısmı neydi?
+3. En son ne zaman {problemArea} ile uğraştınız? O süreci adım adım anlatır mısınız?
+4. En zorlandığınız kısım neydi?
 5. Bu ne sıklıkla oluyor?
-6. Bugün bunun için ne yapıyorsunuz? Hangi araçlar ya da kişiler yardımcı oluyor?
-7. Size zaman ya da para olarak maliyeti ne?
-8. Başka bir yolla çözmeyi denediniz mi? Neden bıraktınız?
+6. Bugün bu konuda ne yapıyorsunuz? Hangi araçlar ya da kişiler size yardımcı oluyor?
+7. Bu size zaman ya da para olarak neye mal oluyor?
+8. Başka bir yolla çözmeyi denediniz mi? Neden vazgeçtiniz?
 
 Kapanış
-9. Sihirli bir değneğiniz olsaydı ne değişirdi?
-10. Bu konuda başka kiminle konuşmalıyım?
+9. Elinizde sihirli bir değnek olsaydı neyi değiştirirdiniz?
+10. Bu konuda başka kiminle konuşmamı önerirsiniz?
 
-İpuçları: geleceğe dair fikirleri değil, geçmişteki davranışları sorun. Ürününüzü anlatmayın.''',
-      'Solution validation': r'''ÇÖZÜM DOĞRULAMA GÖRÜŞMESİ
+İpuçları: Gelecekle ilgili görüşleri değil, geçmişte ne yaptıklarını sorun. Ürününüzü tanıtmaya çalışmayın.''',
+      'Solution validation': r'''ÇÖZÜMÜ DOĞRULAMA GÖRÜŞMESİ
 Hedef kitle: {segment}
 Ürün: {product}
 
-1. Bugün bu konuyu nasıl yönettiğinizi tekrar anlatır mısınız: {problemArea}?
-2. (Prototipi gösterin.) Sizce bu ne yapıyor?
-3. Bu görevi tamamlamayı deneyin. İlerlerken sesli düşünün.
-4. Ne kafa karıştırıcı ya da yavaştı?
-5. Bugün kullandığınız şeyin yerini alması için ne eksik?
-6. En çok hangi kısmı kullanırdınız?
+1. Bugün {problemArea} konusunu nasıl yürüttüğünüzü kısaca hatırlatır mısınız?
+2. (Prototipi gösterin.) Sizce bu ne işe yarıyor?
+3. Şu görevi tamamlamayı deneyin. Bu sırada aklınızdan geçenleri sesli söyleyin.
+4. Kafanızı karıştıran ya da sizi yavaşlatan ne oldu?
+5. Bugün kullandığınız yöntemin yerini alması için eksik olan ne?
+6. En çok hangi bölümü kullanırdınız?
 7. {product} yarın ortadan kalksa ne hissederdiniz?
 8. İlk beta grubumuzda yer almak ister misiniz?
 
-İpuçları: sessizliğe izin verin. Yalnızca söylediklerine değil, yaptıklarına bakın.''',
-      'Pricing': r'''FİYATLANDIRMA GÖRÜŞMESİ (Van Westendorp)
+İpuçları: Sessizlikten korkmayın. Yalnızca ne söylediklerine değil, ne yaptıklarına da bakın.''',
+      'Pricing': r'''FİYATLANDIRMA GÖRÜŞMESİ (Van Westendorp yöntemi)
 Hedef kitle: {segment}
 Ürün: {product}
 
-1. {product} aylık hangi fiyatta kalitesinden şüphe edeceğiniz kadar ucuz olurdu?
-2. Hangi fiyatta kaçırılmayacak bir fırsat, parasına değer bir alım olur?
-3. Hangi fiyatta pahalı gelmeye başlar ama yine de düşünürsünüz?
-4. Hangi fiyatta düşünülemeyecek kadar pahalı olur?
-5. Bugün bu alanla ilgili araçlara ne ödüyorsunuz: {problemArea}?
-6. Bu satın almayı kim onaylıyor?
-7. Aylık mı yıllık mı faturalandırmayı tercih edersiniz? Neden?
+1. {product} aylık hangi fiyatta olsa, kalitesinden şüphe edecek kadar ucuz bulursunuz?
+2. Hangi fiyatta kaçırılmayacak bir fırsat, parasının karşılığını fazlasıyla veren bir ürün olur?
+3. Hangi fiyattan itibaren pahalı gelmeye başlar ama yine de almayı düşünürsünüz?
+4. Hangi fiyatta almayı düşünmeyecek kadar pahalı bulursunuz?
+5. Bugün {problemArea} için kullandığınız araçlara ne kadar ödüyorsunuz?
+6. Bu satın almaya kim onay veriyor?
+7. Aylık mı yoksa yıllık ödemeyi mi tercih edersiniz? Neden?
 
-İpucu: kabul edilebilir fiyat aralığını bulmak için 1–4 arası cevapları grafiğe dökün.''',
+İpucu: Kabul edilebilir fiyat aralığını bulmak için 1–4. soruların cevaplarını bir grafikte gösterin.''',
     },
   ),
   'ideaScore': ToolText(
     name: 'Fikir puanlama matrisi',
-    description: 'Geliştirmeden önce bir fikri altı ölçüte göre puanlayın.',
+    description:
+        'Geliştirmeye başlamadan önce fikrinizi altı ölçüte göre puanlayın.',
     fields: {
       'problemPain': FieldText(
-        'Problemin acısı',
-        hint: 'Bugün ne kadar canını yakıyor',
+        'Sorunun şiddeti',
+        hint: 'Bu sorun bugün ne kadar can yakıyor?',
       ),
       'marketSize': FieldText('Pazar büyüklüğü'),
-      'willingnessToPay': FieldText('Ödeme isteği'),
+      'willingnessToPay': FieldText('Ödeme istekliliği'),
       'competition': FieldText(
-        'Rekabete karşı alan',
-        hint: '5 = az sayıda güçlü rakip',
+        'Rekabette boşluk',
+        hint: '5 = güçlü rakip sayısı az',
       ),
       'feasibility': FieldText(
-        'Yapılabilirlik',
+        'Uygulanabilirlik',
         hint: 'Ekibiniz bunu geliştirebilir mi?',
       ),
-      'founderFit': FieldText('Kurucu uyumu'),
+      'founderFit': FieldText('Kurucu ile fikrin uyumu'),
     },
   ),
 };

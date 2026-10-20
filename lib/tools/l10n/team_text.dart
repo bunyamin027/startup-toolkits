@@ -11,169 +11,178 @@ const teamText = <String, Map<String, ToolText>>{
 const _tr = <String, ToolText>{
   'jobPost': ToolText(
     name: 'İş ilanı',
-    description: 'Adayların gerçekten okuduğu bir iş tanımı.',
+    description: 'Adayların gerçekten sonuna kadar okuduğu bir iş ilanı.',
     fields: {
       'company': FieldText('Şirket adı'),
       'oneLiner': FieldText(
         'Tek cümlelik tanım',
-        example: 'serbest çalışanlar için kendi kendini yapan muhasebe',
+        example: 'serbest çalışanlar için kendi kendine işleyen muhasebe',
       ),
-      'title': FieldText('Pozisyon', example: 'Kurucu Mobil Mühendis'),
-      'location': FieldText('Konum', example: 'Uzaktan (Türkiye saat dilimi)'),
+      'title': FieldText(
+        'Pozisyon',
+        example: 'Mobil Yazılım Mühendisi (kurucu ekip)',
+      ),
+      'location': FieldText(
+        'Çalışma şekli',
+        example: 'Uzaktan (Türkiye saati)',
+      ),
       'salary': FieldText(
         'Maaş aralığı',
-        example: r'$60 bin–$80 bin + %0,5–1 hisse',
+        example: r'Yıllık $60 bin–$80 bin + %0,5–1 hisse opsiyonu',
       ),
       'responsibilities': FieldText(
         'Sorumluluklar',
         example:
-            'Flutter uygulamasını tasarımdan yayına sahiplenmek\nKurucularla her hafta yayın yapmak\nMühendislik kültürümüzü şekillendirmek',
+            'Flutter uygulamasının tasarımdan yayına kadar sorumluluğunu üstlenmek\nKurucularla birlikte her hafta yeni sürüm çıkarmak\nMühendislik kültürümüzü birlikte şekillendirmek',
       ),
       'requirements': FieldText(
         'Aranan nitelikler',
         example:
-            '3+ yıl mobil uygulama geliştirme deneyimi\nApp Store’a uygulama yayınlamış olmak\nBelirsizlikle rahat çalışabilmek',
+            'En az 3 yıl mobil uygulama geliştirme deneyimi\nApp Store’da yayınlanmış en az bir uygulama\nBelirsizliğin olduğu ortamlarda rahat çalışabilmek',
       ),
       'benefits': FieldText(
         'Yan haklar',
         example:
-            'Özel sağlık sigortası\nEv ofisi bütçesi\n4 hafta ücretli izin',
+            'Özel sağlık sigortası\nEv ofisi donanım desteği\nYılda 4 hafta ücretli izin',
       ),
       'email': FieldText('İletişim e-postası'),
     },
-    template: r'''{company}: {title}
+    template: r'''{title} · {company}
 {location} · {salary}
 
 HAKKIMIZDA
-{company}, {oneLiner} geliştiriyor. Hızlı yayın yapan ve her hafta müşterileriyle konuşan küçük bir ekibiz.
+{company} ne yapıyor? {oneLiner|cap}. Hızlı ürün çıkaran ve her hafta müşterileriyle konuşan küçük bir ekibiz.
 
-NE YAPACAKSINIZ
+NE YAPACAKSINIZ?
 {responsibilities|bullets}
 
-NE ARIYORUZ
+NE ARIYORUZ?
 {requirements|bullets}
 
-NE SUNUYORUZ
+NE SUNUYORUZ?
 {benefits|bullets}
 
-NASIL BAŞVURULUR
-Kısa bir not ve geliştirdiğiniz bir şeyin bağlantısını {email} adresine gönderin. Ön yazı gerekmez.
+NASIL BAŞVURULUR?
+Kısa bir not ve geliştirdiğiniz bir işin bağlantısını {email} adresine gönderin. Ön yazıya gerek yok.
 
-Her geçmişten ve kimlikten adayların başvurusunu memnuniyetle karşılıyoruz.''',
+Her geçmişten ve kimlikten adayların başvurularını memnuniyetle bekliyoruz.''',
   ),
   'interviewLibrary': ToolText(
-    name: 'Mülakat soruları kütüphanesi',
-    description: 'Role göre yapılandırılmış sorular.',
+    name: 'Mülakat soru bankası',
+    description: 'Pozisyona göre hazırlanmış yapılandırılmış mülakat soruları.',
     options: {
       'General': 'Genel',
-      'Engineering': 'Mühendislik',
+      'Engineering': 'Yazılım',
       'Design': 'Tasarım',
       'Sales': 'Satış',
     },
     fields: {
-      'role': FieldText('Rol'),
+      'role': FieldText('Alan'),
       'company': FieldText('Şirket adı'),
-      'title': FieldText('Pozisyon', example: 'Kurucu Mobil Mühendis'),
+      'title': FieldText(
+        'Pozisyon',
+        example: 'Mobil Yazılım Mühendisi (kurucu ekip)',
+      ),
     },
     templates: {
-      'General': r'''MÜLAKAT: {company}, {title}
+      'General': r'''MÜLAKAT: {title} · {company}
 
 Motivasyon
 1. Neden {company} ve neden şimdi?
 2. Ne tür işler size enerji veriyor?
 
-Geçmiş davranışlar
-3. Gurur duyduğunuz bir projeyi anlatın. Sizin payınız neydi?
-4. Bir ekip arkadaşınızla anlaşamadığınız bir anı anlatın. Ne oldu?
-5. İşte yaptığınız bir hatayı ve sonrasında neyi değiştirdiğinizi anlatın.
+Geçmiş deneyimler
+3. Gurur duyduğunuz bir projeyi anlatır mısınız? Sizin katkınız neydi?
+4. Bir ekip arkadaşınızla fikir ayrılığına düştüğünüz bir durumu anlatın. Nasıl sonuçlandı?
+5. İş hayatınızda yaptığınız bir hatayı ve sonrasında neyi değiştirdiğinizi anlatın.
 
-Girişim uyumu
-6. Kimse söylemediğinde neyin üzerinde çalışacağınıza nasıl karar verirsiniz?
-7. İlk yılınızda bir işten ayrılmanıza ne sebep olurdu?
+Girişime uyum
+6. Kimse size ne yapacağınızı söylemediğinde neyle uğraşacağınıza nasıl karar verirsiniz?
+7. Bir işi ilk yılınızda bırakmanıza ne sebep olurdu?
 
-Puanlama: her cevabı mülakattan hemen sonra, başkalarıyla konuşmadan önce 1–4 arası puanlayın.''',
-      'Engineering': r'''MÜHENDİSLİK MÜLAKATI: {company}, {title}
+Değerlendirme: Her cevabı mülakattan hemen sonra, başkalarıyla konuşmadan önce 1 ile 4 arasında puanlayın.''',
+      'Engineering': r'''YAZILIM MÜLAKATI: {title} · {company}
 
-1. Geliştirdiğiniz bir şeyin mimarisini anlatın. Neyi değiştirirdiniz?
-2. Düzelttiğiniz en zor hatayı anlatın. Nasıl buldunuz?
-3. Hızlı yayınlamak ile doğru inşa etmek arasında nasıl karar verirsiniz?
-4. Kodunuzu nasıl test edersiniz? Neyi test etmezsiniz?
-5. Performansı iyileştirdiğiniz bir anı anlatın. Nasıl ölçtünüz?
-6. Uygulama: çevrimdışı senkronizasyonlu bir gider takipçisinin veri modelini tasarlayın.
-7. Başkasının kodunu nasıl incelersiniz?
+1. Geliştirdiğiniz bir sistemin mimarisini anlatır mısınız? Bugün olsa neyi değiştirirdiniz?
+2. Çözdüğünüz en zor hatayı anlatın. Nasıl buldunuz?
+3. Hızlı çıkarmak ile sağlam kurmak arasında nasıl karar verirsiniz?
+4. Kodunuzu nasıl test edersiniz? Neleri test etmezsiniz?
+5. Performansı iyileştirdiğiniz bir durumu anlatın. İyileşmeyi nasıl ölçtünüz?
+6. Pratik görev: İnternetsiz çalışıp bağlantı gelince eşitlenen bir gider takip uygulamasının veri modelini tasarlayın.
+7. Başkasının yazdığı kodu nasıl incelersiniz?
 
-Puanlama: problem çözme, iletişim ve sahiplenmeyi 1–4 arası puanlayın.''',
-      'Design': r'''TASARIM MÜLAKATI: {company}, {title}
+Değerlendirme: Problem çözme, iletişim ve sorumluluk alma becerilerini 1 ile 4 arasında puanlayın.''',
+      'Design': r'''TASARIM MÜLAKATI: {title} · {company}
 
-1. Problemden yayınlanan tasarıma kadar bir vaka çalışmanızı anlatın.
+1. Problemden yayına alınan tasarıma kadar bir proje sürecinizi anlatır mısınız?
 2. Tasarımın işe yaradığını nasıl anladınız? Neyi ölçtünüz?
-3. Araştırmanın fikrinizi değiştirdiği bir anı anlatın.
-4. Zaman kısıtlıyken mühendislerle nasıl çalışırsınız?
-5. Her gün kullandığınız bir uygulamayı eleştirin.
-6. Uygulama: bir muhasebe uygulamasının ilk açılış deneyimini çizin.
+3. Kullanıcı araştırmasının fikrinizi değiştirdiği bir durumu anlatın.
+4. Zaman darken yazılımcılarla nasıl çalışırsınız?
+5. Her gün kullandığınız bir uygulamayı eleştirir misiniz?
+6. Pratik görev: Bir muhasebe uygulamasının ilk kullanım deneyimi için taslak çizin.
 
-Puanlama: ustalık, ürün düşüncesi ve iş birliğini 1–4 arası puanlayın.''',
-      'Sales': r'''SATIŞ MÜLAKATI: {company}, {title}
+Değerlendirme: Tasarım becerisi, ürün bakış açısı ve iş birliğini 1 ile 4 arasında puanlayın.''',
+      'Sales': r'''SATIŞ MÜLAKATI: {title} · {company}
 
-1. En iyi satışınızı ilk temastan kapanışa kadar anlatın.
+1. En başarılı satışınızı ilk temastan anlaşmaya kadar anlatır mısınız?
 2. Kaybettiğiniz bir satışı anlatın. Neyi farklı yapardınız?
-3. Sıfırdan nasıl bir satış hattı kurarsınız?
-4. Bir adayı nasıl nitelendirirsiniz? Hangi soruları sorarsınız?
-5. Canlandırma: {company} ürününü şüpheci bir serbest çalışana iki dakikada anlatın.
-6. Rakamlarınızı haftadan haftaya nasıl takip edersiniz?
+3. Sıfırdan bir satış hunisini nasıl oluşturursunuz?
+4. Bir müşteri adayının size uygun olup olmadığını nasıl değerlendirirsiniz? Hangi soruları sorarsınız?
+5. Rol çalışması: {company} ürününü şüpheci bir serbest çalışana iki dakikada anlatın.
+6. Satış rakamlarınızı haftadan haftaya nasıl takip edersiniz?
 
-Puanlama: müşteri bulma, ihtiyaç keşfi, kapanış ve gelişime açıklığı 1–4 arası puanlayın.''',
+Değerlendirme: Müşteri bulma, ihtiyaç analizi, satışı kapatma ve öğrenmeye açıklığı 1 ile 4 arasında puanlayın.''',
     },
   ),
   'meetingNotes': ToolText(
     name: 'Toplantı notları ve aksiyonlar',
-    description: 'Kararlar ve gerçekten yapılan aksiyonlar.',
+    description: 'Alınan kararlar ve gerçekten tamamlanan aksiyonlar.',
     itemLabel: 'Aksiyon',
-    stages: {'Open': 'Açık', 'Done': 'Bitti'},
+    stages: {'Open': 'Açık', 'Done': 'Tamamlandı'},
     fields: {
       'owner': FieldText('Sorumlu'),
-      'due': FieldText('Bitiş', example: 'Cuma'),
+      'due': FieldText('Teslim', example: 'Cuma'),
       'meeting': FieldText('Toplantı', example: 'Haftalık toplantı'),
     },
     samples: [
-      SampleText('Yatırımcı güncellemesini gönder', {
+      SampleText('Yatırımcı bilgilendirmesini gönder', {
         'due': 'Cum',
         'meeting': 'Haftalık toplantı',
       }),
-      SampleText('Başlangıçtaki kullanıcı kaybını düzelt', {
+      SampleText('Karşılama adımlarındaki kullanıcı kaybını azalt', {
         'due': 'Çar',
-        'meeting': 'Ürün değerlendirmesi',
+        'meeting': 'Ürün değerlendirme toplantısı',
       }),
-      SampleText('Bordro sağlayıcısını seç', {
+      SampleText('Bordro hizmeti sağlayıcısını seç', {
         'due': 'Pzt',
         'meeting': 'Haftalık toplantı',
       }),
     ],
   ),
   'onboardingChecklist': ToolText(
-    name: 'İşe başlangıç kontrol listesi',
-    description: 'Yeni bir ekip arkadaşının ilk haftaları için hazır adımlar.',
+    name: 'İşe alışma kontrol listesi',
+    description: 'Yeni ekip arkadaşınızın ilk haftaları için hazır adımlar.',
     itemLabel: 'Adım',
-    stages: {'To do': 'Yapılacak', 'Done': 'Bitti'},
+    stages: {'To do': 'Yapılacak', 'Done': 'Tamamlandı'},
     fields: {'when': FieldText('Ne zaman', example: '1. gün')},
     samples: [
-      SampleText('Teklif mektubunu ve sözleşmeyi gönder', {
-        'when': '1. günden önce',
+      SampleText('İş teklifi mektubunu ve sözleşmeyi gönder', {
+        'when': 'İlk günden önce',
       }),
-      SampleText('E-posta ve araç hesaplarını oluştur', {
-        'when': '1. günden önce',
-      }),
-      SampleText('Bilgisayarı ve ekipmanı gönder', {'when': '1. günden önce'}),
+      SampleText('E-posta ve araç hesaplarını aç', {'when': 'İlk günden önce'}),
+      SampleText('Bilgisayarı ve ekipmanı gönder', {'when': 'İlk günden önce'}),
       SampleText('Hoş geldin görüşmesi ve ekiple tanışma', {'when': '1. gün'}),
       SampleText('Misyonu, değerleri ve yol haritasını paylaş', {
         'when': '1. gün',
       }),
-      SampleText('Bir başlangıç rehberi ata', {'when': '1. gün'}),
-      SampleText('İlk küçük görev yayınlandı', {'when': '1. hafta'}),
+      SampleText('Bir oryantasyon arkadaşı (buddy) belirle', {
+        'when': '1. gün',
+      }),
+      SampleText('İlk küçük görevi tamamla', {'when': '1. hafta'}),
       SampleText('Beş müşteriyle tanış ya da görüşme kayıtlarını dinle', {
         'when': '2. hafta',
       }),
-      SampleText('30. gün değerlendirmesi', {'when': '30. gün'}),
+      SampleText('30. gün değerlendirme görüşmesi', {'when': '30. gün'}),
     ],
   ),
 };

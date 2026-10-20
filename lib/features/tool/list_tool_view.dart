@@ -46,7 +46,10 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
         foregroundColor: t.onAccent,
         icon: const Icon(Icons.add),
         label: Text(
-          context.l10n.listAddItem(nounIn(tool.itemLabel, tool.language)),
+          sentenceIn(
+            context.l10n.listAddItem(nounIn(tool.itemLabel, tool.language)),
+            tool.language,
+          ),
         ),
       ),
       body: Column(
@@ -311,7 +314,10 @@ class _ItemCard extends StatelessWidget {
               ),
               if (next != null)
                 IconButton(
-                  tooltip: context.l10n.listMoveTo(tool.stageLabel(next)),
+                  tooltip: sentenceIn(
+                    context.l10n.listMoveTo(tool.stageLabel(next)),
+                    tool.language,
+                  ),
                   onPressed: onAdvance,
                   icon: Icon(Icons.arrow_forward_rounded, color: t.accent),
                 )
@@ -515,13 +521,16 @@ class _ItemEditorState extends State<_ItemEditor> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              editing
-                  ? context.l10n.listEditItem(
-                      nounIn(tool.itemLabel, tool.language),
-                    )
-                  : context.l10n.listNewItem(
-                      nounIn(tool.itemLabel, tool.language),
-                    ),
+              sentenceIn(
+                editing
+                    ? context.l10n.listEditItem(
+                        nounIn(tool.itemLabel, tool.language),
+                      )
+                    : context.l10n.listNewItem(
+                        nounIn(tool.itemLabel, tool.language),
+                      ),
+                tool.language,
+              ),
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontSize: 22),

@@ -10,7 +10,7 @@ const mobileAppText = <String, Map<String, ToolText>>{
 
 const _tr = <String, ToolText>{
   'storeListing': ToolText(
-    name: 'Mağaza sayfası yazarı',
+    name: 'Mağaza sayfası metni',
     description: 'Uygulama mağazaları için başlık, alt başlık ve açıklama.',
     fields: {
       'app': FieldText('Uygulama adı'),
@@ -20,17 +20,17 @@ const _tr = <String, ToolText>{
       ),
       'audience': FieldText('Hedef kitle', example: 'serbest çalışanlar'),
       'features': FieldText(
-        'Temel özellikler',
+        'Öne çıkan özellikler',
         example:
-            'Banka senkronizasyonu her gideri sınıflandırır\nÜç aylık vergi tahmini\nFişleri bir saniyede çekin\nMali müşaviriniz için dışa aktarma',
+            'Banka entegrasyonu her gideri otomatik sınıflandırır\nGeçici vergi tahmini\nFişlerinizi bir saniyede fotoğraflayın\nMali müşaviriniz için dışa aktarma',
       ),
       'price': FieldText(
-        'Fiyat satırı',
+        'Fiyat bilgisi',
         example: r'14 gün ücretsiz, ardından aylık $12 veya yıllık $99.',
       ),
       'proof': FieldText(
         'Sosyal kanıt',
-        example: '1.200 serbest çalışan seviyor',
+        example: '1.200 serbest çalışan Nimbly’yi seviyor',
       ),
     },
     template: r'''UYGULAMA ADI
@@ -40,27 +40,27 @@ ALT BAŞLIK
 {subtitle}
 
 TANITIM METNİ
-{proof}. Akşamlarınızı geri alın.
+{proof}. Akşamlarınız size kalsın.
 
 AÇIKLAMA
-{app}, {audience} için yapılmış, kendi kendini yapan bir muhasebe uygulamasıdır.
+{app}, {audience} için tasarlanmış, kendi kendine işleyen bir muhasebe uygulamasıdır.
 
-NELER SUNAR
+NELER SUNUYOR?
 {features|bullets}
 
-NEDEN {app|upper}
+NEDEN {app|upper}?
 • İki dakikada kurulum
-• Gizlilik odaklı tasarım: verilerinizi asla satmayız
+• Gizliliğe önem veren tasarım: verilerinizi asla satmayız
 
-FİYAT
+FİYATLANDIRMA
 {price}
-Abonelikler, dönem bitiminden en az 24 saat önce iptal edilmezse otomatik olarak yenilenir. Hesap ayarlarınızdan yönetebilir veya iptal edebilirsiniz.
+Abonelik, dönem bitiminden en az 24 saat önce iptal edilmezse otomatik olarak yenilenir. Aboneliğinizi hesap ayarlarınızdan yönetebilir veya iptal edebilirsiniz.
 
-Göndermeden önce sınırları kontrol edin: ad 30 karakter, alt başlık 30, tanıtım metni 170.''',
+Göndermeden önce karakter sınırlarını kontrol edin: uygulama adı 30, alt başlık 30, tanıtım metni 170 karakter.''',
   ),
   'asoKeywords': ToolText(
     name: 'ASO anahtar kelime aracı',
-    description: 'App Store araması için anahtar kelime alanı fikirleri.',
+    description: 'App Store aramaları için anahtar kelime alanı önerileri.',
     fields: {
       'app': FieldText('Uygulama adı'),
       'primary': FieldText('Birincil anahtar kelime', example: 'muhasebe'),
@@ -68,17 +68,17 @@ Göndermeden önce sınırları kontrol edin: ad 30 karakter, alt başlık 30, t
       'audience': FieldText('Hedef kitle', example: 'serbest çalışan'),
       'competitor': FieldText(
         'Rakip',
-        hint: 'Anahtar kelime alanında başka marka adları kullanmayın',
+        hint: 'Anahtar kelime alanında başka markaların adlarını kullanmayın',
       ),
     },
     template:
         r'''ANAHTAR KELİME ALANI (100 karakter, virgülle ayrılmış, boşluksuz)
 {primary|lower},{secondary|lower},takip,fiş,vergi,fatura,{audience|lower},bütçe,defter,gelir,tarayıcı
 
-BAŞLIK + ALT BAŞLIK FİKİRLERİ
-• {app}: {primary|cap} ve {secondary|cap} Takibi
-• {app}: {audience|cap} için {primary|cap}
-• {audience|cap} için {secondary|cap} Takibi
+BAŞLIK VE ALT BAŞLIK FİKİRLERİ
+• {app}: {primary|cap} ve {secondary|lower} takibi
+• {app}: {audience|cap} için {primary|lower}
+• {audience|cap} için {secondary|lower} takibi
 
 HEDEFLENECEK UZUN KUYRUK ARAMALAR
 • {audience|lower} için {primary|lower} uygulaması
@@ -86,14 +86,14 @@ HEDEFLENECEK UZUN KUYRUK ARAMALAR
 • şahıs şirketi {primary|lower}
 
 KURALLAR
-• Başlıkta veya alt başlıkta zaten olan kelimeleri tekrarlamayın.
-• Tekil biçimler kullanın; mağaza çoğulları eşleştirir.
+• Başlıkta veya alt başlıkta geçen kelimeleri tekrar yazmayın.
+• Kelimelerin tekil hâlini kullanın; mağaza çoğul hâllerini de eşleştirir.
 • "{competitor}" gibi rakip adlarını kullanmayın.
-• Her seferinde tek bir değişkeni değiştirin ve karar vermeden önce 2–4 hafta bekleyin.''',
+• Her seferinde yalnızca bir şeyi değiştirin ve sonucu değerlendirmeden önce 2–4 hafta bekleyin.''',
   ),
   'reviewReply': ToolText(
-    name: 'Yorum yanıtı yazarı',
-    description: 'Mağaza yorumlarına sakin ve yardımsever yanıtlar.',
+    name: 'Yorum yanıtlayıcı',
+    description: 'Mağaza yorumlarına sakin ve yardımcı yanıtlar.',
     options: {
       'Positive': 'Olumlu',
       'Negative': 'Olumsuz',
@@ -104,71 +104,71 @@ KURALLAR
       'kind': FieldText('Yorum türü'),
       'name': FieldText('Yorum yapanın adı'),
       'app': FieldText('Uygulama adı'),
-      'topic': FieldText('Bahsettiği konu', example: 'banka senkronizasyonu'),
+      'topic': FieldText('Bahsettiği konu', example: 'banka entegrasyonu'),
       'email': FieldText('Destek e-postası'),
     },
     templates: {
       'Positive':
-          r'''Merhaba {name}, çok teşekkür ederiz! Şu özelliğin size zaman kazandırmasına çok sevindik: {topic}. {app} uygulamasını daha da iyi yapacak fikirleriniz varsa {email} adresinden duymayı çok isteriz.''',
+          r'''Merhaba {name}, çok teşekkür ederiz! {topic|cap} özelliğinin size zaman kazandırmasına çok sevindik. {app} uygulamasını daha da iyi hâle getirecek fikirleriniz varsa {email} adresine yazmanızı çok isteriz.''',
       'Negative':
-          r'''Merhaba {name}, bu konuda sizi hayal kırıklığına uğrattığımız için üzgünüz: {topic}. Size yaşatmak istediğimiz deneyim bu değil. Lütfen birkaç ayrıntıyla {email} adresine yazın, sorunu bizzat çözelim.''',
+          r'''Merhaba {name}, {topic} konusunda sizi hayal kırıklığına uğrattığımız için çok üzgünüz. Size yaşatmak istediğimiz deneyim kesinlikle bu değil. Birkaç ayrıntıyla birlikte {email} adresine yazarsanız sorunu bizzat ilgilenerek çözelim.''',
       'Bug report':
-          r'''Merhaba {name}, bu konudaki sorunu bildirdiğiniz için teşekkürler: {topic}. Ekibimiz üzerinde çalışıyor ve düzeltme bir sonraki güncellemeyle geliyor. Cihaz modelinizi {email} adresine gönderebilirseniz düzeltmeyi doğrulamamıza yardımcı olur.''',
+          r'''Merhaba {name}, {topic} ile ilgili sorunu bildirdiğiniz için teşekkür ederiz. Ekibimiz konu üzerinde çalışıyor; düzeltme bir sonraki güncellemeyle gelecek. Cihaz modelinizi {email} adresine gönderebilirseniz düzeltmenin sizde de çalıştığını doğrulamamıza yardımcı olursunuz.''',
       'Feature request':
-          r'''Merhaba {name}, harika fikir! {topic|cap} listemizde ve oyunuz onu üst sıralara taşıyor. Gelişmeleri takip etmek ya da daha fazla ayrıntı paylaşmak için: {email}.''',
+          r'''Merhaba {name}, harika bir fikir! {topic|cap} listemizde ve sizin oyunuz onu öne taşıyor. Daha fazla ayrıntı paylaşmak isterseniz {email} adresine yazabilirsiniz.''',
     },
   ),
   'appPrivacy': ToolText(
     name: 'Uygulama gizlilik politikası',
     description:
-        'Mağaza gizlilik etiketleriyle uyumlu bir uygulama gizlilik politikası.',
+        'Mağazalardaki gizlilik beyanlarıyla uyumlu bir uygulama gizlilik politikası.',
     options: {
-      'No account': 'Hesap yok',
+      'No account': 'Hesap gerekmiyor',
       'Account required': 'Hesap zorunlu',
-      'Optional account': 'İsteğe bağlı hesap',
+      'Optional account': 'Hesap isteğe bağlı',
       'No analytics': 'Analitik yok',
-      'Anonymous analytics': 'Anonim analitik',
-      'Analytics linked to user': 'Kullanıcıya bağlı analitik',
+      'Anonymous analytics': 'Anonim analitik var',
+      'Analytics linked to user': 'Kişiye bağlı analitik var',
       'No ads': 'Reklam yok',
-      'Ads without tracking': 'İzlemesiz reklam',
-      'Ads with tracking': 'İzlemeli reklam',
+      'Ads without tracking': 'Takipsiz reklam var',
+      'Ads with tracking': 'Takipli reklam var',
     },
     fields: {
       'app': FieldText('Uygulama adı'),
       'developer': FieldText('Geliştirici', example: 'Nimbly A.Ş.'),
       'email': FieldText('Destek e-postası'),
-      'account': FieldText('Hesaplar'),
+      'account': FieldText('Hesap'),
       'analytics': FieldText('Analitik'),
       'ads': FieldText('Reklam'),
       'date': FieldText('Yürürlük tarihi', example: '19 Ekim 2026'),
     },
     template: r'''GİZLİLİK POLİTİKASI: {app}
-Yürürlük: {date}
+Yürürlük tarihi: {date}
 
-{app} uygulamasını {developer} ("biz") geliştirdi. Bu politika, uygulamanın hangi verileri işlediğini açıklar.
+{app} uygulaması {developer} ("biz") tarafından geliştirilmiştir. Bu politika, uygulamanın hangi verileri işlediğini açıklar.
 
 HESAPLAR
-{account}. Bir hesap oluşturursanız, onu ve verilerini istediğiniz zaman uygulamanın içinden silebilirsiniz.
+{account}. Hesap oluşturursanız, hesabınızı ve ona bağlı verileri istediğiniz zaman uygulama içinden silebilirsiniz.
 
 CİHAZINIZDA SAKLANAN VERİLER
-{app} uygulamasına girdiğiniz bilgiler, senkronize etmeyi ya da paylaşmayı seçmediğiniz sürece cihazınızda saklanır.
+{app} uygulamasına girdiğiniz bilgiler, eşitlemeyi ya da paylaşmayı siz seçmedikçe yalnızca cihazınızda saklanır.
 
 ANALİTİK
-{analytics}. Analitiği yalnızca uygulamayı geliştirmek için kullanırız; sizi reklam amacıyla tanımlamak için asla kullanmayız.
+{analytics}. Analitik verileri yalnızca uygulamayı geliştirmek için kullanırız; sizi reklam amacıyla tanımlamak için asla kullanmayız.
 
-REKLAM VE İZLEME
-{ads}. Uygulama sizi başka şirketlerin uygulama veya web sitelerinde izleyecek olursa önce izninizi ister.
+REKLAM VE TAKİP
+{ads}. Uygulama sizi başka şirketlerin uygulamalarında veya web sitelerinde takip edecek olursa önce izninizi ister.
 
-SATIN ALIMLAR
-Ödemeler App Store veya Google Play tarafından yürütülür. Kart bilgilerinizi görmeyiz.
+SATIN ALMALAR
+Ödemeler App Store veya Google Play üzerinden yapılır. Kart bilgilerinizi göremeyiz.
 
 ÇOCUKLAR
 {app}, 13 yaşından küçük çocuklara yönelik değildir.
 
 HAKLARINIZ
-Verilerinizin bir kopyasını veya silinmesini {email} adresinden isteyin.
+Verilerinizin bir kopyasını almak veya silinmesini istemek için {email} adresine yazabilirsiniz.
 
-Bu politikayı App Store Connect’teki Uygulama Gizliliği bilgileri ve Google Play’deki Veri güvenliği formuyla tutarlı tutun.''',
+Not: Bu politikayı App Store Connect’teki Uygulama Gizliliği bilgileriyle ve Google Play’deki Veri güvenliği formuyla tutarlı tutun.''',
   ),
 };
 

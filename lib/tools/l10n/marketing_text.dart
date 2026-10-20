@@ -11,44 +11,45 @@ const marketingText = <String, Map<String, ToolText>>{
 const _tr = <String, ToolText>{
   'brandName': ToolText(
     name: 'Marka adı ve slogan',
-    description: 'Birkaç anahtar kelimeden ad fikirleri ve sloganlar.',
+    description: 'Birkaç anahtar kelimeden isim fikirleri ve sloganlar.',
     fields: {
       'keyword': FieldText(
         'Ana anahtar kelime',
         example: 'defter',
-        hint: 'Ürünü anlatan tek kelime',
+        hint: 'Ürünü anlatan tek bir kelime',
       ),
       'keyword2': FieldText('İkinci anahtar kelime', example: 'kolay'),
       'benefit': FieldText(
         'Ana fayda',
-        example: 'kazandığınızın daha fazlası cebinizde',
+        example: 'kazandığınızın daha fazlası cebinizde kalsın',
       ),
       'audience': FieldText('Hedef kitle', example: 'serbest çalışanlar'),
     },
-    template: r'''AD FİKİRLERİ
+    template: r'''İSİM FİKİRLERİ
 • {keyword|cap}im
 • {keyword2|cap}
-• {keyword|cap}Go
-• {keyword|cap}Hane
+• {keyword|cap}hane
 • {keyword2|cap}{keyword|cap}
-• {keyword|cap}ify
+• Cep{keyword|cap}
+• {keyword|cap}Go
+• Akıllı{keyword|cap}
+• {keyword|cap}360
+• {keyword|cap}Pro
 • Hey{keyword|cap}
-• {keyword|cap}Merkez
-• {keyword2|cap}App
-• {keyword2|cap}io
 
 SLOGANLAR
 • {benefit|cap}.
-• {audience|cap} için yapıldı. Dakikalar içinde hazır.
-• Siz çalışırken çalışan {keyword|lower}.
-• Daha az evrak. Daha çok iş.
-• Tasarımı gereği {keyword2|lower}.
+• {audience|cap} için tasarlandı. Dakikalar içinde hazır.
+• Siz çalışırken o da çalışır.
+• Daha az evrak, daha çok üretim.
+• {keyword2|cap}, çünkü öyle tasarlandı.
 
-Seçmeden önce: alan adını ve uygulama mağazasındaki adları kontrol edin, marka tescillerini arayın ve adı beş kişiye yüksek sesle söyleyin.''',
+Karar vermeden önce: .com ve .com.tr alan adlarını ve uygulama mağazalarındaki isimleri kontrol edin, TÜRKPATENT’te marka araması yapın ve ismi beş kişiye sesli söyleyip tepkilerine bakın.''',
   ),
   'colorPalette': ToolText(
     name: 'Renk paleti ve logo fikri',
-    description: 'Marka havasına göre başlangıç paleti ve logo yönü.',
+    description:
+        'Marka karakterine göre başlangıç renk paleti ve logo önerisi.',
     options: {
       'Trustworthy': 'Güven veren',
       'Bold': 'Cesur',
@@ -58,64 +59,64 @@ Seçmeden önce: alan adını ve uygulama mağazasındaki adları kontrol edin, 
     },
     fields: {
       'company': FieldText('Girişim adı'),
-      'mood': FieldText('Marka havası'),
+      'mood': FieldText('Marka karakteri'),
     },
     templates: {
       'Trustworthy': r'''PALET: GÜVEN VEREN ({company})
 Ana renk     #1F4FD8  koyu mavi
-İkincil      #14B8A6  camgöbeği
-Vurgu        #F59E0B  kehribar, eylem çağrıları için
+İkincil      #14B8A6  turkuaz
+Vurgu        #F59E0B  kehribar, harekete geçirici düğmeler için
 Nötr         #0F172A / #F8FAFC
-Başlıklar ve düğmeler için maviyi, kehribarı yalnızca istediğiniz tek eylem için kullanın.
+Başlık ve düğmelerde maviyi, kehribarı ise yalnızca kullanıcının yapmasını istediğiniz tek eylemde kullanın.
 
 LOGO FİKRİ
-Geometrik bir sans yazı tipiyle sade bir "{company}" yazısı; ilk harfe katlanmış küçük bir onay işareti ya da kalkan.''',
+Geometrik, tırnaksız (sans-serif) bir yazı tipiyle sade bir "{company}" yazısı; ilk harfin içine yerleştirilmiş küçük bir onay işareti ya da kalkan.''',
       'Bold': r'''PALET: CESUR ({company})
-Ana renk     #E11D48  kızıl
+Ana renk     #E11D48  koyu kırmızı
 İkincil      #111827  siyaha yakın
 Vurgu        #FACC15  sarı
 Nötr         #F9FAFB
-Yüksek kontrast; kırmızı öne çıksın diye geniş alanları siyah ya da beyaz bırakın.
+Yüksek kontrast; kırmızının öne çıkması için geniş alanları siyah ya da beyaz bırakın.
 
 LOGO FİKRİ
-Kalın, dar "{company|upper}" yazısı; harflerden biri çapraz kesilmiş.''',
+Kalın ve dar (condensed) harflerle "{company|upper}" yazısı; harflerden biri çapraz kesilmiş.''',
       'Calm': r'''PALET: SAKİN ({company})
 Ana renk     #4F8A8B  adaçayı yeşili
-İkincil      #A7C4BC  sis
+İkincil      #A7C4BC  açık gri-yeşil
 Vurgu        #F4A261  yumuşak turuncu
 Nötr         #FBFAF7 / #2B2D42
-Bol boşluk, yuvarlak biçimler.
+Bol boşluk, yuvarlak hatlar.
 
 LOGO FİKRİ
-Yuvarlak bir sans yazı tipiyle küçük harfli "{company|lower}"; yanında yumuşak bir daire ya da yaprak simgesi.''',
+Yuvarlak hatlı, tırnaksız bir yazı tipiyle küçük harflerle "{company|lower}"; yanında yumuşak bir daire ya da yaprak simgesi.''',
       'Playful': r'''PALET: EĞLENCELİ ({company})
 Ana renk     #7C3AED  mor
-İkincil      #22D3EE  turkuaz
+İkincil      #22D3EE  camgöbeği
 Vurgu        #FB7185  mercan
 Nötr         #FFFFFF / #1E1B4B
-İllüstrasyonlarda renkleri özgürce karıştırın; metni açık zemin üzerinde koyu tutun.
+İllüstrasyonlarda renkleri özgürce karıştırın; metinleri açık zemin üzerinde koyu renkte tutun.
 
 LOGO FİKRİ
-Yuvarlak, hafif zıplayan bir yazı tipiyle "{company}" ve yanında sevimli bir maskot ya da damla biçimi.''',
+Yuvarlak, hafif hareketli bir yazı tipiyle "{company}" ve yanında sevimli bir maskot ya da yumuşak hatlı bir şekil.''',
       'Premium': r'''PALET: PREMIUM ({company})
 Ana renk     #0B1020  gece mavisi
 İkincil      #C9A227  mat altın
 Vurgu        #E5E7EB  gümüş
 Nötr         #FAFAF9
-Altını idareli kullanın: çizgiler, simgeler, ekran başına tek vurgu.
+Altın rengini az kullanın: ince çizgiler, simgeler ve ekran başına tek bir vurgu.
 
 LOGO FİKRİ
-Yüksek kontrastlı serif bir yazı tipiyle aralıklı büyük harflerle "{company|upper}" ya da ince bir çerçeve içinde ilk harften bir monogram.''',
+Yüksek kontrastlı, tırnaklı (serif) bir yazı tipiyle harf aralığı açık "{company|upper}" yazısı ya da ince bir çerçeve içinde ilk harften oluşan bir monogram.''',
     },
   ),
   'contentCalendar': ToolText(
     name: 'İçerik takvimi',
-    description: 'Gönderileri fikirden yayına kadar planlayın.',
-    itemLabel: 'Gönderi',
+    description: 'Paylaşımlarınızı fikir aşamasından yayına kadar planlayın.',
+    itemLabel: 'Paylaşım',
     stages: {
       'Idea': 'Fikir',
       'Drafting': 'Taslak',
-      'Scheduled': 'Planlandı',
+      'Scheduled': 'Zamanlandı',
       'Published': 'Yayınlandı',
     },
     fields: {
@@ -126,65 +127,74 @@ Yüksek kontrastlı serif bir yazı tipiyle aralıklı büyük harflerle "{compa
       SampleText('Serbest çalışanların unuttuğu 5 vergi indirimi', {
         'date': '22 Eki',
       }),
-      SampleText('Perde arkası: banka senkronizasyonu', {'date': '24 Eki'}),
-      SampleText('Üç aylık vergi son tarihi hatırlatması', {'date': '10 Oca'}),
+      SampleText('Kamera arkası: banka entegrasyonunu nasıl kurduk?', {
+        'date': '24 Eki',
+      }),
+      SampleText('Geçici vergi beyannamesi son gün hatırlatması', {
+        'date': '10 Oca',
+      }),
     ],
   ),
   'landingPage': ToolText(
     name: 'Açılış sayfası metni',
-    description: 'Ana başlık, faydalar, sosyal kanıt ve eylem çağrısı.',
+    description:
+        'Giriş bölümü, faydalar, sosyal kanıt ve harekete geçirici mesaj.',
     fields: {
       'company': FieldText('Ürün adı'),
       'audience': FieldText('Hedef kitle', example: 'serbest çalışanlar'),
       'outcome': FieldText(
-        'Ana sonuç',
-        example: 'Kendi kendini yapan muhasebe',
+        'Ana vaat',
+        example: 'Kendi kendine işleyen muhasebe',
       ),
       'problem': FieldText(
         'Problem',
         example:
-            'Serbest çalışmaya harika işler çıkarmak için başladınız, fiş kovalamak için değil.',
+            'Serbest çalışmaya harika işler çıkarmak için başladınız, fiş peşinde koşmak için değil.',
       ),
       'features': FieldText(
-        'En önemli 3 özellik',
+        'Öne çıkan 3 özellik',
         example:
-            'Banka senkronizasyonu her gideri sınıflandırır\nÜç aylık vergi tahmini, her zaman güncel\nFişleri bir saniyede çekin',
+            'Banka entegrasyonu her gideri otomatik sınıflandırır\nGeçici vergi tahmini her zaman güncel\nFişlerinizi bir saniyede fotoğraflayın',
       ),
       'proof': FieldText(
         'Sosyal kanıt',
-        example: '1.200 serbest çalışan güveniyor',
+        example: '1.200 serbest çalışan Nimbly’ye güveniyor',
       ),
-      'cta': FieldText('Eylem çağrısı', example: 'Ücretsiz başla'),
+      'cta': FieldText(
+        'Harekete geçirici mesaj (CTA)',
+        example: 'Ücretsiz deneyin',
+      ),
     },
-    template: r'''ANA BÖLÜM
+    template: r'''GİRİŞ BÖLÜMÜ
 {outcome}.
-{company}, {audience} için yapıldı.
+{company}, {audience} için tasarlandı.
 → {cta}
 
 PROBLEM
 {problem}
 
-{company|upper} NASIL YARDIM EDER
+{company|upper} SİZE NASIL YARDIMCI OLUR?
 {features|bullets}
 
 SOSYAL KANIT
 {proof}
 
-SSS
+SIKÇA SORULAN SORULAR
 • Kurulum ne kadar sürer? Yaklaşık iki dakika.
 • İstediğim zaman iptal edebilir miyim? Evet, tek dokunuşla.
-• Verilerim güvende mi? Banka düzeyinde şifreleme; verileri asla satmayız.
+• Verilerim güvende mi? Banka düzeyinde şifreleme kullanıyoruz ve verilerinizi asla satmıyoruz.
 
-SON EYLEM ÇAĞRISI
-Zamanınızı geri almaya hazır mısınız? → {cta}''',
+SON ÇAĞRI
+Zamanınızı geri kazanmaya hazır mısınız? → {cta}''',
   ),
   'emailTemplates': ToolText(
     name: 'E-posta şablonları',
-    description: 'Soğuk erişim, takip, yatırımcı güncellemesi, teşekkür.',
+    description:
+        'İlk temas, hatırlatma, yatırımcı bilgilendirmesi ve teşekkür e-postaları.',
     options: {
-      'Cold outreach': 'Soğuk erişim',
-      'Follow-up': 'Takip',
-      'Investor update': 'Yatırımcı güncellemesi',
+      'Cold outreach': 'İlk temas',
+      'Follow-up': 'Hatırlatma',
+      'Investor update': 'Yatırımcı bilgilendirmesi',
       'Thank you': 'Teşekkür',
     },
     fields: {
@@ -194,55 +204,55 @@ Zamanınızı geri almaya hazır mısınız? → {cta}''',
       'company': FieldText('Girişim adı'),
       'oneLiner': FieldText(
         'Tek cümlelik tanım',
-        example: 'serbest çalışanlar için kendi kendini yapan muhasebe',
+        example: 'serbest çalışanlar için kendi kendine işleyen muhasebe',
       ),
       'hook': FieldText(
-        'Kişisel bağlantı',
-        example: 'SaaStr’daki tek kurucular konuşmanız',
+        'Kişisel giriş',
+        example: 'SaaStr’da tek başına kurucular üzerine yaptığınız konuşma',
       ),
       'traction': FieldText(
-        'Çekiş',
-        example: r'3,5 bin $ MRR, bu ay %18 artış',
+        'Son durum',
+        example: r'3,5 bin $ aylık yinelenen gelir, bu ay %18 artış',
       ),
       'ask': FieldText(
-        'Talep',
+        'İsteğiniz',
         example: 'önümüzdeki hafta 20 dakikalık bir görüşme',
       ),
     },
     templates: {
-      'Cold outreach': r'''Konu: Kısa bir soru, {recipient}
+      'Cold outreach': r'''Konu: Kısa bir sorum var, {recipient}
 
 Merhaba {recipient},
 
-{hook} beni çok etkiledi. Ben {sender}, {company} kurucusuyum: {oneLiner}.
+{hook} beni çok etkiledi. Ben {sender}, {company} adlı girişimin kurucusuyum: {oneLiner}.
 
-Şu an {traction} seviyesindeyiz ve bir sonraki adımımız hakkında keskin bir görüşünüz olacağını düşünüyorum.
+Güncel durumumuz: {traction}. Bundan sonraki adımlarımız konusunda görüşlerinizin çok değerli olacağını düşünüyorum.
 
-{ask} için müsait olur musunuz?
+Sizin için de uygunsa {ask} rica edebilir miyim?
 
 Teşekkürler,
 {sender}''',
-      'Follow-up': r'''Konu: Ynt: Kısa bir soru, {recipient}
+      'Follow-up': r'''Konu: Ynt: Kısa bir sorum var, {recipient}
 
 Merhaba {recipient},
 
-Gözden kaçmış olabilir diye tekrar yazıyorum. Son mesajımdan bu yana: {traction}.
+Önceki e-postam gözünüzden kaçmış olabilir diye tekrar yazıyorum. Son yazdığımdan bu yana: {traction}.
 
-{ask} konusunda hâlâ çok istekliyim. Şu an uygun değilse söylemeniz yeterli, bir sonraki çeyrekte tekrar yazarım.
+Önerim hâlâ geçerli: {ask}. Şu an uygun değilse söylemeniz yeterli; bir sonraki çeyrekte yeniden yazarım.
 
-Sevgiler,
+Saygılarımla,
 {sender}''',
-      'Investor update': r'''Konu: {company} güncellemesi: {traction}
+      'Investor update': r'''Konu: {company} aylık bilgilendirme: {traction}
 
 Merhaba {recipient},
 
-Öne çıkanlar
+Bu ay iyi gidenler
 • {traction}
 
-Zorluklar
-• Bu ay neyin işe yaramadığı ve ne öğrendiğimiz.
+Zorlandığımız konular
+• Bu ay neyin işe yaramadığı ve bundan ne öğrendiğimiz.
 
-Talepler
+Desteğinizi beklediğimiz konular
 • {ask}
 
 Desteğiniz için teşekkürler,
@@ -251,49 +261,49 @@ Desteğiniz için teşekkürler,
 
 Merhaba {recipient},
 
-Bugün zaman ayırdığınız için teşekkür ederim. {hook} hakkındaki görüşünüz özellikle çok faydalı oldu.
+Bugün bana zaman ayırdığınız için çok teşekkür ederim. Sohbetimizde değindiğiniz şu konu özellikle çok faydalı oldu: {hook}.
 
-Söz verdiğim gibi, sonraki adımları cuma gününe kadar ileteceğim.
+Söz verdiğim gibi, sonraki adımları cuma gününe kadar size ileteceğim.
 
-Sevgiler,
+Saygılarımla,
 {sender}
 {company}''',
     },
   ),
   'seoKeywords': ToolText(
     name: 'SEO anahtar kelime fikirleri',
-    description: 'Müşterilerinizin aradığı terimler.',
+    description: 'Müşterilerinizin arama motorlarına yazdığı ifadeler.',
     fields: {
       'topic': FieldText('Konu', example: 'muhasebe'),
       'audience': FieldText('Hedef kitle', example: 'serbest çalışanlar'),
       'alternative': FieldText(
         'Bilinen rakip ya da alternatif',
-        example: 'excel tabloları',
+        example: 'excel',
       ),
       'location': FieldText('Konum', example: 'Türkiye'),
     },
-    template: r'''YÜKSEK NİYET (satın almaya hazır)
+    template: r'''SATIN ALMA NİYETİ YÜKSEK
 • {audience} için en iyi {topic} uygulaması
-• {audience} için {topic} yazılımı
+• {audience} için {topic} programı
 • {topic} programı fiyatları
 • {topic} için {alternative} alternatifi
 
-PROBLEM (yardım arıyor)
-• serbest çalışan olarak {topic} nasıl yapılır
+PROBLEM ODAKLI (yardım arayanlar)
+• serbest çalışan {topic} nasıl yapılır
 • {audience} için {topic} ipuçları
-• kaçınılması gereken {topic} hataları
+• en sık yapılan {topic} hataları
 • {audience} için {topic} kontrol listesi
 
 YEREL
-• {location} {audience} için {topic}
-• {location} {topic} kuralları {audience}
+• {topic} {audience} {location}
+• {topic} mevzuatı {location}
 
 UZUN KUYRUK BLOG FİKİRLERİ
 • {audience|cap} için {topic}: yeni başlayanlar rehberi
-• {alternative|cap} mı, {topic} uygulamaları mı: hangisi daha iyi?
+• {alternative|cap} mı, {topic} uygulaması mı? Hangisi daha iyi?
 • {topic|cap} her ay ne kadar zaman alıyor?
 
-Sonraki adım: hacim ve zorluğu bir anahtar kelime aracında kontrol edin, ardından her yüksek niyetli terim için bir sayfa yazın.''',
+Sonraki adım: Bu ifadelerin arama hacmini ve rekabet düzeyini bir anahtar kelime aracında kontrol edin, ardından satın alma niyeti yüksek her ifade için ayrı bir sayfa hazırlayın.''',
   ),
 };
 

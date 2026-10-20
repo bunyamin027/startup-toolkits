@@ -5,41 +5,50 @@ const growthText = <String, Map<String, ToolText>>{
   'tr': {
     'kpiBoard': ToolText(
       name: 'KPI panosu',
-      description: 'Önemli olan birkaç rakam ve gidişatları.',
+      description: 'Gerçekten önemli birkaç metrik ve nasıl gittikleri.',
       itemLabel: 'KPI',
       stages: {
         'On track': 'Yolunda',
         'At risk': 'Risk altında',
-        'Off track': 'Yoldan çıktı',
+        'Off track': 'Hedefin gerisinde',
       },
-      fields: {'current': FieldText('Mevcut'), 'target': FieldText('Hedef')},
+      fields: {
+        'current': FieldText('Şu anki değer'),
+        'target': FieldText('Hedef'),
+      },
       samples: [
-        SampleText('Aylık tekrarlayan gelir', {
+        SampleText('Aylık yinelenen gelir (MRR)', {
           'current': r'$3.500',
           'target': r'$5.000',
         }),
-        SampleText('Denemeden ücretliye', {'current': '%6', 'target': '%8'}),
-        SampleText('Aylık kayıp oranı', {'current': '%7', 'target': '%4'}),
+        SampleText('Denemeden ücretliye geçiş', {
+          'current': '%6',
+          'target': '%8',
+        }),
+        SampleText('Aylık müşteri kaybı (churn)', {
+          'current': '%7',
+          'target': '%4',
+        }),
       ],
     ),
     'abTest': ToolText(
-      name: 'A/B testi anlamlılığı',
-      description: 'B varyantı gerçekten daha mı iyi, yoksa şans mı?',
+      name: 'A/B testi anlamlılık hesabı',
+      description: 'B seçeneği gerçekten daha mı iyi, yoksa sonuç tesadüf mü?',
       fields: {
-        'visitorsA': FieldText('Ziyaretçi A'),
-        'conversionsA': FieldText('Dönüşüm A'),
-        'visitorsB': FieldText('Ziyaretçi B'),
-        'conversionsB': FieldText('Dönüşüm B'),
+        'visitorsA': FieldText('A ziyaretçi sayısı'),
+        'conversionsA': FieldText('A dönüşüm sayısı'),
+        'visitorsB': FieldText('B ziyaretçi sayısı'),
+        'conversionsB': FieldText('B dönüşüm sayısı'),
       },
     ),
     'funnel': ToolText(
       name: 'Dönüşüm hunisi',
-      description: 'İnsanlar ziyaret ile ödeme arasında nerede kopuyor.',
+      description: 'Kullanıcılar ziyaretten ödemeye giderken nerede kopuyor?',
       fields: {
-        'visitors': FieldText('Ziyaretçiler'),
-        'signups': FieldText('Kayıtlar'),
-        'active': FieldText('Aktif kullanıcılar'),
-        'paying': FieldText('Ödeyen müşteriler'),
+        'visitors': FieldText('Ziyaretçi'),
+        'signups': FieldText('Kayıt olan'),
+        'active': FieldText('Aktif kullanıcı'),
+        'paying': FieldText('Ödeme yapan müşteri'),
       },
     ),
   },

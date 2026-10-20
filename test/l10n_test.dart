@@ -90,7 +90,7 @@ void main() {
     // Tool names follow too, e.g. in Home's Start here list.
     await tester.tap(find.text('Ana sayfa'));
     await tester.pumpAndSettle();
-    expect(find.text('Sunum sihirbazı'), findsWidgets);
+    expect(find.text('Yatırımcı sunumu sihirbazı'), findsWidgets);
 
     await pumpRoot(tester, kv: kv);
     expect(find.text('Ana sayfa'), findsOneWidget);
@@ -119,7 +119,7 @@ void main() {
       expect(find.textContaining('Monate'), findsWidgets);
 
       await switchTo(tester, c, 'tr');
-      expect(find.text('Pist ve yakım hızı'), findsOneWidget);
+      expect(find.text('Nakit ömrü ve nakit yakma hızı'), findsOneWidget);
       expect(find.text(r'$120.000'), findsOneWidget);
     });
 
@@ -150,11 +150,11 @@ void main() {
       await switchTo(tester, c, 'tr');
       final output = tester.widget<SelectableText>(find.byType(SelectableText));
       // The stored choice is English; the policy shows it in Turkish.
-      expect(output.data, contains('HESAPLAR\nHesap yok.'));
+      expect(output.data, contains('HESAPLAR\nHesap gerekmiyor.'));
       expect(output.data, endsWith('Kullanmadan önce bir avukata inceletin.'));
       await tester.tap(find.text('Düzenle'));
       await tester.pumpAndSettle();
-      expect(find.text('Hesap yok'), findsOneWidget);
+      expect(find.text('Hesap gerekmiyor'), findsOneWidget);
     });
 
     testWidgets('tracker stages and untouched samples', (tester) async {
@@ -165,8 +165,8 @@ void main() {
 
       await switchTo(tester, c, 'tr');
       expect(find.text('Yapılıyor  2'), findsOneWidget);
-      expect(find.text('Banka senkronizasyonu hata yönetimi'), findsOneWidget);
-      expect(find.text('Ekle: görev'), findsOneWidget);
+      expect(find.text('Banka entegrasyonunda hata yönetimi'), findsOneWidget);
+      expect(find.text('Görev ekle'), findsOneWidget);
 
       await switchTo(tester, c, 'de');
       expect(find.text('Aufgabe hinzufügen'), findsOneWidget);

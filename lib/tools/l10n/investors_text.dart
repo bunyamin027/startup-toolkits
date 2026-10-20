@@ -10,56 +10,57 @@ const investorsText = <String, Map<String, ToolText>>{
 
 const _tr = <String, ToolText>{
   'pitchDeck': ToolText(
-    name: 'Sunum sihirbazı',
-    description: 'Projenizden 10 slaytlık bir sunum taslağı.',
+    name: 'Yatırımcı sunumu sihirbazı',
+    description: 'Projenizden 10 slaytlık bir yatırımcı sunumu taslağı.',
     fields: {
       'company': FieldText('Girişim adı'),
       'oneLiner': FieldText(
         'Tek cümlelik tanım',
-        example: 'Serbest çalışanlar için kendi kendini yapan muhasebe.',
+        example: 'Serbest çalışanlar için kendi kendine işleyen muhasebe.',
       ),
       'problem': FieldText(
         'Problem',
         example:
-            'Serbest çalışanlar ayda 5+ saati muhasebeye harcıyor ve vergi indirimlerini kaçırıyor.',
+            'Serbest çalışanlar her ay muhasebeye 5 saatten fazla zaman harcıyor ve vergi indirimlerini kaçırıyor.',
       ),
       'solution': FieldText(
         'Çözüm',
         example:
-            'Nimbly bankayı senkronize eder, giderleri sınıflandırır ve üç aylık vergiyi tahmin eder.',
+            'Nimbly banka hesabına bağlanır, giderleri sınıflandırır ve geçici vergiyi önceden hesaplar.',
       ),
       'market': FieldText(
         'Pazar büyüklüğü',
         example:
-            r'59 milyon ABD’li serbest çalışan; 4 milyar $ hizmet verilebilir pazar',
+            r'ABD’de 59 milyon serbest çalışan; 4 milyar $ ulaşılabilir pazar',
       ),
       'model': FieldText(
         'İş modeli',
-        example: r'Abonelik, aylık $12 veya yıllık $99',
+        example: r'Abonelik: aylık $12 veya yıllık $99',
       ),
       'traction': FieldText(
-        'Çekiş',
-        example: r'1.200 kullanıcı, 3,5 bin $ MRR, aylık %18 büyüme',
+        'Çekiş gücü',
+        example:
+            r'1.200 kullanıcı, 3,5 bin $ aylık yinelenen gelir (MRR), aylık %18 büyüme',
       ),
       'competition': FieldText(
         'Rekabet',
         example:
-            'Kapsamlı muhasebe paketleri (fazla karmaşık), tablolar (elle)',
+            'Kapsamlı muhasebe yazılımları (fazla karmaşık), Excel tabloları (her şey elle)',
       ),
       'team': FieldText(
         'Ekip',
         example:
-            'Ada (CEO, eski ürün lideri), Sam (CTO), Lee (mali müşavir, vergi yazılımında 8 yıl)',
+            'Ada (CEO, eski ürün yöneticisi), Sam (CTO), Lee (mali müşavir, vergi yazılımında 8 yıl)',
       ),
       'ask': FieldText(
-        'Talep',
-        example: r'18 aylık pist için 750 bin $ pre-seed',
+        'İstenen yatırım',
+        example: r'18 aylık nakit ömrü için 750 bin $ pre-seed yatırım',
       ),
       'email': FieldText('İletişim e-postası'),
     },
-    template: r'''SUNUM TASLAĞI: {company}
+    template: r'''YATIRIMCI SUNUMU TASLAĞI: {company}
 
-Slayt 1. Başlık
+Slayt 1. Kapak
 {company}: {oneLiner}
 
 Slayt 2. Problem
@@ -68,50 +69,50 @@ Slayt 2. Problem
 Slayt 3. Çözüm
 {solution}
 
-Slayt 4. Neden şimdi
-Pazarda ne değişti de bu bugün mümkün hale geldi?
+Slayt 4. Neden şimdi?
+Pazarda ne değişti de bu fikir bugün hayata geçirilebilir hâle geldi?
 
 Slayt 5. Pazar büyüklüğü
 {market}
 
 Slayt 6. Ürün
-Üç ekran görüntüsü ve her biri için tek cümle.
+Üç ekran görüntüsü, her biri için tek bir cümle.
 
 Slayt 7. İş modeli
 {model}
 
-Slayt 8. Çekiş
+Slayt 8. Çekiş gücü
 {traction}
 
 Slayt 9. Rekabet
 {competition}
-{company} şirketinin en iyi köşede tek başına durduğu bir 2×2 gösterin.
+{company} ürününün en iyi köşede tek başına durduğu 2×2’lik bir konumlandırma grafiği ekleyin.
 
-Slayt 10. Ekip ve talep
+Slayt 10. Ekip ve yatırım ihtiyacı
 {team}
-Aranan yatırım: {ask}
+İstenen yatırım: {ask}
 İletişim: {email}
 
-İpucu: her slaytta tek fikir, büyük yazı, sıfatlar yerine rakamlar.''',
+İpucu: Her slaytta tek bir fikir, büyük yazı, sıfat yerine rakam kullanın.''',
   ),
   'onePager': ToolText(
-    name: 'Tek sayfa özet',
-    description: 'Yatırımcılar için girişiminiz tek sayfada.',
+    name: 'Tek sayfalık özet',
+    description: 'Yatırımcılar için girişiminizin tek sayfalık özeti.',
     fields: {
       'company': FieldText('Girişim adı'),
       'oneLiner': FieldText(
         'Tek cümlelik tanım',
-        example: 'Serbest çalışanlar için kendi kendini yapan muhasebe.',
+        example: 'Serbest çalışanlar için kendi kendine işleyen muhasebe.',
       ),
       'problem': FieldText(
         'Problem',
         example:
-            'Serbest çalışanlar ayda 5+ saati muhasebeye harcıyor ve vergi indirimlerini kaçırıyor.',
+            'Serbest çalışanlar her ay muhasebeye 5 saatten fazla zaman harcıyor ve vergi indirimlerini kaçırıyor.',
       ),
       'solution': FieldText(
         'Çözüm',
         example:
-            'Nimbly bankayı senkronize eder, giderleri sınıflandırır ve üç aylık vergiyi tahmin eder.',
+            'Nimbly banka hesabına bağlanır, giderleri sınıflandırır ve geçici vergiyi önceden hesaplar.',
       ),
       'customer': FieldText(
         'Hedef müşteri',
@@ -119,17 +120,20 @@ Aranan yatırım: {ask}
       ),
       'market': FieldText(
         'Pazar büyüklüğü',
-        example: r'4 milyar $ hizmet verilebilir pazar',
+        example: r'4 milyar $ ulaşılabilir pazar',
       ),
       'traction': FieldText(
-        'Çekiş',
+        'Çekiş gücü',
         example: r'1.200 kullanıcı, 3,5 bin $ MRR, aylık +%18',
       ),
       'team': FieldText(
         'Ekip',
         example: 'Ada (CEO), Sam (CTO), Lee (mali müşavir)',
       ),
-      'ask': FieldText('Talep', example: r'750 bin $ pre-seed'),
+      'ask': FieldText(
+        'İstenen yatırım',
+        example: r'750 bin $ pre-seed yatırım',
+      ),
       'email': FieldText('İletişim e-postası'),
     },
     template: r'''{company|upper}
@@ -141,59 +145,60 @@ PROBLEM
 ÇÖZÜM
 {solution}
 
-MÜŞTERİ
+HEDEF MÜŞTERİ
 {customer}
 
 PAZAR
 {market}
 
-ÇEKİŞ
+ÇEKİŞ GÜCÜ
 {traction}
 
 EKİP
 {team}
 
-TALEP
+İSTENEN YATIRIM
 {ask}
 
 İletişim: {email}''',
   ),
   'investorTracker': ToolText(
     name: 'Yatırımcı takibi',
-    description: 'Yatırım sürecinizi aşama aşama izleyin.',
+    description: 'Yatırım görüşmelerinizi aşama aşama izleyin.',
     itemLabel: 'Yatırımcı',
     stages: {
-      'To contact': 'Ulaşılacak',
-      'Contacted': 'Ulaşıldı',
+      'To contact': 'İletişime geçilecek',
+      'Contacted': 'İletişime geçildi',
       'Meeting': 'Görüşme',
       'Committed': 'Taahhüt verdi',
-      'Passed': 'Geçti',
+      'Passed': 'Reddetti',
     },
     fields: {
-      'firm': FieldText('Kurum', example: 'Melek yatırımcı'),
+      'firm': FieldText('Fon / kurum', example: 'Melek yatırımcı'),
       'amount': FieldText('Yatırım tutarı'),
       'next': FieldText('Sonraki adım', example: 'Sunumu gönder'),
     },
     samples: [
       SampleText('Maya Chen', {
         'firm': 'Northstar Ventures',
-        'next': 'Perşembe ortak toplantısı',
+        'next': 'Perşembe günü ortaklar toplantısı',
       }),
       SampleText('Jordan Ellis', {
         'firm': 'Melek yatırımcı',
-        'next': 'SAFE gönder',
+        'next': 'SAFE sözleşmesini gönder',
       }),
       SampleText('Harbor Pre-seed Fonu', {
         'firm': 'Pre-seed fonu',
-        'next': 'Jordan’dan tanıştırma iste',
+        'next': 'Jordan’dan tanıştırma rica et',
       }),
     ],
   ),
   'valuation': ToolText(
     name: 'Değerleme tahmini',
-    description: 'Kaba bir ARR çarpanı aralığı. Değerleme değildir.',
+    description:
+        'ARR çarpanına dayalı kaba bir değer aralığı. Resmî değerleme değildir.',
     fields: {
-      'arr': FieldText('Yıllık tekrarlayan gelir'),
+      'arr': FieldText('Yıllık yinelenen gelir (ARR)'),
       'growth': FieldText('Yıllık büyüme'),
     },
   ),

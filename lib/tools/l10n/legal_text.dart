@@ -14,40 +14,40 @@ const legalText = <String, Map<String, ToolText>>{
 
 const _trPrivacy = r'''
 
-1. BİZ KİMİZ
-{company} ("biz"), {service} hizmetini sunar. İletişim: {email}.
+1. BİZ KİMİZ?
+{company} ("biz") şu hizmeti sunar: {service}. İletişim: {email}.
 
 2. TOPLADIĞIMIZ VERİLER
 {data|bullets}
 
-3. VERİLERİ NEDEN KULLANIYORUZ
-{service} hizmetini sunmak ve geliştirmek, size destek olmak ve yasal yükümlülüklerimizi yerine getirmek için.
+3. VERİLERİ HANGİ AMAÇLA KULLANIYORUZ?
+Verileri; hizmeti sunmak ve geliştirmek, size destek olmak ve yasal yükümlülüklerimizi yerine getirmek için kullanırız.
 
-4. PAYLAŞIM
-Verileri yalnızca {service} hizmetini yürütmemize yardım eden hizmet sağlayıcılarla, sözleşme kapsamında ve yasanın gerektirdiği durumlarda paylaşırız. Kişisel verileri satmayız.
+4. VERİLERİN PAYLAŞILMASI
+Verileri yalnızca hizmeti yürütmemize yardımcı olan hizmet sağlayıcılarla, sözleşmeye dayalı olarak ve yasanın gerektirdiği durumlarda paylaşırız. Kişisel verileri satmayız.
 
-5. SAKLAMA
-Verileri hesabınız etkin olduğu sürece saklar, hesabınızı kapattıktan sonra {retention} içinde sileriz; yasa daha uzun bir süre öngörüyorsa o süre uygulanır.
+5. SAKLAMA SÜRESİ
+Verileri hesabınız açık olduğu sürece saklarız ve hesabınızı kapatmanızın ardından {retention} içinde sileriz. Mevzuat daha uzun bir saklama süresi öngörüyorsa bu süre uygulanır.
 
 6. GÜVENLİK
-Aktarım sırasında ve depolamada şifreleme kullanır, personel erişimini sınırlarız.''';
+Veriler aktarım sırasında ve depolanırken şifrelenir; çalışanlarımızın verilere erişimi sınırlandırılmıştır.''';
 
 const _trTerms = r'''
 
 KULLANIM KOŞULLARI (ÖZET)
-• Bulunduğunuz yerde sözleşme yapabilecek yaşta olmalısınız.
-• {service} hizmetini kötüye kullanmayın ve güvenliğini aşmaya çalışmayın.
-• Ücretli planlar, hesabınızdan ya da mağaza ayarlarından iptal edilene kadar otomatik yenilenir.
-• {service} "olduğu gibi" sunulur; sorumluluğumuz son 12 ayda ödediğiniz tutarla sınırlıdır.
-• Bu koşulları güncelleyebiliriz ve önemli değişiklikleri size bildiririz.
+• Hizmeti kullanmak için bulunduğunuz ülkede sözleşme yapabilecek yaşta olmanız gerekir.
+• Hizmeti kötüye kullanmamalı ve güvenliğini aşmaya çalışmamalısınız.
+• Ücretli planlar, hesabınızdan ya da uygulama mağazası ayarlarından iptal edilene kadar otomatik olarak yenilenir.
+• Hizmet "olduğu gibi" sunulur; sorumluluğumuz son 12 ayda ödediğiniz tutarla sınırlıdır.
+• Bu koşulları güncelleyebiliriz; önemli değişiklikleri size ayrıca bildiririz.
 
 Yürürlük tarihi: {date}
-Sorular: {email}''';
+Sorularınız için: {email}''';
 
 const _tr = <String, ToolText>{
   'nda': ToolText(
-    name: 'Gizlilik sözleşmesi (karşılıklı NDA)',
-    description: 'Karşılıklı bir gizlilik sözleşmesi.',
+    name: 'Gizlilik sözleşmesi (NDA)',
+    description: 'İki taraf için karşılıklı gizlilik sözleşmesi.',
     fields: {
       'company': FieldText('Şirket adı', example: 'Nimbly A.Ş.'),
       'otherParty': FieldText('Karşı taraf', example: 'Studio North Ltd. Şti.'),
@@ -58,50 +58,50 @@ const _tr = <String, ToolText>{
       'term': FieldText('Gizlilik süresi', example: '2 yıl'),
       'law': FieldText(
         'Uygulanacak hukuk',
-        example: 'Türkiye Cumhuriyeti kanunları',
+        example: 'Türkiye Cumhuriyeti hukuku',
       ),
       'date': FieldText('Yürürlük tarihi', example: '19 Ekim 2026'),
     },
     template: r'''KARŞILIKLI GİZLİLİK SÖZLEŞMESİ
 
-Bu sözleşme {date} tarihinde {company} ile {otherParty} (her biri "Taraf") arasında yapılmıştır.
+İşbu sözleşme {date} tarihinde {company} ile {otherParty} (her biri "Taraf", birlikte "Taraflar") arasında akdedilmiştir.
 
 1. AMAÇ
-Taraflar, {purpose} amacıyla gizli bilgi paylaşmak istemektedir.
+Taraflar, {purpose} amacıyla birbirleriyle gizli bilgi paylaşmak istemektedir.
 
 2. GİZLİ BİLGİ
-Bir Tarafın diğerine herhangi bir biçimde paylaştığı, gizli olarak işaretlenmiş ya da makul olarak gizli olduğu anlaşılacak, kamuya açık olmayan her türlü ticari, teknik veya mali bilgi.
+Bir Tarafın diğer Tarafa herhangi bir biçimde açıkladığı; gizli olarak işaretlenmiş ya da niteliği gereği gizli olduğu makul olarak anlaşılan, kamuya açık olmayan her türlü ticari, teknik ve mali bilgi.
 
 3. YÜKÜMLÜLÜKLER
-Her Taraf, diğerinin gizli bilgisini yalnızca Amaç için kullanır, en az makul özenle korur ve yalnızca bilmesi gereken ve benzer yükümlülüklerle bağlı kişilerle paylaşır.
+Her Taraf, diğer Tarafın gizli bilgisini yalnızca Amaç doğrultusunda kullanır, en az makul özeni göstererek korur ve yalnızca bu bilgiyi bilmesi gereken ve benzer gizlilik yükümlülükleriyle bağlı kişilerle paylaşır.
 
 4. İSTİSNALAR
-Alıcı Tarafın kusuru olmaksızın kamuya açık hale gelen, alıcı Tarafça zaten bilinen, bağımsız olarak geliştirilen veya üçüncü bir kişiden hukuka uygun olarak edinilen bilgiler.
+Bilgiyi alan Tarafın kusuru olmaksızın kamuya açık hâle gelen, bu Tarafça önceden bilinen, bağımsız olarak geliştirilen ya da üçüncü bir kişiden hukuka uygun şekilde edinilen bilgiler gizli bilgi sayılmaz.
 
 5. SÜRE
-Bu yükümlülükler, açıklama tarihinden itibaren {term} boyunca devam eder.
+Bu yükümlülükler, bilginin açıklandığı tarihten itibaren {term} boyunca geçerlidir.
 
 6. İADE VEYA İMHA
-Talep halinde her Taraf, diğerinin gizli bilgisini iade eder veya imha eder.
+Taraflardan biri talep ettiğinde diğer Taraf, kendisine verilen gizli bilgileri iade eder veya imha eder.
 
 7. LİSANS VERİLMEMESİ
-Bu sözleşmedeki hiçbir hüküm, diğer Tarafın fikri mülkiyeti üzerinde hak tanımaz.
+İşbu sözleşme, Taraflardan hiçbirine diğer Tarafın fikri mülkiyet hakları üzerinde herhangi bir hak tanımaz.
 
 8. UYGULANACAK HUKUK
-Bu sözleşme {law} hükümlerine tabidir.
+İşbu sözleşmeye {law} uygulanır.
 
 İmzalar:
 {company} ____________________   Tarih: ________
 {otherParty} ____________________   Tarih: ________''',
   ),
   'privacyTerms': ToolText(
-    name: 'Gizlilik politikası ve koşullar',
+    name: 'Gizlilik politikası ve kullanım koşulları',
     description:
-        'GDPR, CCPA, KVKK ya da küresel kullanım için gizlilik politikası ve koşullar.',
+        'GDPR, CCPA, KVKK ya da genel kullanım için gizlilik politikası ve kullanım koşulları.',
     options: {
-      'Global': 'Küresel',
-      'GDPR': 'GDPR',
-      'CCPA': 'CCPA',
+      'Global': 'Genel',
+      'GDPR': 'GDPR (AB)',
+      'CCPA': 'CCPA (ABD)',
       'KVKK': 'KVKK',
     },
     fields: {
@@ -109,13 +109,13 @@ Bu sözleşme {law} hükümlerine tabidir.
       'company': FieldText('Şirket adı', example: 'Nimbly A.Ş.'),
       'service': FieldText(
         'Hizmet',
-        example: 'Nimbly uygulaması ve web sitesi',
+        example: 'Nimbly mobil uygulaması ve web sitesi',
       ),
       'email': FieldText('İletişim e-postası'),
       'data': FieldText(
         'Toplanan veriler',
         example:
-            'Ad ve e-posta\nBağladığınız banka hareketleri\nYüklediğiniz fişler\nUygulama kullanım analitiği',
+            'Ad soyad ve e-posta adresi\nBağladığınız banka hesabındaki işlemler\nYüklediğiniz fişler\nUygulama kullanım istatistikleri',
       ),
       'retention': FieldText('Silme süresi', example: '30 gün'),
       'date': FieldText('Yürürlük tarihi', example: '19 Ekim 2026'),
@@ -125,123 +125,131 @@ Bu sözleşme {law} hükümlerine tabidir.
           'GİZLİLİK POLİTİKASI: {company}$_trPrivacy'
           r'''
 
-7. SEÇİMLERİNİZ
-{email} adresine yazarak verilerinize istediğiniz zaman erişebilir, onları düzeltebilir veya silebilirsiniz.'''
+7. HAKLARINIZ
+{email} adresine yazarak verilerinize istediğiniz zaman erişebilir, verilerinizin düzeltilmesini veya silinmesini isteyebilirsiniz.'''
           '$_trTerms',
       'GDPR':
-          'GİZLİLİK POLİTİKASI (AB/BK GDPR): {company}$_trPrivacy'
+          'GİZLİLİK POLİTİKASI (AB VE BİRLEŞİK KRALLIK GDPR): {company}$_trPrivacy'
           r'''
 
 7. HUKUKİ DAYANAK
-Sözleşme ({service} hizmetini sunmak için), meşru menfaat (güvenlik, ürün geliştirme) ve açık rıza (isteğe bağlı analitik ve pazarlama).
+Sözleşmenin ifası (hizmeti sunabilmek için), meşru menfaat (güvenlik ve ürün geliştirme) ve açık rıza (isteğe bağlı analitik ve pazarlama).
 
 8. HAKLARINIZ
-Erişim, düzeltme, silme, kısıtlama, taşınabilirlik ve itiraz. Rızanızı istediğiniz zaman geri alabilir ve yerel veri koruma otoritesine şikâyette bulunabilirsiniz. İletişim: {email}.
+Verilerinize erişme, düzeltilmesini, silinmesini veya işlenmesinin kısıtlanmasını isteme, veri taşınabilirliği ve itiraz haklarına sahipsiniz. Rızanızı istediğiniz zaman geri çekebilir ve yetkili veri koruma otoritesine şikâyette bulunabilirsiniz. İletişim: {email}.
 
 9. ULUSLARARASI AKTARIMLAR
-Veriler AEA/BK dışına çıktığında Standart Sözleşme Maddelerine veya bir yeterlilik kararına dayanırız.'''
+Veriler Avrupa Ekonomik Alanı veya Birleşik Krallık dışına aktarıldığında Standart Sözleşme Maddelerine ya da bir yeterlilik kararına dayanırız.'''
           '$_trTerms',
       'CCPA':
           'GİZLİLİK POLİTİKASI (KALİFORNİYA CCPA/CPRA): {company}$_trPrivacy'
           r'''
 
-7. KALİFORNİYA’DAKİ HAKLARINIZ
-Kişisel bilgileri öğrenme, silme ve düzeltme hakkı; satış veya paylaşımdan vazgeçme hakkı; hassas kişisel bilgilerin kullanımını sınırlama hakkı; haklarınızı kullandığınız için ayrımcılığa uğramama.
+7. KALİFORNİYA’DA YAŞAYANLARIN HAKLARI
+Kişisel bilgilerinizi öğrenme, sildirme ve düzelttirme; bu bilgilerin satılmasını veya paylaşılmasını reddetme; hassas kişisel bilgilerin kullanımını sınırlandırma haklarına sahipsiniz. Bu haklarınızı kullandığınız için ayrımcılığa uğramazsınız.
 
 8. SATIŞ VE PAYLAŞIM
-Kişisel bilgileri bağlamlar arası davranışsal reklamcılık için satmayız veya paylaşmayız.
+Kişisel bilgileri, farklı platformlar arasında davranışa dayalı reklamcılık amacıyla satmayız veya paylaşmayız.
 
-9. HAKLARINIZI NASIL KULLANIRSINIZ
-{email} adresine yazın. Talebinizi doğrular ve 45 gün içinde yanıtlarız.'''
+9. HAKLARINIZI NASIL KULLANIRSINIZ?
+{email} adresine yazın. Talebinizi doğruladıktan sonra 45 gün içinde yanıt veririz.'''
           '$_trTerms',
       'KVKK':
-          'AYDINLATMA METNİ (KVKK): {company}$_trPrivacy'
+          'KİŞİSEL VERİLERİN İŞLENMESİNE İLİŞKİN AYDINLATMA METNİ: {company}$_trPrivacy'
           r'''
 
 7. HUKUKİ SEBEPLER (KVKK MADDE 5)
-Sözleşmenin ifası, hukuki yükümlülükler, meşru menfaat ve gerektiğinde açık rıza.
+Kişisel verileriniz; bir sözleşmenin kurulması veya ifası, hukuki yükümlülüklerimizin yerine getirilmesi, meşru menfaatimiz ve gerektiğinde açık rızanız hukuki sebeplerine dayanılarak işlenir.
 
 8. HAKLARINIZ (KVKK MADDE 11)
-Verilerinizin işlenip işlenmediğini öğrenme, bilgi talep etme, düzeltilmesini veya silinmesini isteme, otomatik sonuçlara itiraz etme ve zararın giderilmesini talep etme. {email} adresine başvurun; 30 gün içinde yanıtlarız.
+Kişisel verilerinizin işlenip işlenmediğini öğrenme, işlenmişse buna ilişkin bilgi talep etme, eksik veya yanlış işlenmişse düzeltilmesini, gerekli şartlar oluştuğunda silinmesini isteme, münhasıran otomatik sistemlerle analiz edilmesi sonucu aleyhinize bir sonuç doğmasına itiraz etme ve kanuna aykırı işleme nedeniyle zarara uğramanız hâlinde zararın giderilmesini talep etme haklarına sahipsiniz. Başvurularınızı {email} adresine iletebilirsiniz; en geç 30 gün içinde yanıt veririz.
 
 9. YURT DIŞINA AKTARIM
-Veriler yalnızca KVKK Madde 9’daki güvencelerle yurt dışına aktarılır.'''
+Kişisel verileriniz yalnızca KVKK’nın 9. maddesinde öngörülen şartlar ve güvenceler çerçevesinde yurt dışına aktarılır.'''
           '$_trTerms',
     },
   ),
   'contract': ToolText(
     name: 'Serbest çalışan ve ortaklık sözleşmesi',
-    description: 'Yükleniciler veya kurucu ortaklar için sade sözleşmeler.',
-    options: {'Freelancer': 'Serbest çalışan', 'Partnership': 'Ortaklık'},
+    description:
+        'Serbest çalışanlar veya kurucu ortaklar için sade sözleşmeler.',
+    options: {
+      'Freelancer': 'Serbest çalışan',
+      'Partnership': 'Kurucu ortaklık',
+    },
     fields: {
       'type': FieldText('Sözleşme türü'),
       'company': FieldText('Şirket adı', example: 'Nimbly A.Ş.'),
       'otherParty': FieldText('Karşı taraf'),
       'scope': FieldText(
-        'İş kapsamı veya roller',
-        example: 'iOS uygulaması MVP’sini tasarlamak ve geliştirmek',
+        'İşin kapsamı veya roller',
+        example:
+            'iOS uygulamasının ilk sürümünün (MVP) tasarımı ve geliştirilmesi',
       ),
-      'fee': FieldText('Ücret veya hisse', example: r'iki aşamada $8.000'),
+      'fee': FieldText(
+        'Ücret veya hisse',
+        example: r'$8.000, iki ödeme aşamasında',
+      ),
       'term': FieldText('Süre', example: '3 ay'),
       'law': FieldText(
         'Uygulanacak hukuk',
-        example: 'Türkiye Cumhuriyeti kanunları',
+        example: 'Türkiye Cumhuriyeti hukuku',
       ),
       'date': FieldText('Yürürlük tarihi', example: '19 Ekim 2026'),
     },
     templates: {
-      'Freelancer': r'''BAĞIMSIZ YÜKLENİCİ SÖZLEŞMESİ
+      'Freelancer': r'''SERBEST ÇALIŞAN HİZMET SÖZLEŞMESİ
 
-{company} ("Müşteri") ile {otherParty} ("Yüklenici") arasında, {date} tarihinden itibaren geçerlidir.
+İşbu sözleşme {company} ("Müşteri") ile {otherParty} ("Hizmet Veren") arasında, {date} tarihinden itibaren geçerli olmak üzere akdedilmiştir.
 
 1. HİZMETLER
 {scope}
 
 2. ÜCRET
-{fee}. Faturalar 14 gün içinde ödenir.
+{fee}. Faturalar, düzenlenme tarihinden itibaren 14 gün içinde ödenir.
 
 3. SÜRE
-{term}; taraflardan biri 14 gün önceden yazılı bildirimle daha erken sona erdirmedikçe.
+Sözleşmenin süresi: {term}. Taraflardan her biri, 14 gün önceden yazılı bildirimde bulunarak sözleşmeyi bu süreden önce sona erdirebilir.
 
-4. BAĞIMSIZ YÜKLENİCİ
-Yüklenici çalışan değildir; kendi vergilerinden ve araçlarından kendisi sorumludur.
+4. BAĞIMSIZ ÇALIŞMA
+Hizmet Veren, Müşterinin çalışanı değildir; kendi vergi ve sosyal güvenlik yükümlülüklerinden ve kullandığı araçlardan kendisi sorumludur.
 
 5. FİKRİ MÜLKİYET
-Ödeme yapıldığında, bu sözleşme kapsamında üretilen tüm çalışmalar Müşteriye devredilir.
+Ücretin ödenmesiyle birlikte, bu sözleşme kapsamında üretilen tüm çalışmaların hakları Müşteriye devredilir.
 
 6. GİZLİLİK
-Yüklenici, bu sözleşme süresince ve sonrasında Müşterinin kamuya açık olmayan bilgilerini gizli tutar.
+Hizmet Veren, sözleşme süresince ve sona ermesinden sonra Müşterinin kamuya açık olmayan bilgilerini gizli tutar.
 
 7. UYGULANACAK HUKUK
-{law}.
+İşbu sözleşmeye {law} uygulanır.
 
 İmzalar:
 {company} ____________________
 {otherParty} ____________________''',
-      'Partnership': r'''KURUCU ORTAK / ORTAKLIK SÖZLEŞMESİ (TASLAK)
+      'Partnership': r'''KURUCU ORTAKLIK SÖZLEŞMESİ (TASLAK)
 
-{otherParty} dahil {company} kurucuları arasında, {date} tarihinden itibaren geçerlidir.
+İşbu sözleşme, {otherParty} dahil olmak üzere {company} kurucuları arasında, {date} tarihinden itibaren geçerli olmak üzere akdedilmiştir.
 
 1. ROLLER VE SORUMLULUKLAR
 {scope}
 
-2. HİSSE
-{fee}. Kurucu hisseleri 1 yıllık bekleme süresiyle 4 yılda hak edilir.
+2. HİSSE PAYLARI
+{fee}. Kurucu payları 1 yıllık bekleme süresi (cliff) sonrasında 4 yıl içinde kademeli olarak hak edilir (vesting).
 
 3. ZAMAN TAAHHÜDÜ
-{date} tarihinden itibaren tam zamanlı; ilk süre {term}, ardından gözden geçirilir.
+Kurucular {date} tarihinden itibaren tam zamanlı çalışır. İlk dönem {term} olup bu sürenin sonunda yeniden değerlendirilir.
 
 4. KARARLAR
-Günlük kararları ilgili kurucu verir; büyük kararlar (yatırım alma, üst düzey yönetici işe alma, şirketi satma) tüm kurucuların onayını gerektirir.
+Günlük kararları ilgili alandan sorumlu kurucu verir. Önemli kararlar (yatırım almak, üst düzey yönetici işe almak, şirketi satmak) tüm kurucuların onayını gerektirir.
 
 5. FİKRİ MÜLKİYET
-Şirketle ilgili tüm çalışmalar {company} şirketine devredilir.
+Şirketle ilgili tüm çalışmaların hakları {company} şirketine aittir.
 
 6. AYRILMA
-Hak edilmemiş hisseler şirkete döner; hak edilmiş hisseler gerçeğe uygun değerden geri alınabilir.
+Bir kurucu ayrılırsa, henüz hak edilmemiş payları şirkete geri döner; hak edilmiş payları ise gerçeğe uygun değeri üzerinden geri satın alınabilir.
 
 7. UYUŞMAZLIKLAR
-Önce iyi niyetli görüşme, ardından arabuluculuk; {law} çerçevesinde.
+Uyuşmazlıklar önce iyi niyetli görüşmelerle, sonuç alınamazsa arabuluculuk yoluyla ve {law} çerçevesinde çözülür.
 
 İmzalar:
 ____________________   ____________________''',
