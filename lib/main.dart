@@ -13,6 +13,7 @@ import 'core/theme/app_theme.dart';
 import 'features/onboarding/welcome_screen.dart';
 import 'features/shell/app_shell.dart';
 import 'project/project_providers.dart';
+import 'l10n/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,7 +99,9 @@ class StartupToolkitsApp extends ConsumerWidget {
     ref.watch(billingSyncProvider);
     final onboarded = ref.watch(onboardingDoneProvider);
     return MaterialApp(
-      title: 'Startup Toolkits',
+      onGenerateTitle: (context) => context.l10n.appName,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,

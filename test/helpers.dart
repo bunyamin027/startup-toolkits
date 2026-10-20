@@ -7,6 +7,7 @@ import 'package:startup_toolkits/core/storage/storage_providers.dart';
 import 'package:startup_toolkits/core/bootstrap.dart';
 import 'package:startup_toolkits/core/theme/app_theme.dart';
 import 'package:startup_toolkits/main.dart';
+import 'package:startup_toolkits/l10n/l10n.dart';
 
 /// Logical screen sizes (points).
 const iPhone15 = Size(393, 852);
@@ -45,6 +46,8 @@ Future<ProviderContainer> pumpApp(
       container: container,
       child: MaterialApp(
         theme: AppTheme.dark,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: home,
         // Tests run with Reduce Motion so endless pulses let pumpAndSettle
         // finish and numbers show their final value at once.

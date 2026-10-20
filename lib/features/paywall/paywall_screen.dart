@@ -15,6 +15,7 @@ import '../../core/theme/text_scale.dart';
 import '../../core/widgets/app_card.dart';
 import '../../tools/catalog/catalog.dart';
 import '../tool/tool_actions.dart';
+import '../../l10n/l10n.dart';
 
 /// Subscription screen. Follows App Review 3.1.2: the billed amount and
 /// period are the most prominent price, trial terms and auto-renewal are
@@ -62,14 +63,11 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
           params,
         );
         Navigator.pop(context);
-        showMessage(context, 'Every tool is unlocked. Enjoy!');
+        showMessage(context, context.l10n.paywallSuccess);
       case PurchaseOutcome.cancelled:
         break;
       case PurchaseOutcome.failed:
-        showMessage(
-          context,
-          'The purchase did not go through. Please try again.',
-        );
+        showMessage(context, context.l10n.paywallFailed);
     }
   }
 
@@ -81,9 +79,9 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
     if (found) {
       ref.read(entitlementProvider.notifier).setSubscribed(true);
       Navigator.pop(context);
-      showMessage(context, 'Subscription restored.');
+      showMessage(context, context.l10n.restoreSuccess);
     } else {
-      showMessage(context, 'No active subscription found for this account.');
+      showMessage(context, context.l10n.restoreNothing);
     }
   }
 
@@ -119,7 +117,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: IconButton(
-                        tooltip: 'Close',
+                        tooltip: context.l10n.commonClose,
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.close),
                       ),
@@ -134,22 +132,22 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                         ),
                         children: [
                           Text(
-                            'Every tool.\nEvery day.',
+                            context.l10n.paywallTitle,
                             style: text.displaySmall,
                           ),
                           const SizedBox(height: 18),
-                          const _Benefit('All 45 tools, unlimited'),
-                          const _Benefit(
-                            'Decks, docs and numbers that fill themselves from your project',
+                          _Benefit(
+                            context.l10n.paywallBenefitAll(allTools.length),
                           ),
-                          const _Benefit('Your data stays on your device'),
+                          _Benefit(context.l10n.paywallBenefitAutofill),
+                          _Benefit(context.l10n.paywallBenefitPrivate),
                           const SizedBox(height: 24),
                           if (loading)
                             const Center(child: CircularProgressIndicator())
                           else if (offers.isEmpty)
                             AppCard(
                               child: Text(
-                                'Subscriptions are not available right now. Please try again later.',
+                                context.l10n.paywallUnavailable,
                                 style: text.bodyMedium,
                               ),
                             )
@@ -172,7 +170,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                             ],
                           if (_billing.isPreview)
                             Text(
-                              'Preview store: placeholder prices, no real purchase.',
+                              context.l10n.paywallPreview,
                               textAlign: TextAlign.center,
                               style: text.bodySmall?.copyWith(color: t.blue),
                             ),
@@ -272,7 +270,9 @@ class _PlanCard extends StatelessWidget {
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
-                            yearly ? 'Yearly' : 'Monthly',
+                            yearly
+                                ? context.l10n.paywallYearly
+                                : context.l10n.paywallMonthly,
                             style: text.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
@@ -290,7 +290,9 @@ class _PlanCard extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                'Save ${(savings! * 100).round()}%',
+                                context.l10n.paywallSave(
+                                  (savings! * 100).round(),
+                                ),
                                 style: TextStyle(
                                   color: t.onAccent,
                                   fontSize: 12,
@@ -302,7 +304,7 @@ class _PlanCard extends StatelessWidget {
                       ),
                       if (offer.freeTrialDays != null)
                         Text(
-                          '${offer.freeTrialDays} days free',
+                          context.l10n.paywallDaysFree(offer.freeTrialDays!),
                           style: text.bodySmall,
                         ),
                     ],
@@ -313,11 +315,14 @@ class _PlanCard extends StatelessWidget {
                   children: [
                     // The billed amount is the most prominent price.
                     Text(
-                      offer.perPeriod,
+                      perPeriod(context.l10n, offer),
                       style: text.titleLarge?.copyWith(fontSize: 17),
                     ),
                     if (offer.monthlyEquivalent != null)
-                      Text(offer.monthlyEquivalent!, style: text.bodySmall),
+                      Text(
+                        context.l10n.paywallPerMonth(offer.monthlyEquivalent!),
+                        style: text.bodySmall,
+                      ),
                   ],
                 ),
               ],
@@ -341,27 +346,29 @@ class _Footer extends StatelessWidget {
   final bool busy;
   final VoidCallback? onBuy;
   final VoidCallback? onRestore;
-
-  String get _cta {
+  String _cta(AppLocalizations l) {
     final o = offer;
-    if (o == null) return 'Subscribe';
+    if (o == null) return l.paywallSubscribe;
     return o.freeTrialDays != null
-        ? 'Start ${o.freeTrialDays}-day free trial'
-        : 'Subscribe for ${o.perPeriod}';
+        ? l.paywallStartTrial(o.freeTrialDays!)
+        : l.paywallSubscribeFor(perPeriod(l, o));
   }
 
-  String get _terms {
+  String _terms(AppLocalizations l) {
     final o = offer;
     if (o == null) return '';
-    final period = o.period == PlanPeriod.yearly ? 'year' : 'month';
+    final yearly = o.period == PlanPeriod.yearly;
     final store = defaultTargetPlatform == TargetPlatform.android
         ? 'Google Play'
         : 'App Store';
-    final start = o.freeTrialDays != null
-        ? '${o.freeTrialDays} days free, then ${o.priceString} per $period.'
-        : '${o.priceString} per $period.';
-    return '$start Renews automatically unless cancelled at least 24 hours before the end '
-        'of the current period. Manage or cancel anytime in your $store account settings.';
+    final days = o.freeTrialDays;
+    final start = switch ((days, yearly)) {
+      (final d?, true) => l.paywallTermsTrialYearly(d, o.priceString),
+      (final d?, false) => l.paywallTermsTrialMonthly(d, o.priceString),
+      (null, true) => l.paywallTermsYearly(o.priceString),
+      (null, false) => l.paywallTermsMonthly(o.priceString),
+    };
+    return '$start ${l.paywallTermsRenewal(store)}';
   }
 
   @override
@@ -391,19 +398,26 @@ class _Footer extends StatelessWidget {
                         color: t.onAccent,
                       ),
                     )
-                  : Text(_cta),
+                  : Text(_cta(context.l10n)),
             ),
-            if (_terms.isNotEmpty) ...[
+            if (_terms(context.l10n).isNotEmpty) ...[
               const SizedBox(height: 8),
-              Text(_terms, textAlign: TextAlign.center, style: small),
+              Text(
+                _terms(context.l10n),
+                textAlign: TextAlign.center,
+                style: small,
+              ),
             ],
             Wrap(
               alignment: WrapAlignment.center,
               children: [
-                _Link('Restore Purchases', onRestore),
-                _Link('Terms of Use', _url(context, BillingConfig.termsUrl)),
+                _Link(context.l10n.paywallRestore, onRestore),
                 _Link(
-                  'Privacy Policy',
+                  context.l10n.termsOfUse,
+                  _url(context, BillingConfig.termsUrl),
+                ),
+                _Link(
+                  context.l10n.privacyPolicy,
                   _url(context, BillingConfig.privacyUrl),
                 ),
               ],
@@ -418,7 +432,7 @@ class _Footer extends StatelessWidget {
   /// of failing silently.
   static VoidCallback _url(BuildContext context, String url) => () {
     if (url.isEmpty) {
-      showMessage(context, 'This link is added before release.');
+      showMessage(context, context.l10n.commonLinkMissing);
       return;
     }
     unawaited(launchUrl(Uri.parse(url), mode: LaunchMode.inAppBrowserView));
@@ -554,3 +568,9 @@ class _FloatingIconsState extends State<_FloatingIcons>
     );
   }
 }
+
+/// Billed amount with its period, the most prominent price (3.1.2).
+String perPeriod(AppLocalizations l, PlanOffer o) =>
+    o.period == PlanPeriod.yearly
+    ? l.paywallPerYear(o.priceString)
+    : l.paywallPerMonth(o.priceString);

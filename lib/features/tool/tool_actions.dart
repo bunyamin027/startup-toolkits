@@ -7,13 +7,14 @@ import 'package:share_plus/share_plus.dart';
 
 import '../../core/analytics.dart';
 import '../../core/theme/app_tokens.dart';
+import '../../l10n/l10n.dart';
 
 Future<void> copyText(BuildContext context, String text) async {
   await Clipboard.setData(ClipboardData(text: text));
   if (!context.mounted) return;
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(const SnackBar(content: Text('Copied to clipboard')));
+    ..showSnackBar(SnackBar(content: Text(context.l10n.commonCopied)));
 }
 
 /// Opens the system share sheet. [context] anchors the iPad popover.
@@ -88,7 +89,7 @@ class ToolActionBar extends ConsumerWidget {
                   child: FilledButton.icon(
                     onPressed: onSaveToProject,
                     icon: const Icon(Icons.bookmark_add_outlined),
-                    label: const Text('Save to project'),
+                    label: Text(context.l10n.toolSaveToProject),
                   ),
                 )
               else
@@ -96,17 +97,21 @@ class ToolActionBar extends ConsumerWidget {
                   child: FilledButton.icon(
                     onPressed: copy,
                     icon: const Icon(Icons.copy),
-                    label: const Text('Copy'),
+                    label: Text(context.l10n.commonCopy),
                   ),
                 ),
               const SizedBox(width: AppSpace.gapS),
               if (onSaveToProject != null)
-                _SquareButton(icon: Icons.copy, label: 'Copy', onPressed: copy),
+                _SquareButton(
+                  icon: Icons.copy,
+                  label: context.l10n.commonCopy,
+                  onPressed: copy,
+                ),
               const SizedBox(width: AppSpace.gapS),
               Builder(
                 builder: (context) => _SquareButton(
                   icon: Icons.ios_share,
-                  label: 'Share',
+                  label: context.l10n.commonShare,
                   onPressed: () {
                     analytics.log(AnalyticsEvent.outputShared, {
                       'tool': toolId,

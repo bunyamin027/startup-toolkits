@@ -10,6 +10,7 @@ import '../../tools/tool_def.dart';
 import '../../tools/tool_providers.dart';
 import 'field_input.dart';
 import 'tool_actions.dart';
+import '../../l10n/l10n.dart';
 
 /// Tracker: stage filter, optional totals, items that move stage by stage.
 class ListToolView extends ConsumerStatefulWidget {
@@ -44,7 +45,7 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
         backgroundColor: t.accent,
         foregroundColor: t.onAccent,
         icon: const Icon(Icons.add),
-        label: Text('Add ${tool.itemLabel.toLowerCase()}'),
+        label: Text(context.l10n.listAddItem(tool.itemLabel.toLowerCase())),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -57,7 +58,7 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
               padding: const EdgeInsets.symmetric(horizontal: AppSpace.edge),
               children: [
                 _StageChip(
-                  label: 'All',
+                  label: context.l10n.listAll,
                   count: items.length,
                   selected: _stage == null,
                   onTap: () => setState(() => _stage = null),
@@ -123,9 +124,9 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text('Deleted "${item.title}"'),
+          content: Text(context.l10n.listDeleted(item.title)),
           action: SnackBarAction(
-            label: 'Undo',
+            label: context.l10n.commonUndo,
             onPressed: () => notifier.restore(item, index),
           ),
         ),
@@ -307,7 +308,7 @@ class _ItemCard extends StatelessWidget {
               ),
               if (next != null)
                 IconButton(
-                  tooltip: 'Move to $next',
+                  tooltip: context.l10n.listMoveTo(next),
                   onPressed: onAdvance,
                   icon: Icon(Icons.arrow_forward_rounded, color: t.accent),
                 )
@@ -317,7 +318,7 @@ class _ItemCard extends StatelessWidget {
                   child: Icon(
                     Icons.check_circle_rounded,
                     color: t.muted,
-                    semanticLabel: 'Final stage',
+                    semanticLabel: context.l10n.listFinalStage,
                   ),
                 ),
             ],
@@ -356,8 +357,8 @@ class _Empty extends StatelessWidget {
         padding: const EdgeInsets.all(32),
         child: Text(
           stage == null
-              ? 'No ${tool.itemLabel.toLowerCase()}s yet. Tap Add to start.'
-              : 'Nothing in $stage.',
+              ? context.l10n.listEmpty
+              : context.l10n.listEmptyStage(stage!),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall,
         ),
@@ -406,7 +407,7 @@ class _CopyBar extends ConsumerWidget {
                   copyText(context, _text);
                 },
                 icon: const Icon(Icons.copy, size: 18),
-                label: const Text('Copy list'),
+                label: Text(context.l10n.listCopy),
               ),
               Builder(
                 builder: (context) => TextButton.icon(
@@ -417,7 +418,7 @@ class _CopyBar extends ConsumerWidget {
                     shareText(context, _text, subject: tool.name);
                   },
                   icon: const Icon(Icons.ios_share, size: 18),
-                  label: const Text('Share'),
+                  label: Text(context.l10n.commonShare),
                 ),
               ),
             ],
@@ -490,7 +491,7 @@ class _ItemEditorState extends State<_ItemEditor> {
     final editing = widget.item != null;
     final stageField = FieldDef(
       key: '_stage',
-      label: 'Stage',
+      label: context.l10n.listStage,
       type: FieldType.choice,
       options: tool.stages,
     );
@@ -508,8 +509,8 @@ class _ItemEditorState extends State<_ItemEditor> {
           children: [
             Text(
               editing
-                  ? 'Edit ${tool.itemLabel.toLowerCase()}'
-                  : 'New ${tool.itemLabel.toLowerCase()}',
+                  ? context.l10n.listEditItem(tool.itemLabel.toLowerCase())
+                  : context.l10n.listNewItem(tool.itemLabel.toLowerCase()),
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontSize: 22),
@@ -532,7 +533,9 @@ class _ItemEditorState extends State<_ItemEditor> {
                   label: f.label,
                   type: f.type,
                   options: f.options,
-                  hint: f.hint ?? 'e.g. ${fieldText(f.defaultValue)}',
+                  hint:
+                      f.hint ??
+                      context.l10n.commonExample(fieldText(f.defaultValue)),
                 ),
                 value: _fields[f.key],
                 onChanged: (v) => _fields[f.key] = v,
@@ -549,7 +552,9 @@ class _ItemEditorState extends State<_ItemEditor> {
               listenable: _title,
               builder: (context, _) => FilledButton(
                 onPressed: _title.text.trim().isEmpty ? null : _save,
-                child: Text(editing ? 'Save' : 'Add'),
+                child: Text(
+                  editing ? context.l10n.commonSave : context.l10n.commonAdd,
+                ),
               ),
             ),
             if (editing) ...[
@@ -557,7 +562,7 @@ class _ItemEditorState extends State<_ItemEditor> {
               TextButton.icon(
                 onPressed: () => Navigator.pop(context, _Delete(widget.item!)),
                 icon: const Icon(Icons.delete_outline),
-                label: const Text('Delete'),
+                label: Text(context.l10n.commonDelete),
                 style: TextButton.styleFrom(
                   foregroundColor: Theme.of(context).colorScheme.error,
                 ),

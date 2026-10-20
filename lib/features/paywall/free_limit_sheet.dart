@@ -9,6 +9,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/motion.dart';
 import '../../tools/catalog/catalog.dart';
 import 'paywall_screen.dart';
+import '../../l10n/l10n.dart';
 
 /// Bottom sheet shown on the free plan when a second tool is opened in a
 /// day: countdown to midnight, then "Go unlimited" or "Come back tomorrow".
@@ -83,16 +84,18 @@ class _FreeLimitSheetState extends ConsumerState<FreeLimitSheet> {
               size: 132,
               stroke: 10,
               child: Semantics(
-                label:
-                    '$hours hours $minutes minutes until your next free tool',
+                label: context.l10n.limitCountdownSemantics(hours, minutes),
                 excludeSemantics: true,
                 // Scales down inside the fixed ring at large text sizes.
                 child: FittedBox(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('${hours}h ${minutes}m', style: text.titleLarge),
-                      Text('to reset', style: text.bodySmall),
+                      Text(
+                        context.l10n.limitCountdown(hours, minutes),
+                        style: text.titleLarge,
+                      ),
+                      Text(context.l10n.limitToReset, style: text.bodySmall),
                     ],
                   ),
                 ),
@@ -101,16 +104,15 @@ class _FreeLimitSheetState extends ConsumerState<FreeLimitSheet> {
           ),
           const SizedBox(height: 20),
           Text(
-            "You've used today's free tool",
+            context.l10n.limitTitle,
             textAlign: TextAlign.center,
             style: text.headlineSmall?.copyWith(fontSize: 22),
           ),
           const SizedBox(height: 8),
           Text(
             today == null
-                ? 'The free plan opens one tool a day. Your project stays free.'
-                : '${today.name} stays open all day. The free plan opens one tool a day; '
-                      'your project stays free.',
+                ? context.l10n.limitBody
+                : context.l10n.limitBodyTool(today.name),
             textAlign: TextAlign.center,
             style: text.bodySmall,
           ),
@@ -120,7 +122,7 @@ class _FreeLimitSheetState extends ConsumerState<FreeLimitSheet> {
               final navigator = Navigator.of(context)..pop();
               unawaited(navigator.push(PaywallScreen.route()));
             },
-            child: const Text('Go unlimited'),
+            child: Text(context.l10n.limitGoUnlimited),
           ),
           const SizedBox(height: AppSpace.gapS),
           TextButton(
@@ -129,7 +131,7 @@ class _FreeLimitSheetState extends ConsumerState<FreeLimitSheet> {
               minimumSize: const Size.fromHeight(AppSpace.minTouch),
               foregroundColor: t.muted,
             ),
-            child: const Text('Come back tomorrow'),
+            child: Text(context.l10n.limitTomorrow),
           ),
         ],
       ),

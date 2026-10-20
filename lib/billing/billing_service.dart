@@ -30,16 +30,13 @@ class PlanOffer {
   /// Length of the free intro offer, when the user is eligible for it.
   final int? freeTrialDays;
 
-  String get perPeriod =>
-      period == PlanPeriod.yearly ? '$priceString/year' : '$priceString/month';
-
-  /// Monthly equivalent of a yearly plan, shown smaller than the billed
-  /// amount. Formatted with the currency code because the store does not
-  /// localize derived prices.
+  /// Monthly equivalent price of a yearly plan ("$6.67"), shown smaller
+  /// than the billed amount. Formatted with the currency code because the
+  /// store does not localize derived prices.
   String? get monthlyEquivalent {
     if (period != PlanPeriod.yearly) return null;
     return '${currencyCode == 'USD' ? r'$' : '$currencyCode '}'
-        '${Fmt.number(price / 12, decimals: 2)}/month';
+        '${Fmt.number(price / 12, decimals: 2)}';
   }
 }
 

@@ -10,6 +10,7 @@ import '../../tools/tool_providers.dart';
 import 'field_input.dart';
 import 'tool_actions.dart';
 import 'tool_screen.dart';
+import '../../l10n/l10n.dart';
 
 /// Text generator: Result and Edit tabs over the same values. Opens on the
 /// result so the example output is the first thing the user sees.
@@ -51,16 +52,16 @@ class _DocToolViewState extends ConsumerState<DocToolView> {
           child: SizedBox(
             width: double.infinity,
             child: SegmentedButton<_Tab>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: _Tab.result,
-                  label: Text('Result'),
-                  icon: Icon(Icons.article_outlined),
+                  label: Text(context.l10n.toolResult),
+                  icon: const Icon(Icons.article_outlined),
                 ),
                 ButtonSegment(
                   value: _Tab.edit,
-                  label: Text('Edit'),
-                  icon: Icon(Icons.edit_outlined),
+                  label: Text(context.l10n.commonEdit),
+                  icon: const Icon(Icons.edit_outlined),
                 ),
               ],
               selected: {_tab},

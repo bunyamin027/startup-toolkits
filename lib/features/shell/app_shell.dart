@@ -5,6 +5,7 @@ import '../favorites/my_tools_screen.dart';
 import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
 import '../project/project_screen.dart';
+import '../../l10n/l10n.dart';
 
 /// Bottom tabs: Home, Project, My tools, Profile (§7.4). Tabs keep their
 /// scroll position while switching.
@@ -54,26 +55,26 @@ class _AppShellState extends State<AppShell> {
           child: NavigationBar(
             selectedIndex: _tab,
             onDestinationSelected: (i) => setState(() => _tab = i),
-            destinations: const [
+            destinations: [
               NavigationDestination(
-                icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home),
-                label: 'Home',
+                icon: const Icon(Icons.home_outlined),
+                selectedIcon: const Icon(Icons.home),
+                label: context.l10n.tabHome,
               ),
               NavigationDestination(
-                icon: Icon(Icons.folder_outlined),
-                selectedIcon: Icon(Icons.folder),
-                label: 'Project',
+                icon: const Icon(Icons.folder_outlined),
+                selectedIcon: const Icon(Icons.folder),
+                label: context.l10n.tabProject,
               ),
               NavigationDestination(
-                icon: Icon(Icons.star_outline_rounded),
-                selectedIcon: Icon(Icons.star_rounded),
-                label: 'My tools',
+                icon: const Icon(Icons.star_outline_rounded),
+                selectedIcon: const Icon(Icons.star_rounded),
+                label: context.l10n.tabMyTools,
               ),
               NavigationDestination(
-                icon: Icon(Icons.person_outline),
-                selectedIcon: Icon(Icons.person),
-                label: 'Profile',
+                icon: const Icon(Icons.person_outline),
+                selectedIcon: const Icon(Icons.person),
+                label: context.l10n.tabProfile,
               ),
             ],
           ),

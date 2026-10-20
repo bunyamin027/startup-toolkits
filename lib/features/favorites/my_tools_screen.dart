@@ -7,6 +7,7 @@ import '../../tools/catalog/catalog.dart';
 import '../../tools/tool_providers.dart';
 import '../catalog/catalog_screen.dart';
 import '../common/tool_tile.dart';
+import '../../l10n/l10n.dart';
 
 /// Favorites and recently used tools.
 class MyToolsScreen extends ConsumerWidget {
@@ -35,9 +36,9 @@ class MyToolsScreen extends ConsumerWidget {
           32,
         ),
         children: [
-          Text('My tools', style: text.displaySmall),
+          Text(context.l10n.myToolsTitle, style: text.displaySmall),
           const SizedBox(height: 20),
-          const SectionLabel('Favorites'),
+          SectionLabel(context.l10n.myToolsFavorites),
           if (favTools.isEmpty)
             AppCard(
               child: Row(
@@ -46,7 +47,7 @@ class MyToolsScreen extends ConsumerWidget {
                   const SizedBox(width: AppSpace.gapM),
                   Expanded(
                     child: Text(
-                      'Tap the star in any tool to keep it here.',
+                      context.l10n.myToolsFavoritesEmpty,
                       style: text.bodySmall,
                     ),
                   ),
@@ -56,11 +57,11 @@ class MyToolsScreen extends ConsumerWidget {
           else
             ToolTileList(tools: favTools),
           const SizedBox(height: 26),
-          const SectionLabel('Recently used'),
+          SectionLabel(context.l10n.homeRecentlyUsed),
           if (recentTools.isEmpty)
             AppCard(
               child: Text(
-                'Tools you open will show up here.',
+                context.l10n.myToolsRecentEmpty,
                 style: text.bodySmall,
               ),
             )
@@ -70,7 +71,7 @@ class MyToolsScreen extends ConsumerWidget {
           OutlinedButton.icon(
             onPressed: () => Navigator.push(context, CatalogScreen.route()),
             icon: const Icon(Icons.apps),
-            label: Text('Browse all ${allTools.length} tools'),
+            label: Text(context.l10n.homeBrowseAll(allTools.length)),
             style: OutlinedButton.styleFrom(
               minimumSize: const Size.fromHeight(52),
               shape: RoundedRectangleBorder(

@@ -10,6 +10,7 @@ import 'calc_tool_view.dart';
 import 'doc_tool_view.dart';
 import 'list_tool_view.dart';
 import 'tool_actions.dart';
+import '../../l10n/l10n.dart';
 
 /// One screen for all 45 tools; the body depends on the tool's engine.
 class ToolScreen extends ConsumerStatefulWidget {
@@ -44,7 +45,7 @@ class _ToolScreenState extends ConsumerState<ToolScreen> {
     if (tool == null) {
       return Scaffold(
         appBar: AppBar(),
-        body: const Center(child: Text('Tool not found')),
+        body: Center(child: Text(context.l10n.toolNotFound)),
       );
     }
     final favorite = ref.watch(
@@ -57,17 +58,22 @@ class _ToolScreenState extends ConsumerState<ToolScreen> {
         actions: [
           if (tool.kind != ToolKind.list)
             PopupMenuButton<String>(
-              tooltip: 'More',
+              tooltip: context.l10n.commonMore,
               onSelected: (_) {
                 ref.read(toolValuesProvider(toolId).notifier).reset();
-                showMessage(context, 'Back to example data');
+                showMessage(context, context.l10n.toolResetDone);
               },
-              itemBuilder: (_) => const [
-                PopupMenuItem(value: 'reset', child: Text('Reset to example')),
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  value: 'reset',
+                  child: Text(context.l10n.toolReset),
+                ),
               ],
             ),
           IconButton(
-            tooltip: favorite ? 'Remove from favorites' : 'Add to favorites',
+            tooltip: favorite
+                ? context.l10n.toolFavoriteRemove
+                : context.l10n.toolFavoriteAdd,
             icon: Icon(
               favorite ? Icons.star_rounded : Icons.star_outline_rounded,
             ),
@@ -101,8 +107,8 @@ VoidCallback? saveToProjectAction(
     showMessage(
       context,
       changed == 0
-          ? 'Project is already up to date'
-          : 'Saved $changed ${changed == 1 ? 'field' : 'fields'} to your project',
+          ? context.l10n.toolProjectUpToDate
+          : context.l10n.toolSavedFields(changed),
     );
   };
 }

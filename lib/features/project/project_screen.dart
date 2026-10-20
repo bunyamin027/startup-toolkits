@@ -14,6 +14,7 @@ import '../../tools/tool_providers.dart';
 import '../common/tool_tile.dart';
 import '../tool/tool_actions.dart';
 import 'project_sheets.dart';
+import '../../l10n/l10n.dart';
 
 /// The project workspace: enter startup facts once, every tool reuses them.
 class ProjectScreen extends ConsumerStatefulWidget {
@@ -55,7 +56,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
           32,
         ),
         children: [
-          rise(Text('Project', style: text.displaySmall)),
+          rise(Text(context.l10n.projectTitle, style: text.displaySmall)),
           const SizedBox(height: 16),
           rise(
             AppCard(
@@ -64,9 +65,9 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                 children: [
                   _Editable(
                     onTap: () => _edit(ProjectField.startupName),
-                    label: 'Startup name',
+                    label: context.l10n.fieldStartupName,
                     child: Text(
-                      name.isEmpty ? 'Name your startup' : name,
+                      name.isEmpty ? context.l10n.projectNameEmpty : name,
                       style: text.headlineSmall?.copyWith(
                         color: name.isEmpty ? t.muted : t.text,
                       ),
@@ -75,11 +76,11 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                   const SizedBox(height: 4),
                   _Editable(
                     onTap: () => _edit(ProjectField.oneLiner),
-                    label: 'One-line description',
+                    label: context.l10n.fieldOneLiner,
                     child: Text(
                       project.isFilled(ProjectField.oneLiner)
                           ? project[ProjectField.oneLiner]
-                          : 'Add a one-line description',
+                          : context.l10n.projectOneLinerEmpty,
                       style: text.bodySmall,
                     ),
                   ),
@@ -92,7 +93,11 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                       size: 18,
                       color: t.accent,
                     ),
-                    label: Text(project.goal?.label ?? 'Set a goal'),
+                    label: Text(
+                      project.goal == null
+                          ? context.l10n.projectSetGoal
+                          : context.l10n.goal(project.goal!),
+                    ),
                     onPressed: () => showSheet(context, const GoalSheet()),
                   ),
                   const SizedBox(height: AppSpace.gapS),
@@ -111,7 +116,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                                 ? t.accent
                                 : t.muted,
                           ),
-                          label: Text(step.name),
+                          label: Text(context.l10n.stepName(step)),
                         ),
                     ],
                   ),
@@ -129,8 +134,10 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                     size: 112,
                     stroke: 10,
                     child: Semantics(
-                      label:
-                          '${project.filledCount} of ${ProjectField.values.length} fields filled',
+                      label: context.l10n.projectFilledSemantics(
+                        project.filledCount,
+                        ProjectField.values.length,
+                      ),
                       excludeSemantics: true,
                       child: Text(
                         '${project.filledCount}/${ProjectField.values.length}',
@@ -144,14 +151,14 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Fields filled',
+                          context.l10n.projectFieldsFilled,
                           style: text.bodyLarge?.copyWith(
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Every tool fills itself from these.',
+                          context.l10n.projectFieldsFilledBody,
                           style: text.bodySmall,
                         ),
                         const SizedBox(height: 10),
@@ -160,7 +167,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                               ? null
                               : () => copyText(context, project.brief),
                           icon: const Icon(Icons.copy, size: 18),
-                          label: const Text('Copy project brief'),
+                          label: Text(context.l10n.projectCopyBrief),
                           style: TextButton.styleFrom(padding: EdgeInsets.zero),
                         ),
                       ],
@@ -176,7 +183,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SectionLabel('Add to unlock more'),
+                  SectionLabel(context.l10n.projectUnlockMore),
                   Wrap(
                     spacing: AppSpace.gapS,
                     runSpacing: AppSpace.gapS,
@@ -184,7 +191,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                       for (final f in missing)
                         ActionChip(
                           avatar: Icon(Icons.add, size: 18, color: t.accent),
-                          label: Text(f.label),
+                          label: Text(context.l10n.field(f)),
                           onPressed: () => _edit(f),
                         ),
                     ],
@@ -198,7 +205,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SectionLabel('Project details'),
+                SectionLabel(context.l10n.projectDetails),
                 AppCard(
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Column(
@@ -223,19 +230,21 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SectionLabel('Tools that use your project'),
+                SectionLabel(context.l10n.projectToolsUsing),
                 ToolTileList(
                   tools: [for (final (tool, _, _) in shownTools) tool],
                   subtitles: {
                     for (final (tool, filled, total) in shownTools)
-                      tool.id: '$filled of $total fields from your project',
+                      tool.id: context.l10n.projectToolFill(filled, total),
                   },
                 ),
                 if (tools.length > 5)
                   TextButton(
                     onPressed: () => setState(() => _allTools = !_allTools),
                     child: Text(
-                      _allTools ? 'Show fewer' : 'Show all ${tools.length}',
+                      _allTools
+                          ? context.l10n.projectShowFewer
+                          : context.l10n.projectShowAll(tools.length),
                     ),
                   ),
               ],
@@ -278,7 +287,7 @@ class _Editable extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      hint: 'Edit $label',
+      hint: context.l10n.commonEditField(label),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(8),
@@ -317,10 +326,10 @@ class _FieldRow extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(field.label, style: text.bodySmall),
+                  Text(context.l10n.field(field), style: text.bodySmall),
                   const SizedBox(height: 2),
                   Text(
-                    empty ? 'Add' : value,
+                    empty ? context.l10n.commonAdd : value,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: text.bodyMedium?.copyWith(

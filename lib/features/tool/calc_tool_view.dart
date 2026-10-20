@@ -10,6 +10,7 @@ import '../../tools/tool_providers.dart';
 import 'field_input.dart';
 import 'tool_actions.dart';
 import 'tool_screen.dart';
+import '../../l10n/l10n.dart';
 
 /// Calculator: big result at the top, inputs below, live updates.
 class CalcToolView extends ConsumerWidget {
@@ -73,7 +74,7 @@ class CalcToolView extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SectionLabel('Inputs'),
+                    SectionLabel(context.l10n.toolInputs),
                     AppCard(
                       child: Column(
                         children: [

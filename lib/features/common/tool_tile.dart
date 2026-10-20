@@ -5,6 +5,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/widgets/app_card.dart';
 import '../../tools/tool_def.dart';
 import '../tool/open_tool.dart';
+import '../../l10n/l10n.dart';
 
 /// Tool row used by Home, Discover, My tools and Project.
 class ToolTile extends ConsumerWidget {
@@ -55,7 +56,7 @@ class ToolTile extends ConsumerWidget {
                   Icon(
                     locked ? Icons.lock_outline : Icons.chevron_right,
                     color: t.muted,
-                    semanticLabel: locked ? 'Locked on the free plan' : null,
+                    semanticLabel: locked ? context.l10n.toolLocked : null,
                   ),
             ],
           ),

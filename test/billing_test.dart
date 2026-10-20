@@ -47,8 +47,7 @@ void main() {
       final offers = await PreviewBillingService().offers();
       expect(yearlySavings(offers), closeTo(0.333, 0.001));
       final yearly = offers.firstWhere((o) => o.period == PlanPeriod.yearly);
-      expect(yearly.perPeriod, r'$79.99/year');
-      expect(yearly.monthlyEquivalent, r'$6.67/month');
+      expect(yearly.monthlyEquivalent, r'$6.67');
       expect(
         offers
             .firstWhere((o) => o.period == PlanPeriod.monthly)

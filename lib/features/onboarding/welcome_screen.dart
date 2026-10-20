@@ -8,6 +8,7 @@ import '../../project/project.dart';
 import '../../project/project_providers.dart';
 import '../../tools/tool_def.dart';
 import '../project/project_sheets.dart';
+import '../../l10n/l10n.dart';
 
 /// First run: pick a goal, then name the startup. Both steps can be
 /// skipped; there is no account (UX principle 1: value in 60 seconds).
@@ -23,14 +24,6 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   Goal? _goal;
   final _name = TextEditingController();
   final _oneLiner = TextEditingController();
-
-  static const _goalDetails = {
-    Goal.raiseFunding: 'Pitch deck, runway, cap table, investor pipeline',
-    Goal.firstCustomers: 'Interviews, landing page, CRM, pricing',
-    Goal.setUpCompany: 'NDA, privacy policy, contracts, invoices',
-    Goal.launchApp: 'Store listing, ASO keywords, app privacy policy',
-  };
-
   @override
   void dispose() {
     _name.dispose();
@@ -72,12 +65,15 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                 children: [
                   if (_page == 1)
                     IconButton(
-                      tooltip: 'Back',
+                      tooltip: context.l10n.commonBack,
                       onPressed: () => setState(() => _page = 0),
                       icon: const Icon(Icons.arrow_back),
                     ),
                   const Spacer(),
-                  TextButton(onPressed: _finish, child: const Text('Skip')),
+                  TextButton(
+                    onPressed: _finish,
+                    child: Text(context.l10n.commonSkip),
+                  ),
                 ],
               ),
             ),
@@ -103,7 +99,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                         onPressed: _goal == null
                             ? null
                             : () => setState(() => _page = 1),
-                        child: const Text('Continue'),
+                        child: Text(context.l10n.commonContinue),
                       )
                     : ListenableBuilder(
                         listenable: _name,
@@ -111,8 +107,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                           onPressed: _finish,
                           child: Text(
                             _name.text.trim().isEmpty
-                                ? 'Skip for now'
-                                : 'Start building',
+                                ? context.l10n.welcomeSkipForNow
+                                : context.l10n.welcomeStart,
                           ),
                         ),
                       ),
@@ -131,18 +127,12 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
       children: [
         RiseIn(
           index: 0,
-          child: Text(
-            'What are you building toward?',
-            style: text.displaySmall,
-          ),
+          child: Text(context.l10n.welcomeGoalTitle, style: text.displaySmall),
         ),
         const SizedBox(height: 8),
         RiseIn(
           index: 1,
-          child: Text(
-            'We will put the right tools first. You can change this anytime.',
-            style: text.bodySmall,
-          ),
+          child: Text(context.l10n.welcomeGoalSubtitle, style: text.bodySmall),
         ),
         const SizedBox(height: 22),
         for (final (i, g) in Goal.values.indexed) ...[
@@ -150,7 +140,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
             index: i + 2,
             child: _GoalCard(
               goal: g,
-              detail: _goalDetails[g]!,
+              detail: context.l10n.goalDetail(g),
               selected: _goal == g,
               onTap: () => setState(() => _goal = g),
             ),
@@ -166,21 +156,18 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
       key: const ValueKey('name'),
       padding: const EdgeInsets.symmetric(horizontal: AppSpace.edge),
       children: [
-        Text('Tell us about your startup', style: text.displaySmall),
+        Text(context.l10n.welcomeNameTitle, style: text.displaySmall),
         const SizedBox(height: 8),
-        Text(
-          'Every tool fills itself from this, so you only type it once.',
-          style: text.bodySmall,
-        ),
+        Text(context.l10n.welcomeNameSubtitle, style: text.bodySmall),
         const SizedBox(height: 22),
         TextField(
           controller: _name,
           autofocus: true,
           textCapitalization: TextCapitalization.words,
           textInputAction: TextInputAction.next,
-          decoration: const InputDecoration(
-            labelText: 'Startup name',
-            hintText: 'e.g. Nimbly',
+          decoration: InputDecoration(
+            labelText: context.l10n.fieldStartupName,
+            hintText: context.l10n.hintStartupName,
           ),
         ),
         const SizedBox(height: AppSpace.gapL),
@@ -190,9 +177,9 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
           textInputAction: TextInputAction.done,
           minLines: 2,
           maxLines: 3,
-          decoration: const InputDecoration(
-            labelText: 'One-line description',
-            hintText: 'Bookkeeping that does itself, for freelancers',
+          decoration: InputDecoration(
+            labelText: context.l10n.fieldOneLiner,
+            hintText: context.l10n.welcomeOneLinerHint,
           ),
           onSubmitted: (_) => _finish(),
         ),
@@ -255,7 +242,7 @@ class _GoalCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        goal.label,
+                        context.l10n.goal(goal),
                         style: text.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),

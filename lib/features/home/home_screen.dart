@@ -17,6 +17,7 @@ import '../catalog/catalog_screen.dart';
 import '../common/tool_tile.dart';
 import '../paywall/paywall_screen.dart';
 import '../tool/open_tool.dart';
+import '../../l10n/l10n.dart';
 
 /// "Mission control": where the user is on the launch path and what to do
 /// next.
@@ -54,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _header(text, name, oneLiner),
+                      _header(context.l10n, text, name, oneLiner),
                       const SizedBox(height: AppSpace.gapS),
                       const PlanBadge(),
                     ],
@@ -62,7 +63,9 @@ class HomeScreen extends ConsumerWidget {
                 : Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(child: _header(text, name, oneLiner)),
+                      Expanded(
+                        child: _header(context.l10n, text, name, oneLiner),
+                      ),
                       const SizedBox(width: AppSpace.gapS),
                       const PlanBadge(),
                     ],
@@ -89,8 +92,10 @@ class HomeScreen extends ConsumerWidget {
               children: [
                 SectionLabel(
                   project.goal == null
-                      ? 'Start here'
-                      : 'Start here · ${project.goal!.label}',
+                      ? context.l10n.homeStartHere
+                      : context.l10n.homeStartHereGoal(
+                          context.l10n.goal(project.goal!),
+                        ),
                 ),
                 ToolTileList(tools: picks),
               ],
@@ -102,7 +107,7 @@ class HomeScreen extends ConsumerWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SectionLabel('Recently used'),
+                  SectionLabel(context.l10n.homeRecentlyUsed),
                   ToolTileList(
                     tools: [for (final id in recentIds) ?toolById(id)],
                   ),
@@ -115,7 +120,7 @@ class HomeScreen extends ConsumerWidget {
             OutlinedButton.icon(
               onPressed: () => Navigator.push(context, CatalogScreen.route()),
               icon: const Icon(Icons.apps),
-              label: Text('Browse all ${allTools.length} tools'),
+              label: Text(context.l10n.homeBrowseAll(allTools.length)),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size.fromHeight(52),
                 shape: RoundedRectangleBorder(
@@ -129,17 +134,22 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _header(TextTheme text, String name, String oneLiner) {
+  Widget _header(
+    AppLocalizations l,
+    TextTheme text,
+    String name,
+    String oneLiner,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'MISSION CONTROL',
+          l.homeMissionControl,
           style: text.labelSmall?.copyWith(letterSpacing: 1.4),
         ),
         const SizedBox(height: 4),
         Text(
-          name.isEmpty ? 'Your startup' : name,
+          name.isEmpty ? l.homeYourStartup : name,
           style: text.displaySmall,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -172,11 +182,11 @@ class PlanBadge extends ConsumerWidget {
     final now = ref.watch(clockProvider)();
     final (label, color) = switch (e.level(now)) {
       AccessLevel.trial => (
-        'Trial · ${e.trialDaysLeft(now)} ${e.trialDaysLeft(now) == 1 ? 'day' : 'days'} left',
+        context.l10n.planTrialBadge(e.trialDaysLeft(now)),
         t.accent,
       ),
-      AccessLevel.free => ('Free plan', t.muted),
-      AccessLevel.subscriber => ('Pro', t.accent),
+      AccessLevel.free => (context.l10n.planFree, t.muted),
+      AccessLevel.subscriber => (context.l10n.planPro, t.accent),
     };
     final badge = Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
@@ -197,7 +207,7 @@ class PlanBadge extends ConsumerWidget {
     if (!tappable || e.level(now) == AccessLevel.subscriber) return badge;
     return Semantics(
       button: true,
-      hint: 'See plans',
+      hint: context.l10n.commonSeePlans,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.chip),
         onTap: () => Navigator.push(context, PaywallScreen.route()),
@@ -215,7 +225,7 @@ class _SearchField extends StatelessWidget {
     final t = context.tokens;
     return Semantics(
       button: true,
-      label: 'Search tools',
+      label: context.l10n.homeSearchLabel,
       excludeSemantics: true,
       child: Material(
         color: t.surface2,
@@ -234,7 +244,7 @@ class _SearchField extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Search ${allTools.length} tools',
+                      context.l10n.homeSearch(allTools.length),
                       style: TextStyle(color: t.muted, fontSize: 16),
                     ),
                   ),
@@ -274,13 +284,14 @@ class LaunchPathCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Launch path',
+                  context.l10n.homeLaunchPath,
                   style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
                 ),
               ),
               Semantics(
-                label:
-                    'Launch path ${(progress * 100).round()} percent complete',
+                label: context.l10n.homeLaunchPathProgress(
+                  (progress * 100).round(),
+                ),
                 excludeSemantics: true,
                 child: CountUp(
                   value: progress * 100,
@@ -378,12 +389,17 @@ class _StepNode extends StatelessWidget {
       ),
     );
     return Semantics(
-      label:
-          '${step.name}: ${switch (state) {
-            _StepState.done => 'done',
-            _StepState.current => 'current step',
-            _StepState.todo => 'not started',
-          }}',
+      label: switch (state) {
+        _StepState.done => context.l10n.homeStepDone(
+          context.l10n.stepName(step),
+        ),
+        _StepState.current => context.l10n.homeStepCurrent(
+          context.l10n.stepName(step),
+        ),
+        _StepState.todo => context.l10n.homeStepTodo(
+          context.l10n.stepName(step),
+        ),
+      },
       excludeSemantics: true,
       child: Column(
         children: [
@@ -399,7 +415,7 @@ class _StepNode extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            step.name,
+            context.l10n.stepName(step),
             style: TextStyle(
               fontSize: 12,
               fontWeight: state == _StepState.current
@@ -426,16 +442,17 @@ class _NextStepCard extends ConsumerWidget {
     final next = this.next;
     if (next == null) {
       return AppCard(
-        child: Text(
-          'Launch path complete. Keep your numbers and story fresh as you grow.',
-          style: text.bodyMedium,
-        ),
+        child: Text(context.l10n.homePathComplete, style: text.bodyMedium),
       );
     }
     final tool = toolById(next.toolId)!;
     final adds = next.missing.isEmpty
-        ? 'Open it to finish the ${next.step.name} step'
-        : 'Adds ${next.missing.map((f) => f.label.toLowerCase()).join(', ')}';
+        ? context.l10n.homeNextFinish(context.l10n.stepName(next.step))
+        : context.l10n.homeNextAdds(
+            next.missing
+                .map((f) => context.l10n.field(f).toLowerCase())
+                .join(', '),
+          );
     return Material(
       color: t.surface1,
       shape: RoundedRectangleBorder(
@@ -454,7 +471,7 @@ class _NextStepCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'NEXT BEST STEP',
+                      context.l10n.homeNextBestStep,
                       style: text.labelSmall?.copyWith(
                         color: t.accent,
                         letterSpacing: 1.3,
@@ -462,7 +479,7 @@ class _NextStepCard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      next.step.action,
+                      context.l10n.stepAction(next.step),
                       style: text.headlineSmall?.copyWith(fontSize: 22),
                     ),
                     const SizedBox(height: 4),
@@ -507,14 +524,11 @@ class _FreePlanBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Your trial has ended',
+                  context.l10n.homeTrialEnded,
                   style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 2),
-                Text(
-                  'Open one tool a day for free, or unlock them all.',
-                  style: text.bodySmall,
-                ),
+                Text(context.l10n.homeTrialEndedBody, style: text.bodySmall),
               ],
             ),
           ),
@@ -524,7 +538,7 @@ class _FreePlanBanner extends StatelessWidget {
             style: FilledButton.styleFrom(
               minimumSize: const Size(0, AppSpace.minTouch),
             ),
-            child: const Text('See plans'),
+            child: Text(context.l10n.commonSeePlans),
           ),
         ],
       ),

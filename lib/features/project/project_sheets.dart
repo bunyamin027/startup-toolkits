@@ -6,6 +6,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../project/project.dart';
 import '../../project/project_providers.dart';
 import '../../tools/tool_def.dart';
+import '../../l10n/l10n.dart';
 
 const _numericFields = {
   ProjectField.cash,
@@ -18,22 +19,6 @@ const _longFields = {
   ProjectField.solution,
   ProjectField.traction,
   ProjectField.team,
-};
-
-const fieldHints = {
-  ProjectField.startupName: 'e.g. Nimbly',
-  ProjectField.oneLiner: 'What you do, for whom, in one sentence',
-  ProjectField.problem: 'The pain your customers feel today',
-  ProjectField.solution: 'How you remove that pain',
-  ProjectField.targetCustomer: 'Who has the problem most',
-  ProjectField.marketSize: r'e.g. $4B serviceable market',
-  ProjectField.traction: 'Users, revenue, growth',
-  ProjectField.ask: r'e.g. $750k pre-seed',
-  ProjectField.team: 'Founders and key roles',
-  ProjectField.contactEmail: 'founders@yourstartup.com',
-  ProjectField.cash: 'Cash in the bank today',
-  ProjectField.monthlyExpenses: 'Total spend per month',
-  ProjectField.monthlyRevenue: 'Revenue per month',
 };
 
 Future<void> showSheet(BuildContext context, Widget child) =>
@@ -96,7 +81,7 @@ class _ProjectFieldSheetState extends ConsumerState<ProjectFieldSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              f.label,
+              context.l10n.field(f),
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontSize: 22),
@@ -121,13 +106,16 @@ class _ProjectFieldSheetState extends ConsumerState<ProjectFieldSheet> {
                   ? TextCapitalization.none
                   : TextCapitalization.sentences,
               decoration: InputDecoration(
-                hintText: fieldHints[f],
+                hintText: context.l10n.fieldHint(f),
                 prefixText: numeric ? r'$ ' : null,
               ),
               onSubmitted: long ? null : (_) => _save(),
             ),
             const SizedBox(height: 20),
-            FilledButton(onPressed: _save, child: const Text('Save')),
+            FilledButton(
+              onPressed: _save,
+              child: Text(context.l10n.commonSave),
+            ),
           ],
         ),
       ),
@@ -155,7 +143,7 @@ class GoalSheet extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'What are you building toward?',
+              context.l10n.welcomeGoalTitle,
               style: Theme.of(
                 context,
               ).textTheme.headlineSmall?.copyWith(fontSize: 22),
@@ -165,7 +153,7 @@ class GoalSheet extends ConsumerWidget {
               ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Icon(goalIcon(g), color: context.tokens.accent),
-                title: Text(g.label),
+                title: Text(context.l10n.goal(g)),
                 trailing: g == current
                     ? Icon(Icons.check_rounded, color: context.tokens.accent)
                     : null,

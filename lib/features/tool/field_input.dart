@@ -5,6 +5,7 @@ import '../../core/format.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../engines/inputs.dart';
 import '../../tools/tool_def.dart';
+import '../../l10n/l10n.dart';
 
 /// Renders one [FieldDef]. Numeric fields with a min and max become sliders;
 /// tapping a slider's value lets the user type an exact number.
@@ -153,7 +154,7 @@ class _SliderInput extends StatelessWidget {
             ),
             Semantics(
               button: true,
-              label: 'Edit ${f.label}',
+              label: context.l10n.commonEditField(f.label),
               child: InkWell(
                 borderRadius: BorderRadius.circular(AppRadius.chip),
                 onTap: () => _typeExact(context, n),
@@ -222,12 +223,12 @@ class _SliderInput extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.commonCancel),
           ),
           FilledButton(
             onPressed: () =>
                 Navigator.pop(context, Inputs.toNumber(controller.text)),
-            child: const Text('Done'),
+            child: Text(context.l10n.commonDone),
           ),
         ],
       ),

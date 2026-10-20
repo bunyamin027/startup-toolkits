@@ -17,6 +17,8 @@ import '../home/home_screen.dart';
 import '../paywall/paywall_screen.dart';
 import '../tool/tool_actions.dart';
 import '../project/project_sheets.dart';
+import '../../l10n/l10n.dart';
+import '../../tools/catalog/catalog.dart';
 
 /// Plan, preferences, legal links and local data.
 class ProfileScreen extends ConsumerWidget {
@@ -29,14 +31,15 @@ class ProfileScreen extends ConsumerWidget {
     final e = ref.watch(entitlementProvider);
     final now = ref.watch(clockProvider)();
     final goal = ref.watch(projectProvider.select((p) => p.goal));
+    final l = context.l10n;
 
     final planText = switch (e.level(now)) {
-      AccessLevel.trial =>
-        'All 45 tools are open during your free trial. '
-            '${e.trialDaysLeft(now)} ${e.trialDaysLeft(now) == 1 ? 'day' : 'days'} left.',
-      AccessLevel.free =>
-        'Free plan: one tool per day. Project and onboarding stay free.',
-      AccessLevel.subscriber => 'Pro: every tool, every day.',
+      AccessLevel.trial => l.profilePlanTrial(
+        e.trialDaysLeft(now),
+        allTools.length,
+      ),
+      AccessLevel.free => l.profilePlanFree,
+      AccessLevel.subscriber => l.profilePlanPro,
     };
 
     return SafeArea(
@@ -49,9 +52,9 @@ class ProfileScreen extends ConsumerWidget {
           32,
         ),
         children: [
-          Text('Profile', style: text.displaySmall),
+          Text(l.profileTitle, style: text.displaySmall),
           const SizedBox(height: 20),
-          const SectionLabel('Plan'),
+          SectionLabel(l.profilePlan),
           AppCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,95 +69,93 @@ class ProfileScreen extends ConsumerWidget {
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(48),
                     ),
-                    child: const Text('Manage subscription'),
+                    child: Text(l.profileManageSubscription),
                   )
                 else
                   FilledButton(
                     onPressed: () =>
                         Navigator.push(context, PaywallScreen.route()),
-                    child: const Text('See plans'),
+                    child: Text(l.commonSeePlans),
                   ),
               ],
             ),
           ),
           const SizedBox(height: 26),
-          const SectionLabel('Preferences'),
+          SectionLabel(l.profilePreferences),
           _Group(
             children: [
               _Row(
                 icon: Icons.flag_outlined,
-                title: 'Goal',
-                value: goal?.label ?? 'Not set',
+                title: l.profileGoal,
+                value: goal == null ? l.profileNotSet : l.goal(goal),
                 onTap: () => showSheet(context, const GoalSheet()),
               ),
-              const _Row(
+              _Row(
                 icon: Icons.language,
-                title: 'Language',
-                value: 'English',
-                note: 'More languages are coming.',
+                title: l.profileLanguage,
+                value: l.profileLanguageValue,
+                note: l.profileLanguageNote,
               ),
-              const _Row(
+              _Row(
                 icon: Icons.dark_mode_outlined,
-                title: 'Appearance',
-                value: 'Dark',
-                note: 'A light theme is coming.',
+                title: l.profileAppearance,
+                value: l.profileAppearanceValue,
+                note: l.profileAppearanceNote,
               ),
-              const _Row(
+              _Row(
                 icon: Icons.motion_photos_off_outlined,
-                title: 'Motion',
-                value: 'Follows system',
-                note:
-                    'Turn on Reduce Motion in system settings to stop animations.',
+                title: l.profileMotion,
+                value: l.profileMotionValue,
+                note: l.profileMotionNote,
               ),
             ],
           ),
           const SizedBox(height: 26),
-          const SectionLabel('Your data'),
+          SectionLabel(l.profileYourData),
           _Group(
             children: [
-              const _Row(
+              _Row(
                 icon: Icons.phone_iphone,
-                title: 'Stored on this device',
-                note:
-                    'No account, no server. Deleting the app deletes your data.',
+                title: l.profileStoredOnDevice,
+                note: l.profileStoredOnDeviceNote,
               ),
               _Row(
                 icon: Icons.delete_outline,
-                title: 'Delete all data',
+                title: l.profileDeleteAll,
                 danger: true,
                 onTap: () => _confirmDelete(context, ref),
               ),
             ],
           ),
           const SizedBox(height: 26),
-          const SectionLabel('About'),
+          SectionLabel(l.profileAbout),
           _Group(
             children: [
               _Row(
                 icon: Icons.restore,
-                title: 'Restore purchases',
+                title: l.profileRestore,
                 onTap: () => _restore(context, ref),
               ),
               _Row(
                 icon: Icons.description_outlined,
-                title: 'Terms of Use',
+                title: l.termsOfUse,
                 onTap: () => _open(context, BillingConfig.termsUrl),
               ),
               _Row(
                 icon: Icons.privacy_tip_outlined,
-                title: 'Privacy Policy',
+                title: l.privacyPolicy,
                 onTap: () => _open(context, BillingConfig.privacyUrl),
               ),
-              const _Row(
+              _Row(
                 icon: Icons.info_outline,
                 title: AppInfo.name,
-                value: 'Version ${AppInfo.version}',
+                value: l.profileVersion(AppInfo.version),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
-            'Legal templates are not legal advice.',
+            l.profileLegalNote,
             textAlign: TextAlign.center,
             style: text.bodySmall?.copyWith(color: t.muted),
           ),
@@ -170,7 +171,7 @@ class ProfileScreen extends ConsumerWidget {
 
   void _open(BuildContext context, String url) {
     if (url.isEmpty) {
-      showMessage(context, 'This link is added before release.');
+      showMessage(context, context.l10n.commonLinkMissing);
       return;
     }
     unawaited(launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication));
@@ -179,7 +180,7 @@ class ProfileScreen extends ConsumerWidget {
   Future<void> _restore(BuildContext context, WidgetRef ref) async {
     final billing = ref.read(billingServiceProvider);
     if (!billing.available) {
-      showMessage(context, 'Purchases are not available right now.');
+      showMessage(context, context.l10n.purchasesUnavailable);
       return;
     }
     final found = await billing.restore();
@@ -187,9 +188,7 @@ class ProfileScreen extends ConsumerWidget {
     if (!context.mounted) return;
     showMessage(
       context,
-      found
-          ? 'Subscription restored.'
-          : 'No active subscription found for this account.',
+      found ? context.l10n.restoreSuccess : context.l10n.restoreNothing,
     );
   }
 
@@ -197,22 +196,19 @@ class ProfileScreen extends ConsumerWidget {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete all data?'),
-        content: const Text(
-          'Your project, tool inputs, lists and favorites will be removed from this device. '
-          'This cannot be undone.',
-        ),
+        title: Text(context.l10n.profileDeleteAllTitle),
+        content: Text(context.l10n.profileDeleteAllBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Delete'),
+            child: Text(context.l10n.commonDelete),
           ),
         ],
       ),
