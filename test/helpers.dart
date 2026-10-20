@@ -99,7 +99,16 @@ Future<MemoryKeyValueStore> pumpRoot(
   return store;
 }
 
+/// Walks the three intro slides to the goal question.
+Future<void> passIntro(WidgetTester tester) async {
+  for (final label in ['Continue', 'Continue', "Let's get started"]) {
+    await tester.tap(find.widgetWithText(FilledButton, label));
+    await tester.pumpAndSettle();
+  }
+}
+
 Future<void> onboard(WidgetTester tester, {String name = 'Rocketly'}) async {
+  await passIntro(tester);
   await tester.tap(find.text('Raise funding'));
   await tester.pump();
   await tester.tap(find.text('Continue'));

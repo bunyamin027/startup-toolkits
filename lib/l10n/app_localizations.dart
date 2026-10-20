@@ -548,6 +548,84 @@ abstract class AppLocalizations {
   /// **'Profile'**
   String get tabProfile;
 
+  /// No description provided for @introHeroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Every tool your startup needs. In one app.'**
+  String get introHeroTitle;
+
+  /// No description provided for @introHeroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} ready-made tools for your idea, money, investors, legal papers, marketing and launch.'**
+  String introHeroBody(int count);
+
+  /// No description provided for @introStatTools.
+  ///
+  /// In en, this message translates to:
+  /// **'tools'**
+  String get introStatTools;
+
+  /// No description provided for @introStatCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'categories'**
+  String get introStatCategories;
+
+  /// No description provided for @introStatLanguages.
+  ///
+  /// In en, this message translates to:
+  /// **'languages'**
+  String get introStatLanguages;
+
+  /// No description provided for @introStatAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'sign-ups needed'**
+  String get introStatAccounts;
+
+  /// No description provided for @introAutofillTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Type it once. Every tool fills itself.'**
+  String get introAutofillTitle;
+
+  /// No description provided for @introAutofillBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your startup\'s name and story flow into pitch decks, contracts and invoices on their own.'**
+  String get introAutofillBody;
+
+  /// No description provided for @introNumbersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Know your numbers before investors ask.'**
+  String get introNumbersTitle;
+
+  /// No description provided for @introNumbersBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Runway, unit economics and valuation update as you type.'**
+  String get introNumbersBody;
+
+  /// No description provided for @introPrivate.
+  ///
+  /// In en, this message translates to:
+  /// **'No account. Your data stays on your device.'**
+  String get introPrivate;
+
+  /// No description provided for @introGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get started'**
+  String get introGetStarted;
+
+  /// No description provided for @introStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String introStep(int current, int total);
+
   /// No description provided for @welcomeGoalTitle.
   ///
   /// In en, this message translates to:

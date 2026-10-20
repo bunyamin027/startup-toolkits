@@ -9,9 +9,11 @@ import '../../project/project_providers.dart';
 import '../../tools/tool_def.dart';
 import '../project/project_sheets.dart';
 import '../../l10n/l10n.dart';
+import 'intro.dart';
 
-/// First run: pick a goal, then name the startup. Both steps can be
-/// skipped; there is no account (UX principle 1: value in 60 seconds).
+/// First run: a three-slide story of what the app does, then pick a goal
+/// and name the startup. Everything can be skipped; there is no account
+/// (UX principle 1: value in 60 seconds).
 class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
@@ -19,13 +21,25 @@ class WelcomeScreen extends ConsumerStatefulWidget {
   ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
+/// Steps after the intro slides.
+enum _Step { intro, goal, name }
+
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
-  int _page = 0;
+  _Step _step = _Step.intro;
+  int _slide = 0;
+  var _slides = PageController();
+
+  /// Replaced controllers; an outgoing page may still use one mid-fade.
+  final _retired = <PageController>[];
   Goal? _goal;
   final _name = TextEditingController();
   final _oneLiner = TextEditingController();
   @override
   void dispose() {
+    _slides.dispose();
+    for (final c in _retired) {
+      c.dispose();
+    }
     _name.dispose();
     _oneLiner.dispose();
     super.dispose();
@@ -52,56 +66,104 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     ref.read(onboardingDoneProvider.notifier).complete();
   }
 
+  Duration get _motion => AppMotion.reduced(context)
+      ? Duration.zero
+      : const Duration(milliseconds: 300);
+
+  void _nextSlide() {
+    if (_slide == introSlideCount - 1) {
+      setState(() => _step = _Step.goal);
+    } else {
+      _slides.animateToPage(
+        _slide + 1,
+        duration: _motion == Duration.zero
+            ? const Duration(milliseconds: 1)
+            : const Duration(milliseconds: 450),
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
+
+  void _back() => setState(() {
+    if (_step == _Step.name) {
+      _step = _Step.goal;
+    } else {
+      // A new PageView attaches; start it on the slide the user left.
+      _retired.add(_slides);
+      _slides = PageController(initialPage: _slide);
+      _step = _Step.intro;
+    }
+  });
+
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final intro = _step == _Step.intro;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(8, 4, 8, 0),
-              child: Row(
-                children: [
-                  if (_page == 1)
-                    IconButton(
-                      tooltip: context.l10n.commonBack,
-                      onPressed: () => setState(() => _page = 0),
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: _finish,
-                    child: Text(context.l10n.commonSkip),
+      body: Stack(
+        children: [
+          const Positioned.fill(child: IntroBackdrop()),
+          SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(8, 4, 8, 0),
+                  child: Row(
+                    children: [
+                      if (!intro)
+                        IconButton(
+                          tooltip: context.l10n.commonBack,
+                          onPressed: _back,
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                      const Spacer(),
+                      // The intro skips to the goal question; later steps
+                      // skip the rest of onboarding.
+                      TextButton(
+                        onPressed: intro
+                            ? () => setState(() => _step = _Step.goal)
+                            : _finish,
+                        child: Text(context.l10n.commonSkip),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: AppMotion.reduced(context)
-                    ? Duration.zero
-                    : const Duration(milliseconds: 300),
-                child: _page == 0 ? _goalPage(text) : _namePage(text),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(
-                AppSpace.edge,
-                8,
-                AppSpace.edge,
-                16,
-              ),
-              child: SizedBox(
-                width: double.infinity,
-                child: _page == 0
-                    ? FilledButton(
+                ),
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: _motion,
+                    child: switch (_step) {
+                      _Step.intro => _introPages(),
+                      _Step.goal => _goalPage(text),
+                      _Step.name => _namePage(text),
+                    },
+                  ),
+                ),
+                if (intro) _Dots(index: _slide, count: introSlideCount),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(
+                    AppSpace.edge,
+                    8,
+                    AppSpace.edge,
+                    16,
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: switch (_step) {
+                      _Step.intro => FilledButton(
+                        onPressed: _nextSlide,
+                        child: Text(
+                          _slide == introSlideCount - 1
+                              ? context.l10n.introGetStarted
+                              : context.l10n.commonContinue,
+                        ),
+                      ),
+                      _Step.goal => FilledButton(
                         onPressed: _goal == null
                             ? null
-                            : () => setState(() => _page = 1),
+                            : () => setState(() => _step = _Step.name),
                         child: Text(context.l10n.commonContinue),
-                      )
-                    : ListenableBuilder(
+                      ),
+                      _Step.name => ListenableBuilder(
                         listenable: _name,
                         builder: (context, _) => FilledButton(
                           onPressed: _finish,
@@ -112,13 +174,24 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                           ),
                         ),
                       ),
-              ),
+                    },
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+
+  Widget _introPages() => PageView.builder(
+    key: const ValueKey('intro'),
+    controller: _slides,
+    itemCount: introSlideCount,
+    onPageChanged: (i) => setState(() => _slide = i),
+    itemBuilder: (context, i) => IntroSlide(index: i),
+  );
 
   Widget _goalPage(TextTheme text) {
     return ListView(
@@ -256,6 +329,43 @@ class _GoalCard extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Slide position: the current dot stretches into a pill.
+class _Dots extends StatelessWidget {
+  const _Dots({required this.index, required this.count});
+
+  final int index;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return Semantics(
+      label: context.l10n.introStep(index + 1, count),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (var i = 0; i < count; i++)
+              AnimatedContainer(
+                duration: AppMotion.reduced(context)
+                    ? Duration.zero
+                    : const Duration(milliseconds: 250),
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                width: i == index ? 22 : 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: i == index ? t.accent : t.border,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+          ],
         ),
       ),
     );

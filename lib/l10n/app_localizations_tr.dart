@@ -236,6 +236,53 @@ class AppLocalizationsTr extends AppLocalizations {
   String get tabProfile => 'Profil';
 
   @override
+  String get introHeroTitle =>
+      'Girişiminizin ihtiyaç duyduğu tüm araçlar, tek uygulamada.';
+
+  @override
+  String introHeroBody(int count) {
+    return 'Fikirden yatırımcıya, hukuki belgelerden pazarlamaya ve lansmana kadar $count hazır araç.';
+  }
+
+  @override
+  String get introStatTools => 'araç';
+
+  @override
+  String get introStatCategories => 'kategori';
+
+  @override
+  String get introStatLanguages => 'dil';
+
+  @override
+  String get introStatAccounts => 'kayıt gerekmez';
+
+  @override
+  String get introAutofillTitle =>
+      'Bir kez yazın, tüm araçlar kendini doldursun.';
+
+  @override
+  String get introAutofillBody =>
+      'Girişiminizin adı ve hikâyesi yatırımcı sunumuna, sözleşmelere ve faturalara kendiliğinden aktarılır.';
+
+  @override
+  String get introNumbersTitle => 'Yatırımcılar sormadan rakamlarınızı bilin.';
+
+  @override
+  String get introNumbersBody =>
+      'Nakit ömrü, birim ekonomisi ve değerleme siz yazdıkça güncellenir.';
+
+  @override
+  String get introPrivate => 'Hesap yok. Verileriniz cihazınızda kalır.';
+
+  @override
+  String get introGetStarted => 'Hadi başlayalım';
+
+  @override
+  String introStep(int current, int total) {
+    return 'Adım $current / $total';
+  }
+
+  @override
   String get welcomeGoalTitle => 'Hedefiniz ne?';
 
   @override

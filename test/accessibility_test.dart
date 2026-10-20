@@ -33,6 +33,7 @@ void main() {
   group('main screens fit an iPhone SE at 2× text', () {
     testWidgets('welcome', (tester) async {
       await pumpRoot(tester, screen: _tight.$1, textScale: _tight.$2);
+      await passIntro(tester);
       await scrollTo(tester, find.text('Raise funding'));
       await tester.tap(find.text('Raise funding'));
       await tester.pumpAndSettle();

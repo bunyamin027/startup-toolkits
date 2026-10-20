@@ -235,6 +235,55 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tabProfile => 'Profil';
 
   @override
+  String get introHeroTitle =>
+      'Alle Tools, die dein Startup braucht. In einer App.';
+
+  @override
+  String introHeroBody(int count) {
+    return '$count fertige Tools für Idee, Finanzen, Investoren, Verträge, Marketing und Launch.';
+  }
+
+  @override
+  String get introStatTools => 'Tools';
+
+  @override
+  String get introStatCategories => 'Kategorien';
+
+  @override
+  String get introStatLanguages => 'Sprachen';
+
+  @override
+  String get introStatAccounts => 'Anmeldungen nötig';
+
+  @override
+  String get introAutofillTitle =>
+      'Einmal eintippen. Jedes Tool füllt sich selbst.';
+
+  @override
+  String get introAutofillBody =>
+      'Name und Story deines Startups landen automatisch in Pitch Decks, Verträgen und Rechnungen.';
+
+  @override
+  String get introNumbersTitle =>
+      'Kenne deine Zahlen, bevor Investoren fragen.';
+
+  @override
+  String get introNumbersBody =>
+      'Runway, Unit Economics und Bewertung aktualisieren sich beim Tippen.';
+
+  @override
+  String get introPrivate =>
+      'Kein Konto. Deine Daten bleiben auf deinem Gerät.';
+
+  @override
+  String get introGetStarted => 'Los geht’s';
+
+  @override
+  String introStep(int current, int total) {
+    return 'Schritt $current von $total';
+  }
+
+  @override
   String get welcomeGoalTitle => 'Worauf arbeitest du hin?';
 
   @override

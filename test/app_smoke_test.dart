@@ -9,7 +9,10 @@ void main() {
     tester,
   ) async {
     await pumpRoot(tester);
-    expect(find.text('What are you building toward?'), findsOneWidget);
+    expect(
+      find.text('Every tool your startup needs. In one app.'),
+      findsOneWidget,
+    );
 
     await onboard(tester);
 
@@ -27,6 +30,9 @@ void main() {
 
   testWidgets('skip goes straight to Home with defaults', (tester) async {
     await pumpRoot(tester);
+    // First Skip leaves the intro, the second skips the questions.
+    await tester.tap(find.text('Skip'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Skip'));
     await tester.pumpAndSettle();
     expect(find.text('Your startup'), findsOneWidget);
@@ -38,7 +44,10 @@ void main() {
     await onboard(tester);
     await pumpRoot(tester, kv: kv);
     expect(find.text('Rocketly'), findsOneWidget);
-    expect(find.text('What are you building toward?'), findsNothing);
+    expect(
+      find.text('Every tool your startup needs. In one app.'),
+      findsNothing,
+    );
   });
 
   testWidgets('next best step opens the tool, which then shows as recent', (
@@ -147,7 +156,10 @@ void main() {
     await tester.tap(find.widgetWithText(TextButton, 'Delete'));
     await tester.pumpAndSettle();
 
-    expect(find.text('What are you building toward?'), findsOneWidget);
+    expect(
+      find.text('Every tool your startup needs. In one app.'),
+      findsOneWidget,
+    );
     final after = await EntitlementStore(kv).load(DateTime.now());
     expect(after.firstLaunch, before.firstLaunch);
   });
