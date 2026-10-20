@@ -43,7 +43,7 @@ class _DocToolViewState extends ConsumerState<DocToolView> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(
+          padding: const EdgeInsetsDirectional.fromSTEB(
             AppSpace.edge,
             4,
             AppSpace.edge,
@@ -73,7 +73,7 @@ class _DocToolViewState extends ConsumerState<DocToolView> {
         Expanded(
           child: switch (_tab) {
             _Tab.result => ListView(
-              padding: const EdgeInsets.fromLTRB(
+              padding: const EdgeInsetsDirectional.fromSTEB(
                 AppSpace.edge,
                 0,
                 AppSpace.edge,
@@ -105,7 +105,7 @@ class _DocToolViewState extends ConsumerState<DocToolView> {
               ],
             ),
             _Tab.edit => ListView(
-              padding: const EdgeInsets.fromLTRB(
+              padding: const EdgeInsetsDirectional.fromSTEB(
                 AppSpace.edge,
                 0,
                 AppSpace.edge,

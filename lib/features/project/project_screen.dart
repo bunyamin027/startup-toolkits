@@ -49,7 +49,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
     return SafeArea(
       bottom: false,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(
+        padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpace.edge,
           12,
           AppSpace.edge,
@@ -293,7 +293,10 @@ class _Editable extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: AppSpace.minTouch),
-          child: Align(alignment: Alignment.centerLeft, child: child),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: child,
+          ),
         ),
       ),
     );

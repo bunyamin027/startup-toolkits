@@ -37,7 +37,7 @@ class CalcToolView extends ConsumerWidget {
       children: [
         Expanded(
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(
+            padding: const EdgeInsetsDirectional.fromSTEB(
               AppSpace.edge,
               4,
               AppSpace.edge,

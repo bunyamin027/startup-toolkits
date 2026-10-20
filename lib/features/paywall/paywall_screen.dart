@@ -115,7 +115,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 return Column(
                   children: [
                     Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: AlignmentDirectional.centerStart,
                       child: IconButton(
                         tooltip: context.l10n.commonClose,
                         onPressed: () => Navigator.pop(context),
@@ -124,7 +124,7 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                     ),
                     Expanded(
                       child: ListView(
-                        padding: const EdgeInsets.fromLTRB(
+                        padding: const EdgeInsetsDirectional.fromSTEB(
                           AppSpace.edge,
                           40,
                           AppSpace.edge,
@@ -383,7 +383,12 @@ class _Footer extends StatelessWidget {
         border: Border(top: BorderSide(color: t.border)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(AppSpace.edge, 12, AppSpace.edge, 4),
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          AppSpace.edge,
+          12,
+          AppSpace.edge,
+          4,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -521,8 +526,8 @@ class _FloatingIconsState extends State<_FloatingIcons>
             final seconds = _clock.value * 63;
             return Stack(
               children: [
-                Positioned(
-                  left: -60,
+                PositionedDirectional(
+                  start: -60,
                   top: -40,
                   child: Container(
                     width: 260,
@@ -539,8 +544,8 @@ class _FloatingIconsState extends State<_FloatingIcons>
                   ),
                 ),
                 for (final (i, (x, y, period)) in _spots.indexed)
-                  Positioned(
-                    left: box.maxWidth * x,
+                  PositionedDirectional(
+                    start: box.maxWidth * x,
                     top:
                         box.maxHeight * y +
                         6 * math.sin(2 * math.pi * seconds / period + i),

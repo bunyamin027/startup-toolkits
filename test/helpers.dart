@@ -32,6 +32,7 @@ Future<ProviderContainer> pumpApp(
   List<dynamic> overrides = const [],
   Size screen = iPhone15,
   double textScale = 1,
+  TextDirection? direction,
 }) async {
   setScreen(tester, screen, textScale);
 
@@ -50,10 +51,13 @@ Future<ProviderContainer> pumpApp(
         supportedLocales: AppLocalizations.supportedLocales,
         home: home,
         // Tests run with Reduce Motion so endless pulses let pumpAndSettle
-        // finish and numbers show their final value at once.
+        // finish and numbers show their final value at once.        // [direction] forces RTL before an RTL language ships.
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context).copyWith(disableAnimations: true),
-          child: child!,
+          child: Directionality(
+            textDirection: direction ?? Directionality.of(context),
+            child: child!,
+          ),
         ),
       ),
     ),

@@ -76,7 +76,7 @@ class ToolActionBar extends ConsumerWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(
+          padding: const EdgeInsetsDirectional.fromSTEB(
             AppSpace.edge,
             10,
             AppSpace.edge,

@@ -42,6 +42,22 @@ flutter run \
 - First iOS build after adding RevenueCat may need
   `cd ios && pod install --repo-update`.
 
+## Languages
+
+UI strings live in `lib/l10n/app_en.arb` and are read with `context.l10n`.
+To add a language (the plan lists es, pt, tr, ar):
+
+1. Copy `app_en.arb` to `app_<code>.arb` and translate the values.
+2. Run `flutter gen-l10n` (or any build); the locale is picked up
+   automatically.
+3. Layouts already use start/end (directional) padding and alignment, and
+   `test/rtl_test.dart` renders every screen and tool right to left, so
+   Arabic needs translations only.
+
+Still English-only: tool content in `lib/tools/catalog/` (names,
+templates, calculator labels) and number formatting in `Fmt` (en-US).
+Both move with the first new language.
+
 ## Analytics
 
 `lib/core/analytics.dart` defines the funnel events from the plan. Until a
@@ -61,7 +77,7 @@ lib/
   billing/    Entitlement (trial, one tool per day, subscriber), providers
   features/   onboarding, shell (tabs), home, project, favorites (My tools),
               profile, catalog (Discover/search), tool (one screen, 45 tools)
-  l10n/       .arb files (with localization work)
+  l10n/       app_en.arb, generated AppLocalizations, context.l10n helpers
 ```
 
 ## Defaults taken for open decisions (plan §14)

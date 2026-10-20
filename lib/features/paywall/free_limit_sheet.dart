@@ -73,7 +73,12 @@ class _FreeLimitSheetState extends ConsumerState<FreeLimitSheet> {
         : toolById(widget.todaysToolId!);
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(AppSpace.edge, 24, AppSpace.edge, 16),
+      padding: const EdgeInsetsDirectional.fromSTEB(
+        AppSpace.edge,
+        24,
+        AppSpace.edge,
+        16,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,

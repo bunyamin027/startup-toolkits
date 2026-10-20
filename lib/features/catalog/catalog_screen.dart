@@ -44,7 +44,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
       body: CustomScrollView(
         slivers: [
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(
+            padding: const EdgeInsetsDirectional.fromSTEB(
               AppSpace.edge,
               4,
               AppSpace.edge,
@@ -69,7 +69,7 @@ class _CatalogScreenState extends State<CatalogScreen> {
             ),
           for (final (title, tools) in sections)
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(
+              padding: const EdgeInsetsDirectional.fromSTEB(
                 AppSpace.edge,
                 16,
                 AppSpace.edge,

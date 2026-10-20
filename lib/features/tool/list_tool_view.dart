@@ -78,7 +78,7 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
             child: visible.isEmpty
                 ? _Empty(tool: tool, stage: _stage)
                 : ListView.separated(
-                    padding: const EdgeInsets.fromLTRB(
+                    padding: const EdgeInsetsDirectional.fromSTEB(
                       AppSpace.edge,
                       8,
                       AppSpace.edge,
@@ -199,7 +199,7 @@ class _StageChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.tokens;
     return Padding(
-      padding: const EdgeInsets.only(right: AppSpace.gapS),
+      padding: const EdgeInsetsDirectional.only(end: AppSpace.gapS),
       child: Center(
         child: ChoiceChip(
           label: Text('$label  $count'),
@@ -232,7 +232,7 @@ class _Totals extends StatelessWidget {
     ];
     if (parts.isEmpty) return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
+      padding: const EdgeInsetsDirectional.fromSTEB(
         AppSpace.edge + 4,
         0,
         AppSpace.edge,
@@ -279,7 +279,7 @@ class _ItemCard extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 6, 12),
+          padding: const EdgeInsetsDirectional.fromSTEB(16, 12, 6, 12),
           child: Row(
             children: [
               Expanded(
@@ -333,8 +333,8 @@ class _DeleteBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(right: 20),
+      alignment: AlignmentDirectional.centerEnd,
+      padding: const EdgeInsetsDirectional.only(end: 20),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.error,
         borderRadius: BorderRadius.circular(AppRadius.chip),
@@ -498,7 +498,7 @@ class _ItemEditorState extends State<_ItemEditor> {
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
+        padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpace.edge,
           20,
           AppSpace.edge,

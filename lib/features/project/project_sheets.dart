@@ -71,7 +71,7 @@ class _ProjectFieldSheetState extends ConsumerState<ProjectFieldSheet> {
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
+        padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpace.edge,
           20,
           AppSpace.edge,
@@ -132,7 +132,7 @@ class GoalSheet extends ConsumerWidget {
     final current = ref.watch(projectProvider.select((p) => p.goal));
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(
+        padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpace.edge,
           20,
           AppSpace.edge,

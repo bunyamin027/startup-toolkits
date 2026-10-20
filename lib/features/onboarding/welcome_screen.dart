@@ -60,7 +60,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(8, 4, 8, 0),
               child: Row(
                 children: [
                   if (_page == 1)
@@ -86,7 +86,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(
+              padding: const EdgeInsetsDirectional.fromSTEB(
                 AppSpace.edge,
                 8,
                 AppSpace.edge,
