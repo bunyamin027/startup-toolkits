@@ -18,6 +18,10 @@ const _tr = <String, ToolText>{
         'Alt başlık (30 karakter)',
         example: 'Serbest çalışana muhasebe',
       ),
+      'oneLiner': FieldText(
+        'Tek cümlelik tanım',
+        example: 'kendi kendine işleyen muhasebe',
+      ),
       'audience': FieldText('Hedef kitle', example: 'serbest çalışanlar'),
       'features': FieldText(
         'Öne çıkan özellikler',
@@ -43,7 +47,8 @@ TANITIM METNİ
 {proof}. Akşamlarınız size kalsın.
 
 AÇIKLAMA
-{app}, {audience} için tasarlanmış, kendi kendine işleyen bir muhasebe uygulamasıdır.
+{app}: {oneLiner}
+{audience|cap} için tasarlandı.
 
 NELER SUNUYOR?
 {features|bullets}
@@ -66,6 +71,11 @@ Göndermeden önce karakter sınırlarını kontrol edin: uygulama adı 30, alt 
       'primary': FieldText('Birincil anahtar kelime', example: 'muhasebe'),
       'secondary': FieldText('İkincil anahtar kelime', example: 'gider'),
       'audience': FieldText('Hedef kitle', example: 'serbest çalışan'),
+      'keywords': FieldText(
+        'Diğer anahtar kelimeler',
+        example: 'takip,fiş,vergi,fatura,bütçe,defter,gelir,tarayıcı',
+        hint: 'Virgülle ayırın, boşluk bırakmayın',
+      ),
       'competitor': FieldText(
         'Rakip',
         hint: 'Anahtar kelime alanında başka markaların adlarını kullanmayın',
@@ -73,7 +83,7 @@ Göndermeden önce karakter sınırlarını kontrol edin: uygulama adı 30, alt 
     },
     template:
         r'''ANAHTAR KELİME ALANI (100 karakter, virgülle ayrılmış, boşluksuz)
-{primary|lower},{secondary|lower},takip,fiş,vergi,fatura,{audience|lower},bütçe,defter,gelir,tarayıcı
+{primary|lower},{secondary|lower},{audience|lower},{keywords|lower}
 
 BAŞLIK VE ALT BAŞLIK FİKİRLERİ
 • {app}: {primary|cap} ve {secondary|lower} takibi
@@ -182,6 +192,10 @@ const _fr = <String, ToolText>{
         'Sous-titre (30 caractères)',
         example: 'Compta pour freelances',
       ),
+      'oneLiner': FieldText(
+        'Accroche',
+        example: 'une comptabilité qui se fait toute seule',
+      ),
       'audience': FieldText('Public', example: 'les freelances'),
       'features': FieldText(
         'Fonctionnalités clés',
@@ -207,7 +221,8 @@ TEXTE PROMOTIONNEL
 {proof}. Retrouvez vos soirées.
 
 DESCRIPTION
-{app} est une comptabilité qui se fait toute seule, conçue pour {audience}.
+{app} : {oneLiner}
+Conçu pour {audience}.
 
 CE QUE VOUS OBTENEZ
 {features|bullets}
@@ -230,6 +245,11 @@ Vérifiez les limites avant l’envoi : nom 30 caractères, sous-titre 30, texte
       'primary': FieldText('Mot-clé principal', example: 'comptabilité'),
       'secondary': FieldText('Mot-clé secondaire', example: 'dépense'),
       'audience': FieldText('Public', example: 'freelance'),
+      'keywords': FieldText(
+        'Autres mots-clés',
+        example: 'suivi,reçu,impôt,facture,budget,compta,revenu,scanner',
+        hint: 'Séparés par des virgules, sans espaces',
+      ),
       'competitor': FieldText(
         'Concurrent',
         hint: 'N’utilisez pas d’autres marques dans le champ mots-clés',
@@ -237,7 +257,7 @@ Vérifiez les limites avant l’envoi : nom 30 caractères, sous-titre 30, texte
     },
     template:
         r'''CHAMP MOTS-CLÉS (100 caractères, séparés par des virgules, sans espaces)
-{primary|lower},{secondary|lower},suivi,reçu,impôt,facture,{audience|lower},budget,compta,revenu,scanner
+{primary|lower},{secondary|lower},{audience|lower},{keywords|lower}
 
 IDÉES DE TITRE + SOUS-TITRE
 • {app} : {primary|cap} et {secondary|cap}s
@@ -349,6 +369,10 @@ const _es = <String, ToolText>{
         'Subtítulo (30 caracteres)',
         example: 'Contabilidad para freelance',
       ),
+      'oneLiner': FieldText(
+        'Frase resumen',
+        example: 'contabilidad que se hace sola',
+      ),
       'audience': FieldText('Público', example: 'freelancers'),
       'features': FieldText(
         'Funciones clave',
@@ -374,7 +398,8 @@ TEXTO PROMOCIONAL
 {proof}. Recupera tus tardes.
 
 DESCRIPCIÓN
-{app} es contabilidad que se hace sola, pensada para {audience}.
+{app}: {oneLiner}
+Pensada para {audience}.
 
 QUÉ OBTIENES
 {features|bullets}
@@ -397,6 +422,12 @@ Revisa los límites antes de enviarla: nombre 30 caracteres, subtítulo 30, text
       'primary': FieldText('Palabra clave principal', example: 'contabilidad'),
       'secondary': FieldText('Palabra clave secundaria', example: 'gasto'),
       'audience': FieldText('Público', example: 'autónomo'),
+      'keywords': FieldText(
+        'Otras palabras clave',
+        example:
+            'control,recibo,impuestos,factura,presupuesto,cuentas,ingresos,escáner',
+        hint: 'Separadas por comas, sin espacios',
+      ),
       'competitor': FieldText(
         'Competidor',
         hint: 'No uses otras marcas en el campo de palabras clave',
@@ -404,7 +435,7 @@ Revisa los límites antes de enviarla: nombre 30 caracteres, subtítulo 30, text
     },
     template:
         r'''CAMPO DE PALABRAS CLAVE (100 caracteres, separadas por comas, sin espacios)
-{primary|lower},{secondary|lower},control,recibo,impuestos,factura,{audience|lower},presupuesto,cuentas,ingresos,escáner
+{primary|lower},{secondary|lower},{audience|lower},{keywords|lower}
 
 IDEAS DE TÍTULO + SUBTÍTULO
 • {app}: {primary|cap} y {secondary|cap}s
@@ -519,6 +550,10 @@ const _de = <String, ToolText>{
         'Untertitel (30 Zeichen)',
         example: 'Buchhaltung für Freelancer',
       ),
+      'oneLiner': FieldText(
+        'One-Liner',
+        example: 'Buchhaltung, die sich selbst erledigt',
+      ),
       'audience': FieldText('Zielgruppe', example: 'Freelancer'),
       'features': FieldText(
         'Wichtigste Funktionen',
@@ -544,7 +579,8 @@ WERBETEXT
 {proof}. Hol dir deine Abende zurück.
 
 BESCHREIBUNG
-{app} ist Buchhaltung, die sich selbst erledigt, gemacht für {audience}.
+{app}: {oneLiner}
+Gemacht für {audience}.
 
 DAS BEKOMMST DU
 {features|bullets}
@@ -567,6 +603,12 @@ Prüfe die Limits vor dem Einreichen: Name 30 Zeichen, Untertitel 30, Werbetext 
       'primary': FieldText('Haupt-Keyword', example: 'Buchhaltung'),
       'secondary': FieldText('Neben-Keyword', example: 'Ausgaben'),
       'audience': FieldText('Zielgruppe', example: 'Freelancer'),
+      'keywords': FieldText(
+        'Weitere Keywords',
+        example:
+            'tracker,beleg,steuer,rechnung,budget,finanzen,einnahmen,scanner',
+        hint: 'Mit Kommas getrennt, ohne Leerzeichen',
+      ),
       'competitor': FieldText(
         'Wettbewerber',
         hint: 'Keine fremden Markennamen im Keyword-Feld verwenden',
@@ -574,7 +616,7 @@ Prüfe die Limits vor dem Einreichen: Name 30 Zeichen, Untertitel 30, Werbetext 
     },
     template:
         r'''KEYWORD-FELD (100 Zeichen, durch Kommas getrennt, ohne Leerzeichen)
-{primary|lower},{secondary|lower},tracker,beleg,steuer,rechnung,{audience|lower},budget,finanzen,einnahmen,scanner
+{primary|lower},{secondary|lower},{audience|lower},{keywords|lower}
 
 IDEEN FÜR TITEL + UNTERTITEL
 • {app}: {primary|cap} & {secondary|cap}

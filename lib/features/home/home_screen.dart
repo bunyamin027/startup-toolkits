@@ -12,6 +12,7 @@ import '../../project/project.dart';
 import '../../project/project_providers.dart';
 import '../../tools/catalog/catalog.dart';
 import '../../tools/catalog/goal_picks.dart';
+import '../../tools/tool_def.dart';
 import '../../tools/tool_providers.dart';
 import '../catalog/catalog_screen.dart';
 import '../common/tool_tile.dart';
@@ -19,8 +20,8 @@ import '../paywall/paywall_screen.dart';
 import '../tool/open_tool.dart';
 import '../../l10n/l10n.dart';
 
-/// "Mission control": where the user is on the launch path and what to do
-/// next.
+/// "Mission control": one mission card (where the startup is and the next
+/// step), then tools to pick from. Everything else is a tap away.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -30,13 +31,21 @@ class HomeScreen extends ConsumerWidget {
     final recent = ref.watch(recentToolsProvider);
     final used = recent.keys.toSet();
     final text = Theme.of(context).textTheme;
+    final t = context.tokens;
+    final l = context.l10n;
     final name = project[ProjectField.startupName].trim();
     final oneLiner = project[ProjectField.oneLiner].trim();
-    final recentIds = ref.read(recentToolsProvider.notifier).ordered.take(3);
     final tools = context.tools;
-    final picks = goalPicks[project.goal]!
-        .map((id) => tools.byId(id)!)
-        .toList();
+    final recentTools = [
+      for (final id in ref.read(recentToolsProvider.notifier).ordered.take(4))
+        ?tools.byId(id),
+    ];
+    final picks = [for (final id in goalPicks[project.goal]!) ?tools.byId(id)];
+    final free = ref.watch(
+      entitlementProvider.select(
+        (e) => e.level(ref.read(clockProvider)()) == AccessLevel.free,
+      ),
+    );
 
     var i = 0;
     Widget rise(Widget child) => RiseIn(index: i++, child: child);
@@ -44,129 +53,180 @@ class HomeScreen extends ConsumerWidget {
     return SafeArea(
       bottom: false,
       child: ListView(
-        padding: const EdgeInsetsDirectional.fromSTEB(
-          AppSpace.edge,
-          12,
-          AppSpace.edge,
-          32,
-        ),
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 32),
         children: [
-          rise(
-            // Large Dynamic Type stacks the badge under the title so
-            // neither gets squeezed.
-            largeText(context)
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _header(context.l10n, text, name, oneLiner),
-                      const SizedBox(height: AppSpace.gapS),
-                      const PlanBadge(),
-                    ],
-                  )
-                : Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: _header(context.l10n, text, name, oneLiner),
-                      ),
-                      const SizedBox(width: AppSpace.gapS),
-                      const PlanBadge(),
-                    ],
-                  ),
-          ),
-          const SizedBox(height: 18),
-          if (ref.watch(
-            entitlementProvider.select(
-              (e) => e.level(ref.read(clockProvider)()) == AccessLevel.free,
-            ),
-          )) ...[
-            rise(const _FreePlanBanner()),
-            const SizedBox(height: AppSpace.gapL),
-          ],
-          rise(const _SearchField()),
-          const SizedBox(height: 18),
-          rise(LaunchPathCard(project: project, usedTools: used)),
-          const SizedBox(height: AppSpace.gapL),
-          rise(_NextStepCard(next: nextBestStep(project, used))),
-          const SizedBox(height: 26),
-          rise(
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                SectionLabel(
-                  project.goal == null
-                      ? context.l10n.homeStartHere
-                      : context.l10n.homeStartHereGoal(
-                          context.l10n.goal(project.goal!),
-                        ),
-                ),
-                ToolTileList(tools: picks),
-              ],
-            ),
-          ),
-          if (recentIds.isNotEmpty) ...[
-            const SizedBox(height: 26),
-            rise(
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+          _Edge(
+            child: rise(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SectionLabel(context.l10n.homeRecentlyUsed),
-                  ToolTileList(
-                    tools: [for (final id in recentIds) ?tools.byId(id)],
+                  // The badge takes the free width (it shortens only on
+                  // very small screens) and never pushes the search away.
+                  if (!largeText(context))
+                    const Flexible(child: PlanBadge())
+                  else
+                    const SizedBox.shrink(),
+                  const SizedBox(width: AppSpace.gapS),
+                  _RoundButton(
+                    icon: Icons.search_rounded,
+                    label: l.homeSearchLabel,
+                    onTap: () => Navigator.push(
+                      context,
+                      CatalogScreen.route(autofocus: true),
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-          const SizedBox(height: 18),
-          rise(
-            OutlinedButton.icon(
-              onPressed: () => Navigator.push(context, CatalogScreen.route()),
-              icon: const Icon(Icons.apps),
-              label: Text(context.l10n.homeBrowseAll(allTools.length)),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.button),
-                ),
+          ),
+          if (largeText(context))
+            const _Edge(
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: PlanBadge(),
+              ),
+            ),
+          const SizedBox(height: 10),
+          _Edge(
+            child: rise(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l.homeMissionControl,
+                    style: text.labelSmall?.copyWith(letterSpacing: 1.4),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    name.isEmpty ? l.homeYourStartup : name,
+                    style: text.displaySmall,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (oneLiner.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      oneLiner,
+                      style: text.bodyLarge?.copyWith(color: t.muted),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
               ),
             ),
           ),
+          const SizedBox(height: 20),
+          if (free) ...[
+            _Edge(child: rise(const _FreePlanBanner())),
+            const SizedBox(height: AppSpace.gapL),
+          ],
+          _Edge(
+            child: rise(_MissionCard(project: project, usedTools: used)),
+          ),
+          const SizedBox(height: 28),
+          rise(
+            _Section(
+              title: project.goal == null
+                  ? l.homeStartHere
+                  : l.homeStartHereGoal(l.goal(project.goal!)),
+              onSeeAll: () => Navigator.push(context, CatalogScreen.route()),
+              child: _ToolCarousel(tools: picks),
+            ),
+          ),
+          if (recentTools.isNotEmpty) ...[
+            const SizedBox(height: 26),
+            rise(
+              _Section(
+                title: l.homeRecentlyUsed,
+                child: _Edge(child: _RecentChips(tools: recentTools)),
+              ),
+            ),
+          ],
+          const SizedBox(height: 26),
+          _Edge(child: rise(const _ExploreCard())),
         ],
       ),
     );
   }
+}
 
-  Widget _header(
-    AppLocalizations l,
-    TextTheme text,
-    String name,
-    String oneLiner,
-  ) {
+/// Standard side gutter for Home rows (the carousel runs edge to edge).
+class _Edge extends StatelessWidget {
+  const _Edge({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: AppSpace.edge),
+    child: child,
+  );
+}
+
+/// Section title with an optional "See all" link.
+class _Section extends StatelessWidget {
+  const _Section({required this.title, required this.child, this.onSeeAll});
+
+  final String title;
+  final Widget child;
+  final VoidCallback? onSeeAll;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          l.homeMissionControl,
-          style: text.labelSmall?.copyWith(letterSpacing: 1.4),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          name.isEmpty ? l.homeYourStartup : name,
-          style: text.displaySmall,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        if (oneLiner.isNotEmpty) ...[
-          const SizedBox(height: 4),
-          Text(
-            oneLiner,
-            style: text.bodySmall,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+        _Edge(
+          child: Row(
+            children: [
+              Expanded(child: SectionLabel(title)),
+              if (onSeeAll != null)
+                TextButton(
+                  onPressed: onSeeAll,
+                  style: TextButton.styleFrom(
+                    foregroundColor: t.accent,
+                    minimumSize: const Size(
+                      AppSpace.minTouch,
+                      AppSpace.minTouch,
+                    ),
+                  ),
+                  child: Text(context.l10n.homeSeeAll),
+                ),
+            ],
           ),
-        ],
+        ),
+        child,
       ],
+    );
+  }
+}
+
+class _RoundButton extends StatelessWidget {
+  const _RoundButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return IconButton(
+      onPressed: onTap,
+      tooltip: label,
+      icon: Icon(icon),
+      style: IconButton.styleFrom(
+        fixedSize: const Size(44, 44),
+        backgroundColor: t.surface2,
+        foregroundColor: t.text,
+        side: BorderSide(color: t.border),
+      ),
     );
   }
 }
@@ -200,6 +260,8 @@ class PlanBadge extends ConsumerWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
         style: TextStyle(
           color: color,
           fontSize: 12,
@@ -215,47 +277,6 @@ class PlanBadge extends ConsumerWidget {
         borderRadius: BorderRadius.circular(AppRadius.chip),
         onTap: () => Navigator.push(context, PaywallScreen.route()),
         child: badge,
-      ),
-    );
-  }
-}
-
-class _SearchField extends StatelessWidget {
-  const _SearchField();
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-    return Semantics(
-      button: true,
-      label: context.l10n.homeSearchLabel,
-      excludeSemantics: true,
-      child: Material(
-        color: t.surface2,
-        borderRadius: BorderRadius.circular(AppRadius.iconBox),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppRadius.iconBox),
-          onTap: () =>
-              Navigator.push(context, CatalogScreen.route(autofocus: true)),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 50),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              child: Row(
-                children: [
-                  Icon(Icons.search, color: t.muted),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      context.l10n.homeSearch(allTools.length),
-                      style: TextStyle(color: t.muted, fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -433,75 +454,379 @@ class _StepNode extends StatelessWidget {
   }
 }
 
-class _NextStepCard extends ConsumerWidget {
-  const _NextStepCard({required this.next});
+/// The one thing to look at: which launch step the startup is on, what to
+/// do next and the tool that does it, with a big Start button.
+class _MissionCard extends ConsumerWidget {
+  const _MissionCard({required this.project, required this.usedTools});
 
-  final NextStep? next;
+  final Project project;
+  final Set<String> usedTools;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.tokens;
     final text = Theme.of(context).textTheme;
-    final next = this.next;
+    final l = context.l10n;
+    final next = nextBestStep(project, usedTools);
+    final current = currentStep(project, usedTools);
+    final progress = launchProgress(project, usedTools);
+
+    final Widget body;
     if (next == null) {
-      return AppCard(
-        child: Text(context.l10n.homePathComplete, style: text.bodyMedium),
+      body = Row(
+        children: [
+          Icon(Icons.verified_rounded, color: t.accent, size: 32),
+          const SizedBox(width: AppSpace.gapM),
+          Expanded(child: Text(l.homePathComplete, style: text.bodyLarge)),
+        ],
+      );
+    } else {
+      final tool = context.tools.byId(next.toolId)!;
+      final adds = next.missing.isEmpty
+          ? l.homeNextFinish(l.stepName(next.step))
+          : l.homeNextAdds(
+              next.missing
+                  .map((f) => nounIn(l.field(f), tool.language))
+                  .join(', '),
+            );
+      body = Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l.stepAction(next.step),
+            style: text.headlineSmall?.copyWith(fontSize: 26, height: 1.15),
+          ),
+          const SizedBox(height: 6),
+          Text(adds, style: text.bodyMedium?.copyWith(color: t.muted)),
+          const SizedBox(height: 18),
+          FilledButton(
+            onPressed: () => openTool(context, ref, tool.id),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(tool.icon, size: 20),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    '${l.homeStartStep} · ${tool.name}',
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                const Icon(Icons.arrow_forward_rounded, size: 20),
+              ],
+            ),
+          ),
+        ],
       );
     }
-    final tool = context.tools.byId(next.toolId)!;
-    final adds = next.missing.isEmpty
-        ? context.l10n.homeNextFinish(context.l10n.stepName(next.step))
-        : context.l10n.homeNextAdds(
-            next.missing
-                .map((f) => nounIn(context.l10n.field(f), tool.language))
-                .join(', '),
-          );
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.card),
+        gradient: LinearGradient(
+          begin: AlignmentDirectional.topStart,
+          end: AlignmentDirectional.bottomEnd,
+          colors: [
+            Color.lerp(t.surface1, t.accent, 0.14)!,
+            Color.lerp(t.surface1, t.blue, 0.10)!,
+          ],
+        ),
+        border: Border.all(color: t.accent.withValues(alpha: 0.45)),
+        boxShadow: [
+          BoxShadow(color: t.accent.withValues(alpha: 0.12), blurRadius: 28),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  upperIn(
+                    current == null
+                        ? l.homeLaunchPath
+                        : '${l.introStep(current + 1, launchPath.length)}'
+                              ' · ${l.stepName(launchPath[current])}',
+                    l.localeName,
+                  ),
+                  style: text.labelSmall?.copyWith(
+                    color: t.accent,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+              Semantics(
+                label: l.homeLaunchPathProgress((progress * 100).round()),
+                excludeSemantics: true,
+                child: CountUp(
+                  value: progress * 100,
+                  format: (v) => '${v.round()}%',
+                  style: text.titleLarge?.copyWith(
+                    color: t.accent,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _PathBar(current: current),
+          const SizedBox(height: 20),
+          body,
+        ],
+      ),
+    );
+  }
+}
+
+/// Five segments, one per launch step; the current one breathes.
+class _PathBar extends StatelessWidget {
+  const _PathBar({required this.current});
+
+  /// Index of the current step; null when the path is complete.
+  final int? current;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final names = !largeText(context);
+    return ExcludeSemantics(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          for (var i = 0; i < launchPath.length; i++) ...[
+            if (i > 0) const SizedBox(width: 6),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _segment(t, current == null || i < current!, i == current),
+                  if (names) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      context.l10n.stepName(launchPath[i]),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: i == current
+                            ? FontWeight.w700
+                            : FontWeight.w500,
+                        color: i == current
+                            ? t.text
+                            : (current == null || i < current!)
+                            ? t.muted
+                            : t.muted.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _segment(AppTokens t, bool done, bool now) {
+    final bar = Container(
+      height: 6,
+      decoration: BoxDecoration(
+        color: done || now ? t.accent : t.border,
+        borderRadius: BorderRadius.circular(3),
+      ),
+    );
+    if (!now) return bar;
+    return _Breathing(child: bar);
+  }
+}
+
+/// Fades the current segment in and out (static with Reduce Motion).
+class _Breathing extends StatefulWidget {
+  const _Breathing({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_Breathing> createState() => _BreathingState();
+}
+
+class _BreathingState extends State<_Breathing>
+    with SingleTickerProviderStateMixin {
+  late final _c = AnimationController(vsync: this, duration: AppMotion.pulse);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (AppMotion.reduced(context)) {
+      _c.value = 1;
+      _c.stop();
+    } else if (!_c.isAnimating) {
+      _c.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => FadeTransition(
+    opacity: Tween(begin: 0.45, end: 1.0).animate(_c),
+    child: widget.child,
+  );
+}
+
+/// Tools as big cards in a horizontal row; a plain list at large text,
+/// where fixed-height cards would cut words off.
+class _ToolCarousel extends StatelessWidget {
+  const _ToolCarousel({required this.tools});
+
+  final List<ToolDef> tools;
+
+  @override
+  Widget build(BuildContext context) {
+    if (largeText(context)) {
+      return _Edge(child: ToolTileList(tools: tools));
+    }
+    return SizedBox(
+      height: 196,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: AppSpace.edge),
+        itemCount: tools.length,
+        separatorBuilder: (_, _) => const SizedBox(width: AppSpace.gapM),
+        itemBuilder: (context, i) => _ToolCard(tool: tools[i]),
+      ),
+    );
+  }
+}
+
+class _ToolCard extends ConsumerWidget {
+  const _ToolCard({required this.tool});
+
+  final ToolDef tool;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.tokens;
+    final text = Theme.of(context).textTheme;
+    final locked = isToolLocked(ref, tool.id);
+    // Wide enough for two-line names such as "Yatırımcı sunumu sihirbazı".
+    return SizedBox(
+      width: 184,
+      child: Material(
+        color: t.surface1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.card),
+          side: BorderSide(color: t.border),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => openTool(context, ref, tool.id),
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    IconBox(tool.icon, size: 46),
+                    const Spacer(),
+                    if (locked)
+                      Icon(
+                        Icons.lock_outline,
+                        size: 18,
+                        color: t.muted,
+                        semanticLabel: context.l10n.toolLocked,
+                      ),
+                  ],
+                ),
+                const Spacer(),
+                Text(
+                  tool.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: text.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  tool.description,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: text.bodySmall,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Recently used tools as compact chips.
+class _RecentChips extends ConsumerWidget {
+  const _RecentChips({required this.tools});
+
+  final List<ToolDef> tools;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.tokens;
+    return Wrap(
+      spacing: AppSpace.gapS,
+      runSpacing: AppSpace.gapS,
+      children: [
+        for (final tool in tools)
+          ActionChip(
+            avatar: Icon(tool.icon, size: 18, color: t.accent),
+            label: Text(tool.name),
+            onPressed: () => openTool(context, ref, tool.id),
+          ),
+      ],
+    );
+  }
+}
+
+/// Entry to the full catalog.
+class _ExploreCard extends StatelessWidget {
+  const _ExploreCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final text = Theme.of(context).textTheme;
     return Material(
-      color: t.surface1,
+      color: t.surface2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.card),
-        side: BorderSide(color: t.accent.withValues(alpha: 0.6), width: 1.5),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => openTool(context, ref, tool.id),
+        onTap: () => Navigator.push(context, CatalogScreen.route()),
         child: Padding(
-          padding: const EdgeInsets.all(18),
+          padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.homeNextBestStep,
-                      style: text.labelSmall?.copyWith(
-                        color: t.accent,
-                        letterSpacing: 1.3,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      context.l10n.stepAction(next.step),
-                      style: text.headlineSmall?.copyWith(fontSize: 22),
-                    ),
-                    const SizedBox(height: 4),
-                    Text('${tool.name} · $adds', style: text.bodySmall),
-                  ],
-                ),
-              ),
+              Icon(Icons.apps_rounded, color: t.accent),
               const SizedBox(width: AppSpace.gapM),
-              Pulse(
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: t.accent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.arrow_forward_rounded, color: t.onAccent),
+              Expanded(
+                child: Text(
+                  context.l10n.homeBrowseAll(allTools.length),
+                  style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
+              Icon(Icons.chevron_right, color: t.muted),
             ],
           ),
         ),

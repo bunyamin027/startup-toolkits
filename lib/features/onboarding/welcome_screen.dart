@@ -7,9 +7,11 @@ import '../../core/widgets/motion.dart';
 import '../../project/project.dart';
 import '../../project/project_providers.dart';
 import '../../tools/tool_def.dart';
-import '../project/project_sheets.dart';
 import '../../l10n/l10n.dart';
+import '../../tools/catalog/catalog.dart';
+import '../project/project_sheets.dart';
 import 'intro.dart';
+import 'onboarding_steps.dart';
 
 /// First run: a three-slide story of what the app does, then pick a goal
 /// and name the startup. Everything can be skipped; there is no account
@@ -21,8 +23,8 @@ class WelcomeScreen extends ConsumerStatefulWidget {
   ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-/// Steps after the intro slides.
-enum _Step { intro, goal, name }
+/// Steps after the intro slides; [launch] is the short payoff screen.
+enum _Step { intro, goal, name, launch }
 
 class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   _Step _step = _Step.intro;
@@ -31,6 +33,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
 
   /// Replaced controllers; an outgoing page may still use one mid-fade.
   final _retired = <PageController>[];
+  Sector? _sector;
   Goal? _goal;
   final _name = TextEditingController();
   final _oneLiner = TextEditingController();
@@ -45,9 +48,11 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     super.dispose();
   }
 
-  void _finish() {
+  /// Keeps what was answered so far in the project.
+  void _saveAnswers() {
     final project = ref.read(projectProvider.notifier);
     if (_goal != null) project.setGoal(_goal);
+    if (_sector != null) project.setSector(_sector);
     if (_name.text.trim().isNotEmpty) {
       project.setField(ProjectField.startupName, _name.text.trim());
     }
@@ -63,7 +68,19 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
     if (_name.text.trim().isNotEmpty) {
       analytics.log(AnalyticsEvent.projectCreated);
     }
+  }
+
+  /// Skip: straight to Home with whatever was answered.
+  void _finish() {
+    _saveAnswers();
     ref.read(onboardingDoneProvider.notifier).complete();
+  }
+
+  /// Last question answered: show the payoff, then Home.
+  void _launch() {
+    _saveAnswers();
+    FocusManager.instance.primaryFocus?.unfocus();
+    setState(() => _step = _Step.launch);
   }
 
   Duration get _motion => AppMotion.reduced(context)
@@ -106,28 +123,41 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
           SafeArea(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(8, 4, 8, 0),
-                  child: Row(
-                    children: [
-                      if (!intro)
-                        IconButton(
-                          tooltip: context.l10n.commonBack,
-                          onPressed: _back,
-                          icon: const Icon(Icons.arrow_back),
+                if (_step != _Step.launch)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(8, 4, 8, 0),
+                    child: Row(
+                      children: [
+                        if (!intro)
+                          IconButton(
+                            tooltip: context.l10n.commonBack,
+                            onPressed: _back,
+                            icon: const Icon(Icons.arrow_back),
+                          ),
+                        const Spacer(),
+                        // The intro skips to the goal question; later steps
+                        // skip the rest of onboarding.
+                        TextButton(
+                          onPressed: intro
+                              ? () => setState(() => _step = _Step.goal)
+                              : _finish,
+                          child: Text(context.l10n.commonSkip),
                         ),
-                      const Spacer(),
-                      // The intro skips to the goal question; later steps
-                      // skip the rest of onboarding.
-                      TextButton(
-                        onPressed: intro
-                            ? () => setState(() => _step = _Step.goal)
-                            : _finish,
-                        child: Text(context.l10n.commonSkip),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
+                if (_step == _Step.goal || _step == _Step.name)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                      AppSpace.edge,
+                      4,
+                      AppSpace.edge,
+                      16,
+                    ),
+                    child: OnboardingProgress(
+                      step: _step == _Step.goal ? 1 : 2,
+                    ),
+                  ),
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: _motion,
@@ -135,48 +165,75 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
                       _Step.intro => _introPages(),
                       _Step.goal => _goalPage(text),
                       _Step.name => _namePage(text),
+                      _Step.launch => LaunchReveal(
+                        key: const ValueKey('launch'),
+                        project: ref.watch(projectProvider),
+                        onDone: () => ref
+                            .read(onboardingDoneProvider.notifier)
+                            .complete(),
+                      ),
                     },
                   ),
                 ),
                 if (intro) _Dots(index: _slide, count: introSlideCount),
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(
-                    AppSpace.edge,
-                    8,
-                    AppSpace.edge,
-                    16,
-                  ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: switch (_step) {
-                      _Step.intro => FilledButton(
-                        onPressed: _nextSlide,
-                        child: Text(
-                          _slide == introSlideCount - 1
-                              ? context.l10n.introGetStarted
-                              : context.l10n.commonContinue,
-                        ),
-                      ),
-                      _Step.goal => FilledButton(
-                        onPressed: _goal == null
-                            ? null
-                            : () => setState(() => _step = _Step.name),
-                        child: Text(context.l10n.commonContinue),
-                      ),
-                      _Step.name => ListenableBuilder(
-                        listenable: _name,
-                        builder: (context, _) => FilledButton(
-                          onPressed: _finish,
+                if (_step != _Step.launch)
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                      AppSpace.edge,
+                      8,
+                      AppSpace.edge,
+                      16,
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: switch (_step) {
+                        _Step.intro => FilledButton(
+                          onPressed: _nextSlide,
                           child: Text(
-                            _name.text.trim().isEmpty
-                                ? context.l10n.welcomeSkipForNow
-                                : context.l10n.welcomeStart,
+                            _slide == introSlideCount - 1
+                                ? context.l10n.introGetStarted
+                                : context.l10n.commonContinue,
                           ),
                         ),
-                      ),
-                    },
+                        // Appears once a goal is picked instead of sitting
+                        // there greyed out.
+                        _Step.goal => IgnorePointer(
+                          ignoring: _goal == null,
+                          child: ExcludeSemantics(
+                            excluding: _goal == null,
+                            child: AnimatedSlide(
+                              offset: _goal == null
+                                  ? const Offset(0, 0.6)
+                                  : Offset.zero,
+                              duration: _motion,
+                              curve: Curves.easeOutCubic,
+                              child: AnimatedOpacity(
+                                opacity: _goal == null ? 0 : 1,
+                                duration: _motion,
+                                child: FilledButton(
+                                  onPressed: () =>
+                                      setState(() => _step = _Step.name),
+                                  child: Text(context.l10n.commonContinue),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        _Step.launch => const SizedBox.shrink(),
+                        _Step.name => ListenableBuilder(
+                          listenable: _name,
+                          builder: (context, _) => FilledButton(
+                            onPressed: _launch,
+                            child: Text(
+                              _name.text.trim().isEmpty
+                                  ? context.l10n.welcomeSkipForNow
+                                  : context.l10n.welcomeStart,
+                            ),
+                          ),
+                        ),
+                      },
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -196,7 +253,12 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   Widget _goalPage(TextTheme text) {
     return ListView(
       key: const ValueKey('goal'),
-      padding: const EdgeInsets.symmetric(horizontal: AppSpace.edge),
+      padding: const EdgeInsetsDirectional.fromSTEB(
+        AppSpace.edge,
+        0,
+        AppSpace.edge,
+        16,
+      ),
       children: [
         RiseIn(
           index: 0,
@@ -205,42 +267,82 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
         const SizedBox(height: 8),
         RiseIn(
           index: 1,
-          child: Text(context.l10n.welcomeGoalSubtitle, style: text.bodySmall),
-        ),
-        const SizedBox(height: 22),
-        for (final (i, g) in Goal.values.indexed) ...[
-          RiseIn(
-            index: i + 2,
-            child: _GoalCard(
-              goal: g,
-              detail: context.l10n.goalDetail(g),
-              selected: _goal == g,
-              onTap: () => setState(() => _goal = g),
+          child: Text(
+            context.l10n.welcomeGoalSubtitle,
+            style: text.bodyLarge?.copyWith(
+              color: context.tokens.muted,
+              height: 1.4,
             ),
           ),
-          const SizedBox(height: AppSpace.gapM),
-        ],
+        ),
+        const SizedBox(height: 24),
+        GoalPicker(selected: _goal, onPick: (g) => setState(() => _goal = g)),
       ],
     );
   }
 
   Widget _namePage(TextTheme text) {
+    // Hints follow the picked category (R&D until one is picked).
+    final example = ToolCatalog.of(
+      context.l10n.localeName,
+      _sector ?? Sector.fallback,
+    ).byId('pitchDeck')!;
+    final nameHint = '${example.field('company')!.defaultValue}';
+    final lineHint = '${example.field('oneLiner')!.defaultValue}';
     return ListView(
       key: const ValueKey('name'),
       padding: const EdgeInsets.symmetric(horizontal: AppSpace.edge),
       children: [
         Text(context.l10n.welcomeNameTitle, style: text.displaySmall),
         const SizedBox(height: 8),
-        Text(context.l10n.welcomeNameSubtitle, style: text.bodySmall),
+        Text(
+          context.l10n.welcomeNameSubtitle,
+          style: text.bodyLarge?.copyWith(
+            color: context.tokens.muted,
+            height: 1.4,
+          ),
+        ),
+        const SizedBox(height: 22),
+        Text(
+          context.l10n.welcomeSectorTitle,
+          style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: AppSpace.gapS,
+          runSpacing: AppSpace.gapS,
+          children: [
+            for (final s in Sector.values)
+              ChoiceChip(
+                avatar: Icon(
+                  sectorIcon(s),
+                  size: 18,
+                  color: s == _sector
+                      ? context.tokens.onAccent
+                      : context.tokens.accent,
+                ),
+                label: Text(context.l10n.sector(s)),
+                selected: s == _sector,
+                showCheckmark: false,
+                selectedColor: context.tokens.accent,
+                labelStyle: TextStyle(
+                  color: s == _sector
+                      ? context.tokens.onAccent
+                      : context.tokens.text,
+                ),
+                onSelected: (_) => setState(() => _sector = s),
+              ),
+          ],
+        ),
         const SizedBox(height: 22),
         TextField(
           controller: _name,
-          autofocus: true,
           textCapitalization: TextCapitalization.words,
           textInputAction: TextInputAction.next,
+          style: text.titleLarge?.copyWith(fontSize: 22),
           decoration: InputDecoration(
             labelText: context.l10n.fieldStartupName,
-            hintText: context.l10n.hintStartupName,
+            hintText: context.l10n.commonExample(nameHint),
           ),
         ),
         const SizedBox(height: AppSpace.gapL),
@@ -252,85 +354,21 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
           maxLines: 3,
           decoration: InputDecoration(
             labelText: context.l10n.fieldOneLiner,
-            hintText: context.l10n.welcomeOneLinerHint,
+            hintText: lineHint,
           ),
-          onSubmitted: (_) => _finish(),
+          onSubmitted: (_) => _launch(),
         ),
+        const SizedBox(height: 22),
+        RiseIn(
+          index: 2,
+          child: NamePreview(
+            name: _name,
+            oneLiner: _oneLiner,
+            lineHint: lineHint,
+          ),
+        ),
+        const SizedBox(height: 16),
       ],
-    );
-  }
-}
-
-class _GoalCard extends StatelessWidget {
-  const _GoalCard({
-    required this.goal,
-    required this.detail,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final Goal goal;
-  final String detail;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.tokens;
-    final text = Theme.of(context).textTheme;
-    return Semantics(
-      selected: selected,
-      button: true,
-      child: Material(
-        color: selected ? t.surface2 : t.surface1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.card),
-          side: BorderSide(
-            color: selected ? t.accent : t.border,
-            width: selected ? 2 : 1,
-          ),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: selected ? t.accent : t.surface2,
-                    borderRadius: BorderRadius.circular(AppRadius.iconBox),
-                  ),
-                  child: Icon(
-                    goalIcon(goal),
-                    color: selected ? t.onAccent : t.accent,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        context.l10n.goal(goal),
-                        style: text.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(detail, style: text.bodySmall),
-                    ],
-                  ),
-                ),
-                if (selected) Icon(Icons.check_circle_rounded, color: t.accent),
-              ],
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/l10n.dart';
 import '../theme/app_tokens.dart';
 
 /// Surface-1 card with the standard radius and border.
@@ -46,7 +47,7 @@ class SectionLabel extends StatelessWidget {
         bottom: AppSpace.gapS,
       ),
       child: Text(
-        text.toUpperCase(),
+        upperIn(text, Localizations.localeOf(context).languageCode),
         style: Theme.of(
           context,
         ).textTheme.labelMedium?.copyWith(letterSpacing: 1.1),

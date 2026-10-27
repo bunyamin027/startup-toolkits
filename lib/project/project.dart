@@ -24,7 +24,7 @@ enum ProjectField {
 
 @immutable
 class Project {
-  const Project({this.values = const {}, this.goal});
+  const Project({this.values = const {}, this.goal, this.sector});
 
   factory Project.fromJson(Map<String, Object?> json) {
     final raw = (json['values'] as Map?) ?? const {};
@@ -34,6 +34,7 @@ class Project {
           if (raw[f.name] case final String v) f: v,
       },
       goal: Goal.values.asNameMap()[json['goal']],
+      sector: Sector.values.asNameMap()[json['sector']],
     );
   }
 
@@ -41,6 +42,12 @@ class Project {
 
   /// Picked during onboarding; drives which tools Home suggests.
   final Goal? goal;
+
+  /// Picked during onboarding; drives the example scenario in tools.
+  final Sector? sector;
+
+  /// The scenario tools use: the picked one, else the R&D example.
+  Sector get scenario => sector ?? Sector.fallback;
 
   String operator [](ProjectField field) => values[field] ?? '';
 
@@ -51,9 +58,13 @@ class Project {
   double get completion => filledCount / ProjectField.values.length;
 
   Project withValue(ProjectField field, String value) =>
-      Project(values: {...values, field: value}, goal: goal);
+      Project(values: {...values, field: value}, goal: goal, sector: sector);
 
-  Project withGoal(Goal? goal) => Project(values: values, goal: goal);
+  Project withGoal(Goal? goal) =>
+      Project(values: values, goal: goal, sector: sector);
+
+  Project withSector(Sector? sector) =>
+      Project(values: values, goal: goal, sector: sector);
 
   /// Plain-text summary for "Copy project brief" (§5), with field names
   /// from [label] (the screen's language; English by default).
@@ -65,5 +76,6 @@ class Project {
   Map<String, Object?> toJson() => {
     'values': {for (final e in values.entries) e.key.name: e.value},
     'goal': goal?.name,
+    'sector': sector?.name,
   };
 }

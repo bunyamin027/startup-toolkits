@@ -99,7 +99,7 @@ Scoring: rate each answer 1–4 right after the interview, before discussing wit
 3. How do you decide between shipping fast and building it right?
 4. How do you test your code? What do you not test?
 5. Describe a time you improved performance. How did you measure it?
-6. Practical: design the data model for an expense tracker with offline sync.
+6. Practical: design the data model for the core feature of {company}.
 7. How do you review someone else's code?
 
 Scoring: rate problem solving, communication and ownership 1–4.''',
@@ -110,7 +110,7 @@ Scoring: rate problem solving, communication and ownership 1–4.''',
 3. Tell me about a time research changed your mind.
 4. How do you work with engineers when time is short?
 5. Critique an app you use every day.
-6. Practical: sketch the first-run experience for a bookkeeping app.
+6. Practical: sketch the first-run experience of {company}.
 
 Scoring: rate craft, product thinking and collaboration 1–4.''',
       'Sales': r'''SALES INTERVIEW: {title} at {company}
@@ -119,7 +119,7 @@ Scoring: rate craft, product thinking and collaboration 1–4.''',
 2. Tell me about a deal you lost. What would you do differently?
 3. How do you build a pipeline from zero?
 4. How do you qualify a lead? Which questions do you ask?
-5. Role play: pitch {company} to a skeptical freelancer in two minutes.
+5. Role play: pitch {company} to a skeptical customer in two minutes.
 6. How do you track your numbers week to week?
 
 Scoring: rate prospecting, discovery, closing and coachability 1–4.''',

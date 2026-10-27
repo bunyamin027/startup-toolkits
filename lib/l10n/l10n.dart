@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+import '../core/currency.dart';
 import '../core/format.dart';
 import '../project/launch_path.dart';
 import '../project/project.dart';
@@ -12,16 +13,35 @@ export 'app_localizations.dart';
 /// UI strings live in `app_*.arb` (master plan §9), tool text in
 /// `tools/l10n/`. Domain enums keep an English `label` for tests; screens
 /// and copied text use the localized names below.
+/// Makes the project's scenario available to `context.tools` without a ref.
+class SectorScope extends InheritedWidget {
+  const SectorScope({super.key, required this.sector, required super.child});
+
+  final Sector sector;
+
+  /// The scenario in the app; the base (software) catalog outside it, as
+  /// in tests of one widget.
+  static Sector of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<SectorScope>()?.sector ??
+      Sector.saas;
+
+  @override
+  bool updateShouldNotify(SectorScope old) => old.sector != sector;
+}
+
 extension L10nContext on BuildContext {
   AppLocalizations get l10n => AppLocalizations.of(this);
 
   /// The 45 tools in the current language. Reading it subscribes the widget
   /// to locale changes, so tool text switches with the language at once.
-  ToolCatalog get tools =>
-      ToolCatalog.of(Localizations.localeOf(this).languageCode);
+  ToolCatalog get tools => ToolCatalog.of(
+    Localizations.localeOf(this).languageCode,
+    SectorScope.of(this),
+  );
 
-  /// Number formatting in the current language.
-  Fmt get fmt => Fmt.of(Localizations.localeOf(this).languageCode);
+  /// Number formatting in the current language and currency (Profile).
+  Fmt get fmt =>
+      Fmt.of(Localizations.localeOf(this).languageCode, CurrencyScope.of(this));
 }
 
 /// [text] in capitals, with Turkish dotted and dotless i kept apart.
@@ -52,6 +72,13 @@ extension DomainLabels on AppLocalizations {
     Goal.firstCustomers => goalFirstCustomers,
     Goal.setUpCompany => goalSetUpCompany,
     Goal.launchApp => goalLaunchApp,
+  };
+
+  String sector(Sector s) => switch (s) {
+    Sector.rnd => sectorRnd,
+    Sector.saas => sectorSaas,
+    Sector.ecommerce => sectorEcommerce,
+    Sector.mobileApp => sectorMobileApp,
   };
 
   String goalDetail(Goal g) => switch (g) {

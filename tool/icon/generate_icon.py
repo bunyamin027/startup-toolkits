@@ -1,4 +1,4 @@
-"""Generates the Startup Toolkits app icon and writes every platform size.
+"""Generates the Startup Toolkit app icon and writes every platform size.
 
 Design (master plan §7.1 tokens): midnight background with a soft blue
 glow, a lime progress ring (the Home "Launch path") with its current-step

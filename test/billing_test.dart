@@ -7,6 +7,7 @@ import 'package:startup_toolkits/billing/billing_service.dart';
 import 'package:startup_toolkits/billing/entitlement.dart';
 import 'package:startup_toolkits/billing/entitlement_providers.dart';
 import 'package:startup_toolkits/core/analytics.dart';
+import 'package:startup_toolkits/features/paywall/paywall_screen.dart';
 import 'package:startup_toolkits/core/storage/key_value_store.dart';
 import 'package:startup_toolkits/project/project_store.dart';
 
@@ -42,6 +43,8 @@ Future<MemoryKeyValueStore> freePlanStore() async {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('offers', () {
     test('yearly savings and monthly equivalent', () async {
       final offers = await PreviewBillingService().offers();
@@ -193,30 +196,28 @@ void main() {
       await tester.pumpAndSettle();
 
       // Paywall: yearly preselected, store prices, required terms and links.
-      expect(find.text('Every tool.\nEvery day.'), findsOneWidget);
+      expect(find.byType(PaywallScreen), findsOneWidget);
+      expect(find.text('Best value'), findsOneWidget);
       expect(find.text('Save 40%'), findsOneWidget);
       expect(find.text(r'$49.99/year'), findsOneWidget);
-      expect(find.text('Start 14-day free trial'), findsOneWidget);
+      // The trial is the app's own 14 days, so the store offers none.
+      expect(find.text(r'Subscribe for $49.99/year'), findsOneWidget);
       expect(
-        find.textContaining(
-          r'14 days free, then $49.99 per year. Renews automatically',
-        ),
+        find.textContaining(r'$49.99 per year. Renews automatically'),
         findsOneWidget,
       );
       expect(find.text('Restore Purchases'), findsOneWidget);
       expect(find.text('Terms of Use (EULA)'), findsOneWidget);
       expect(find.text('Privacy Policy'), findsOneWidget);
 
-      await scrollTo(tester, find.text('Monthly'));
-      await tester.tap(find.text('Monthly'));
-      await tester.pumpAndSettle();
-      expect(find.textContaining(r'then $6.99 per month'), findsOneWidget);
+      // Both plans show above the button without scrolling.
+      expect(find.text('Monthly').hitTestable(), findsOneWidget);
+      expect(find.text(r'$6.99/month'), findsOneWidget);
+
+      // Tapping a plan goes straight to the payment sheet.
       await tester.tap(find.text('Yearly'));
       await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Start 14-day free trial'));
-      await tester.pumpAndSettle();
-      expect(find.text('Every tool.\nEvery day.'), findsNothing);
+      expect(find.byType(PaywallScreen), findsNothing);
       // Back on Home, scrolled earlier: return to the top to see the badge.
       await tester.drag(
         find.byType(ListView).hitTestable().first,
@@ -225,7 +226,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Pro'), findsOneWidget);
       expect(find.text('Your trial has ended'), findsNothing);
-      await tester.tap(find.text('Search 45 tools'));
+      await tester.tap(find.byTooltip('Search tools'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), 'runway');
       await tester.pumpAndSettle();
@@ -240,7 +241,7 @@ void main() {
           AnalyticsEvent.freeLimitHit,
           AnalyticsEvent.paywallViewed,
           AnalyticsEvent.planSelected,
-          AnalyticsEvent.trialStarted,
+          AnalyticsEvent.subscribed,
           AnalyticsEvent.toolOpened,
         ]),
       );

@@ -18,7 +18,7 @@ import '../../tools/tool_def.dart';
 const introSlideCount = 3;
 
 /// Example startup typed into the autofill demo.
-const _demoName = 'Nimbly';
+const _demoName = 'Terralab';
 
 const _fieldHeight = 96.0;
 
@@ -606,14 +606,20 @@ class _FieldCard extends StatelessWidget {
           const SizedBox(height: 4),
           Row(
             children: [
-              Opacity(
-                opacity: fade,
-                child: Text(
-                  value,
-                  style: TextStyle(
-                    color: t.text,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
+              // Shortens rather than spills for names longer than the demo.
+              Flexible(
+                child: Opacity(
+                  opacity: fade,
+                  child: Text(
+                    value,
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(
+                      color: t.text,
+                      fontSize: 26,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),

@@ -1,4 +1,4 @@
-# Startup Toolkits
+# Startup Toolkit
 
 Mini tools for founders in one Flutter app (iOS + Android).
 The single source of truth for product, design and roadmap is
@@ -23,25 +23,23 @@ flutter run
 
 ## Subscriptions and legal links
 
-Keys and URLs are passed at build time, never committed:
+Purchases go straight to the App Store / Google Play through the
+official `in_app_purchase` plugin (`lib/billing/store_billing.dart`); there
+is no backend and no key. Product IDs live in
+`lib/billing/billing_config.dart`.
 
-```sh
-flutter run \
-  --dart-define=RC_APPLE_KEY=appl_xxx \
-  --dart-define=RC_GOOGLE_KEY=goog_xxx
-```
-
-- RevenueCat setup: entitlement `pro`; a current offering with a monthly
-  and an annual package; a 2-week free trial as the introductory offer.
-- Without a key, debug builds use a **preview store** (placeholder prices,
-  fake purchases, labelled on the paywall); release builds disable
-  purchases and the paywall says subscriptions are unavailable.
+- The subscription state is read on the device: StoreKit 2 transactions on
+  iOS, active Play purchases on Android. It is checked at launch and each
+  time the app returns to the foreground.
+- The free trial is the app's own 14 days; the store products have no
+  intro offer.
+- Debug builds use a **preview store** (placeholder prices, fake
+  purchases, labelled on the paywall); profile and release builds,
+  TestFlight included, use the real store.
 - Legal links default to Apple's standard EULA and
   https://www.kahramanapp.com/privacy (override with `TERMS_URL` /
   `PRIVACY_URL`). Support mail and developer name live in
   `lib/core/app_info.dart`.
-- First iOS build after adding RevenueCat may need
-  `cd ios && pod install --repo-update`.
 
 ## Languages
 
@@ -87,7 +85,7 @@ every language appends the "not legal advice" notice in that language.
 ## Analytics
 
 Decision for v1: **no analytics backend**. Nothing leaves the device apart
-from purchases through RevenueCat, which keeps the App Privacy answers in
+from purchases, which Apple and Google handle; that keeps the App Privacy answers in
 `docs/store/privacy-labels.md` and the privacy policy simple.
 `lib/core/analytics.dart` still defines the funnel events from the plan;
 they are printed in debug builds and dropped in release. Adding PostHog or
@@ -116,7 +114,7 @@ lib/
 
 | # | Decision | Outcome | Where |
 | --- | --- | --- | --- |
-| 1 | App name | **Startup Toolkits**, icon in place | Info.plist, AndroidManifest |
+| 1 | App name | **Startup Toolkit**, icon in place | Info.plist, AndroidManifest |
 | 2 | Prices | **$6.99 / month, $49.99 / year** (yearly saves 40%), 14-day intro offer; local tiers come from the stores | App Store Connect / Play Console, `docs/store/app-store-listing.md`; preview store in `lib/billing/billing_service.dart` |
 | 3 | Trial type | In-app 14-day trial from first launch, as in the prototype (confirmed). The paywall also offers the store's intro trial when the user is eligible (its button text comes from the store). Switching to store-only means setting `Entitlement.trialLength` to zero | `lib/billing/entitlement.dart`, `lib/features/paywall/` |
 | 4 | Free plan | One tool per day, resets at local midnight (confirmed) | `lib/billing/entitlement.dart` |
@@ -126,7 +124,7 @@ lib/
 
 Other choices:
 
-- Bundle id: `com.startuptoolkits.startup_toolkits` (placeholder).
+- Bundle id: `com.kahramanapp.startuptoolkit` (iOS and Android).
 - Tracker items are stored in shared_preferences as JSON (`ListStore`), not Hive/Isar; the store can be swapped without touching callers.
 - Tool texts live in Dart maps (`lib/tools/l10n/`), not .arb files: the
   templates use `{placeholders}` that clash with ICU syntax.

@@ -139,6 +139,26 @@ void main() {
     }
   });
 
+  test('numeric fields only fill numeric project fields', () {
+    // A 1–5 rating labeled "Market size" once wrote "4" into the project.
+    const numeric = {
+      ProjectField.cash,
+      ProjectField.monthlyExpenses,
+      ProjectField.monthlyRevenue,
+    };
+    for (final t in allTools) {
+      for (final f in t.fields) {
+        final target = FieldMapper.match(f);
+        if (target == null) continue;
+        expect(
+          numeric.contains(target),
+          f.isNumeric,
+          reason: '${t.id}.${f.key} → ${target.name}',
+        );
+      }
+    }
+  });
+
   test('key project fields are reachable from tools', () {
     final reached = {
       for (final t in allTools)

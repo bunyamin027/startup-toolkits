@@ -38,8 +38,7 @@ class PlanOffer {
   /// [monthlyEquivalent] with the number in the language of [fmt].
   String? monthlyEquivalentIn(Fmt fmt) {
     if (period != PlanPeriod.yearly) return null;
-    return '${currencyCode == 'USD' ? r'$' : '$currencyCode '}'
-        '${fmt.number(price / 12, decimals: 2)}';
+    return fmt.currency(price / 12, currencyCode);
   }
 }
 
@@ -56,10 +55,10 @@ double? yearlySavings(List<PlanOffer> offers) {
 
 enum PurchaseOutcome { success, cancelled, failed }
 
-/// Store abstraction so the paywall works with RevenueCat, the debug
-/// preview store, or no store at all.
+/// Store abstraction so the paywall works with the App Store / Google
+/// Play, the debug preview store, or no store at all.
 abstract class BillingService {
-  /// False when purchases cannot be made (no key in a release build).
+  /// False when purchases cannot be made on this platform.
   bool get available;
 
   /// True when the price labels are placeholders (debug preview store).
@@ -84,8 +83,8 @@ abstract class BillingService {
   Future<bool> restore();
 }
 
-/// Release build without a RevenueCat key: the paywall explains that
-/// subscriptions are unavailable instead of showing fake prices.
+/// Platform without a store: the paywall explains that subscriptions are
+/// unavailable instead of showing fake prices.
 class UnavailableBillingService extends BillingService {
   @override
   bool get available => false;
@@ -110,9 +109,10 @@ class UnavailableBillingService extends BillingService {
   Future<bool> restore() async => false;
 }
 
-/// Debug-only store with the launch prices ($6.99 / $49.99, 14-day
-/// trial), so the paywall can be built and tested before App Store Connect
-/// products exist. Purchases succeed after a short delay and live in memory.
+/// Debug-only store with the launch prices ($6.99 / $49.99), so the
+/// paywall can be built and tested without store products. The trial is
+/// the app's own 14 days, so the store offers none. Purchases succeed
+/// after a short delay and live in memory.
 class PreviewBillingService extends BillingService {
   PreviewBillingService({this.delay = const Duration(milliseconds: 600)});
 
@@ -137,7 +137,6 @@ class PreviewBillingService extends BillingService {
       price: 49.99,
       priceString: r'$49.99',
       currencyCode: 'USD',
-      freeTrialDays: 14,
     ),
     PlanOffer(
       id: 'preview_monthly',
@@ -145,7 +144,6 @@ class PreviewBillingService extends BillingService {
       price: 6.99,
       priceString: r'$6.99',
       currencyCode: 'USD',
-      freeTrialDays: 14,
     ),
   ];
 

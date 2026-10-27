@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In en, this message translates to:
-  /// **'Startup Toolkits'**
+  /// **'Startup Toolkit'**
   String get appName;
 
   /// No description provided for @commonSave.
@@ -389,7 +389,7 @@ abstract class AppLocalizations {
   /// No description provided for @hintStartupName.
   ///
   /// In en, this message translates to:
-  /// **'e.g. Nimbly'**
+  /// **'e.g. Terralab'**
   String get hintStartupName;
 
   /// No description provided for @hintOneLiner.
@@ -692,6 +692,78 @@ abstract class AppLocalizations {
   /// **'Start building'**
   String get welcomeStart;
 
+  /// No description provided for @welcomeReadyFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for you'**
+  String get welcomeReadyFor;
+
+  /// No description provided for @welcomeFillsInto.
+  ///
+  /// In en, this message translates to:
+  /// **'Fills in automatically'**
+  String get welcomeFillsInto;
+
+  /// No description provided for @launchReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Your mission control is ready'**
+  String get launchReady;
+
+  /// No description provided for @launchFirstStep.
+  ///
+  /// In en, this message translates to:
+  /// **'First step: {step}'**
+  String launchFirstStep(String step);
+
+  /// No description provided for @homeStartStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get homeStartStep;
+
+  /// No description provided for @homeSeeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get homeSeeAll;
+
+  /// No description provided for @sectorRnd.
+  ///
+  /// In en, this message translates to:
+  /// **'R&D / deep tech'**
+  String get sectorRnd;
+
+  /// No description provided for @sectorSaas.
+  ///
+  /// In en, this message translates to:
+  /// **'Software / SaaS'**
+  String get sectorSaas;
+
+  /// No description provided for @sectorEcommerce.
+  ///
+  /// In en, this message translates to:
+  /// **'E-commerce / consumer product'**
+  String get sectorEcommerce;
+
+  /// No description provided for @sectorMobileApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile app'**
+  String get sectorMobileApp;
+
+  /// No description provided for @welcomeSectorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you building?'**
+  String get welcomeSectorTitle;
+
+  /// No description provided for @projectSetSector.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a category'**
+  String get projectSetSector;
+
   /// No description provided for @homeMissionControl.
   ///
   /// In en, this message translates to:
@@ -908,11 +980,11 @@ abstract class AppLocalizations {
   /// **'Copy project brief'**
   String get projectCopyBrief;
 
-  /// No description provided for @projectUnlockMore.
+  /// No description provided for @projectNextFields.
   ///
   /// In en, this message translates to:
-  /// **'Add to unlock more'**
-  String get projectUnlockMore;
+  /// **'Add for the {step} step'**
+  String projectNextFields(String step);
 
   /// No description provided for @projectDetails.
   ///
@@ -1010,6 +1082,30 @@ abstract class AppLocalizations {
   /// **'System default'**
   String get profileLanguageSystem;
 
+  /// No description provided for @profileCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get profileCurrency;
+
+  /// No description provided for @profileCurrencyAuto.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic ({currency})'**
+  String profileCurrencyAuto(String currency);
+
+  /// No description provided for @profileCurrencyAutoNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows your region.'**
+  String get profileCurrencyAutoNote;
+
+  /// No description provided for @profileCurrencyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes the symbol only; amounts are not converted.'**
+  String get profileCurrencyNote;
+
   /// No description provided for @profileAppearance.
   ///
   /// In en, this message translates to:
@@ -1040,16 +1136,10 @@ abstract class AppLocalizations {
   /// **'Motion'**
   String get profileMotion;
 
-  /// No description provided for @profileMotionValue.
-  ///
-  /// In en, this message translates to:
-  /// **'Follows system'**
-  String get profileMotionValue;
-
   /// No description provided for @profileMotionNote.
   ///
   /// In en, this message translates to:
-  /// **'Turn on Reduce Motion in system settings to stop animations.'**
+  /// **'Animations follow Reduce Motion in your system settings.'**
   String get profileMotionNote;
 
   /// No description provided for @profileYourData.
@@ -1154,11 +1244,11 @@ abstract class AppLocalizations {
   /// **'Privacy Policy'**
   String get privacyPolicy;
 
-  /// No description provided for @paywallTitle.
+  /// No description provided for @paywallBestValue.
   ///
   /// In en, this message translates to:
-  /// **'Every tool.\nEvery day.'**
-  String get paywallTitle;
+  /// **'Best value'**
+  String get paywallBestValue;
 
   /// No description provided for @paywallBenefitAll.
   ///
@@ -1394,6 +1484,24 @@ abstract class AppLocalizations {
   /// **'Save to project'**
   String get toolSaveToProject;
 
+  /// No description provided for @toolFillTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{filled} of {total} fields filled'**
+  String toolFillTitle(int filled, int total);
+
+  /// No description provided for @toolFillBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in the rest to make this {tool} your own.'**
+  String toolFillBody(String tool);
+
+  /// No description provided for @toolFillAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in'**
+  String get toolFillAction;
+
   /// No description provided for @toolInputs.
   ///
   /// In en, this message translates to:
@@ -1405,6 +1513,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Result'**
   String get toolResult;
+
+  /// No description provided for @listTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get listTotal;
 
   /// No description provided for @listAll.
   ///

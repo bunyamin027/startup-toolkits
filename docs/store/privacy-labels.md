@@ -1,22 +1,18 @@
 # Privacy labels — answers for v1.0
 
 Based on the app as built: no account, content stored on device, no
-analytics backend, purchases via RevenueCat. Re-check if any of that
-changes, and confirm RevenueCat's current guidance before submitting
-([RevenueCat: Apple App Privacy](https://www.revenuecat.com/docs/platform-resources/apple-platform-resources/apple-app-privacy)).
+analytics backend, no servers of our own, purchases directly through the
+App Store / Google Play (StoreKit / Play Billing, no third-party SDK).
+Re-check if any of that changes.
 
 ## Apple App Store Connect → App Privacy
 
-**Do you or your third-party partners collect data from this app?** Yes
-(RevenueCat processes purchase data).
-
-| Data type | Collected | Linked to user | Tracking | Purpose |
-|---|---|---|---|---|
-| Purchases → Purchase History | Yes | No | No | App Functionality |
-| Identifiers → User ID / Device ID | No (RevenueCat's anonymous ID is not linked to a person) | — | — | — |
-| Contact info, Health, Financial info, Location, Contacts, User Content, Browsing, Search, Usage Data, Diagnostics | No | — | — | — |
+**Do you or your third-party partners collect data from this app?**
+**No** → the label reads "Data Not Collected".
 
 Notes:
+- Purchases are processed by Apple, which is not counted as collection by
+  the developer.
 - **User Content** (project, tool inputs) is not collected: it never leaves
   the device.
 - **Tracking:** none, so no App Tracking Transparency prompt.
@@ -26,10 +22,8 @@ Notes:
 
 ## Google Play → Data safety
 
-- Data collected: **Financial info → Purchase history** (by RevenueCat),
-  purpose App functionality; not shared for advertising.
+- Data collected: none. Purchases are processed by Google Play.
 - Data shared: none.
-- Data encrypted in transit: Yes.
-- Users can request deletion: Yes (local data via Profile → Delete all
-  data; purchase data via kahramandev01@gmail.com).
+- Data encrypted in transit: not applicable (the app sends no data).
+- Users can request deletion: local data via Profile → Delete all data.
 - Account creation: none.

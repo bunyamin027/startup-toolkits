@@ -10,6 +10,7 @@ import '../../billing/entitlement.dart';
 import '../../billing/entitlement_providers.dart';
 import '../../core/app_info.dart';
 import '../../core/bootstrap.dart';
+import '../../core/currency.dart';
 import '../../core/theme/app_tokens.dart';
 import '../../core/theme/theme_providers.dart';
 import '../../core/widgets/app_card.dart';
@@ -35,6 +36,8 @@ class ProfileScreen extends ConsumerWidget {
     final goal = ref.watch(projectProvider.select((p) => p.goal));
     final picked = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
+    final pickedCurrency = ref.watch(currencyProvider);
+    final currency = ref.watch(appCurrencyProvider);
     final l = context.l10n;
 
     final planText = switch (e.level(now)) {
@@ -97,9 +100,10 @@ class ProfileScreen extends ConsumerWidget {
               _Row(
                 icon: Icons.language,
                 title: l.profileLanguage,
-                value: picked == null
-                    ? l.profileLanguageSystem
-                    : languageNames[picked.languageCode],
+                // Following the system still names the language in use.
+                value:
+                    languageNames[Localizations.localeOf(context).languageCode],
+                note: picked == null ? l.profileLanguageSystem : null,
                 onTap: () => showSheet(
                   context,
                   _PickSheet<String?>(
@@ -114,6 +118,34 @@ class ProfileScreen extends ConsumerWidget {
                     onPick: (code) => ref
                         .read(localeProvider.notifier)
                         .set(code == null ? null : Locale(code)),
+                  ),
+                ),
+              ),
+              _Row(
+                icon: Icons.payments_outlined,
+                title: l.profileCurrency,
+                value: currencyLabel(currency),
+                note: pickedCurrency == null
+                    ? '${l.profileCurrencyAutoNote} ${l.profileCurrencyNote}'
+                    : l.profileCurrencyNote,
+                onTap: () => showSheet(
+                  context,
+                  _PickSheet<String?>(
+                    title: l.profileCurrency,
+                    options: [
+                      (
+                        null,
+                        l.profileCurrencyAuto(
+                          currencyLabel(
+                            currencyForRegion(ref.read(regionProvider)),
+                          ),
+                        ),
+                      ),
+                      for (final code in currencySymbols.keys)
+                        (code, currencyLabel(code)),
+                    ],
+                    current: pickedCurrency,
+                    onPick: ref.read(currencyProvider.notifier).set,
                   ),
                 ),
               ),
@@ -136,7 +168,6 @@ class ProfileScreen extends ConsumerWidget {
               _Row(
                 icon: Icons.motion_photos_off_outlined,
                 title: l.profileMotion,
-                value: l.profileMotionValue,
                 note: l.profileMotionNote,
               ),
             ],
@@ -274,7 +305,7 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-/// One-choice sheet for Profile settings (language, appearance).
+/// One-choice sheet for Profile settings (language, currency, appearance).
 class _PickSheet<T> extends StatelessWidget {
   const _PickSheet({
     required this.title,
@@ -291,8 +322,9 @@ class _PickSheet<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
+    // Scrolls when the list is longer than the sheet (13 currencies).
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsetsDirectional.fromSTEB(
           AppSpace.edge,
           20,

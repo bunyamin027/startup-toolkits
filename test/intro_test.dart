@@ -23,7 +23,7 @@ void main() {
     expect(find.text('Type it once. Every tool fills itself.'), findsOne);
     // The demo lands the example name in real tools.
     expect(find.text('Pitch deck wizard'), findsOne);
-    expect(find.text('Nimbly'), findsWidgets);
+    expect(find.text('Terralab'), findsWidgets);
 
     await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
     await tester.pumpAndSettle();

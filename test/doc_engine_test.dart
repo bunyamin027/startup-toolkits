@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:startup_toolkits/features/tool/doc_tool_view.dart';
 import 'package:startup_toolkits/engines/doc_engine.dart';
 import 'package:startup_toolkits/engines/inputs.dart';
 import 'package:startup_toolkits/tools/tool_def.dart';
@@ -124,5 +125,25 @@ void main() {
       final out = DocEngine.renderTool(privacy, {});
       expect(out, startsWith('[Company name] complies with CCPA.'));
     });
+  });
+
+  test('document headings are found by their capital lead', () {
+    for (final line in [
+      'LEAN CANVAS: Nimbly',
+      '2. MÜŞTERİ SEGMENTİ',
+      'TOTAL DUE: \$1,830',
+      'SWOT-ANALYSE: Nimbly',
+    ]) {
+      expect(isHeading(line), isTrue, reason: line);
+    }
+    for (final line in [
+      'Konu: Kısa bir sorum var',
+      'KDV (%8): \$135,60',
+      '• SAFE',
+      '1200',
+      '',
+    ]) {
+      expect(isHeading(line), isFalse, reason: line);
+    }
   });
 }

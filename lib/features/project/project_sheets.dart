@@ -107,7 +107,7 @@ class _ProjectFieldSheetState extends ConsumerState<ProjectFieldSheet> {
                   : TextCapitalization.sentences,
               decoration: InputDecoration(
                 hintText: context.l10n.fieldHint(f),
-                prefixText: numeric ? r'$ ' : null,
+                prefixText: numeric ? '${context.fmt.symbol} ' : null,
               ),
               onSubmitted: long ? null : (_) => _save(),
             ),
@@ -159,6 +159,59 @@ class GoalSheet extends ConsumerWidget {
                     : null,
                 onTap: () {
                   ref.read(projectProvider.notifier).setGoal(g);
+                  Navigator.pop(context);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+IconData sectorIcon(Sector sector) => switch (sector) {
+  Sector.rnd => Icons.science_outlined,
+  Sector.saas => Icons.cloud_outlined,
+  Sector.ecommerce => Icons.shopping_bag_outlined,
+  Sector.mobileApp => Icons.phone_iphone,
+};
+
+/// Picks the startup's category; tool examples follow it.
+class SectorSheet extends ConsumerWidget {
+  const SectorSheet({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = ref.watch(projectProvider.select((p) => p.sector));
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          AppSpace.edge,
+          20,
+          AppSpace.edge,
+          12,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              context.l10n.welcomeSectorTitle,
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontSize: 22),
+            ),
+            const SizedBox(height: 12),
+            for (final s in Sector.values)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(sectorIcon(s), color: context.tokens.accent),
+                title: Text(context.l10n.sector(s)),
+                trailing: s == current
+                    ? Icon(Icons.check_rounded, color: context.tokens.accent)
+                    : null,
+                onTap: () {
+                  ref.read(projectProvider.notifier).setSector(s);
                   Navigator.pop(context);
                 },
               ),

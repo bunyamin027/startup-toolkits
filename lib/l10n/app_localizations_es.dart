@@ -9,7 +9,7 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
-  String get appName => 'Startup Toolkits';
+  String get appName => 'Startup Toolkit';
 
   @override
   String get commonSave => 'Guardar';
@@ -155,7 +155,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get fieldMonthlyRevenue => 'Ingresos mensuales';
 
   @override
-  String get hintStartupName => 'p. ej. Nimbly';
+  String get hintStartupName => 'p. ej. Terralab';
 
   @override
   String get hintOneLiner => 'Qué haces y para quién, en una frase';
@@ -325,6 +325,44 @@ class AppLocalizationsEs extends AppLocalizations {
   String get welcomeStart => 'Empezar';
 
   @override
+  String get welcomeReadyFor => 'Listas para ti';
+
+  @override
+  String get welcomeFillsInto => 'Se rellena solo';
+
+  @override
+  String get launchReady => 'Tu centro de control está listo';
+
+  @override
+  String launchFirstStep(String step) {
+    return 'Primer paso: $step';
+  }
+
+  @override
+  String get homeStartStep => 'Empezar';
+
+  @override
+  String get homeSeeAll => 'Ver todo';
+
+  @override
+  String get sectorRnd => 'I+D / deep tech';
+
+  @override
+  String get sectorSaas => 'Software / SaaS';
+
+  @override
+  String get sectorEcommerce => 'E-commerce / producto de consumo';
+
+  @override
+  String get sectorMobileApp => 'App móvil';
+
+  @override
+  String get welcomeSectorTitle => '¿Qué estás construyendo?';
+
+  @override
+  String get projectSetSector => 'Elige una categoría';
+
+  @override
   String get homeMissionControl => 'CENTRO DE CONTROL';
 
   @override
@@ -469,7 +507,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get projectCopyBrief => 'Copiar resumen del proyecto';
 
   @override
-  String get projectUnlockMore => 'Añade para desbloquear más';
+  String projectNextFields(String step) {
+    return 'Añade para el paso $step';
+  }
 
   @override
   String get projectDetails => 'Detalles del proyecto';
@@ -535,6 +575,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profileLanguageSystem => 'Idioma del sistema';
 
   @override
+  String get profileCurrency => 'Moneda';
+
+  @override
+  String profileCurrencyAuto(String currency) {
+    return 'Automática ($currency)';
+  }
+
+  @override
+  String get profileCurrencyAutoNote => 'Según tu región.';
+
+  @override
+  String get profileCurrencyNote =>
+      'Solo cambia el símbolo; los importes no se convierten.';
+
+  @override
   String get profileAppearance => 'Apariencia';
 
   @override
@@ -550,11 +605,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profileMotion => 'Movimiento';
 
   @override
-  String get profileMotionValue => 'Sigue al sistema';
-
-  @override
   String get profileMotionNote =>
-      'Activa Reducir movimiento en los ajustes del sistema para detener las animaciones.';
+      'Las animaciones siguen el ajuste Reducir movimiento del sistema.';
 
   @override
   String get profileYourData => 'Tus datos';
@@ -615,7 +667,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get privacyPolicy => 'Política de privacidad';
 
   @override
-  String get paywallTitle => 'Cada herramienta.\nCada día.';
+  String get paywallBestValue => 'Mejor opción';
 
   @override
   String paywallBenefitAll(int count) {
@@ -778,10 +830,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get toolSaveToProject => 'Guardar en el proyecto';
 
   @override
+  String toolFillTitle(int filled, int total) {
+    return '$filled de $total campos completados';
+  }
+
+  @override
+  String toolFillBody(String tool) {
+    return 'Completa el resto para adaptar este $tool a tu startup.';
+  }
+
+  @override
+  String get toolFillAction => 'Completar';
+
+  @override
   String get toolInputs => 'Datos';
 
   @override
   String get toolResult => 'Resultado';
+
+  @override
+  String get listTotal => 'Total';
 
   @override
   String get listAll => 'Todo';

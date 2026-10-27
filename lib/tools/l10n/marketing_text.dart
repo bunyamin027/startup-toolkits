@@ -289,7 +289,7 @@ Saygılarımla,
 • {topic} için {alternative} alternatifi
 
 PROBLEM ODAKLI (yardım arayanlar)
-• serbest çalışan {topic} nasıl yapılır
+• {topic} için başlangıç rehberi
 • {audience} için {topic} ipuçları
 • en sık yapılan {topic} hataları
 • {audience} için {topic} kontrol listesi
@@ -585,7 +585,7 @@ Bien à vous,
 • alternative au {alternative} pour la {topic}
 
 PROBLÈME (cherchent de l’aide)
-• comment gérer sa {topic} en freelance
+• {topic} : par où commencer
 • conseils de {topic} pour {audience}
 • erreurs de {topic} à éviter
 • checklist {topic} pour {audience}
@@ -880,7 +880,7 @@ Un saludo,
 • alternativa a {alternative} para {topic}
 
 PROBLEMA (buscan ayuda)
-• cómo llevar la {topic} siendo freelance
+• cómo empezar con {topic}
 • consejos de {topic} para {audience}
 • errores de {topic} que evitar
 • checklist de {topic} para {audience}
@@ -1172,7 +1172,7 @@ Viele Grüße,
 • {alternative} Alternative für {topic}
 
 PROBLEM (suchen Hilfe)
-• {topic} als Freelancer selbst machen
+• {topic}: so fängst du an
 • {topic} Tipps für {audience}
 • {topic} Fehler vermeiden
 • {topic} Checkliste für {audience}

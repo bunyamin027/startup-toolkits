@@ -289,7 +289,7 @@ Best,
 • {alternative} alternative for {topic}
 
 PROBLEM (looking for help)
-• how to do {topic} as a freelancer
+• how to get started with {topic}
 • {topic} tips for {audience}
 • {topic} mistakes to avoid
 • {topic} checklist for {audience}

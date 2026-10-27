@@ -1,4 +1,4 @@
-# Store listing — Startup Toolkits (English, v1.0)
+# Store listing — Startup Toolkit (English, v1.0)
 
 Character limits checked against App Store Connect. Placeholders in
 [BRACKETS].
@@ -7,7 +7,7 @@ Character limits checked against App Store Connect. Placeholders in
 
 | Field | Value | Limit |
 |---|---|---|
-| Name | Startup Toolkits | 16 / 30 |
+| Name | Startup Toolkit: 45 in 1 | 24 / 30 |
 | Subtitle | Pitch deck, runway & legal | 26 / 30 |
 | Primary category | Business | |
 | Secondary category | Productivity | |
@@ -34,7 +34,7 @@ tools that fill themselves from your startup details. No account needed.
 
 ### Description
 
-Startup Toolkits puts the 45 tools a founder needs in one app, and they
+Startup Toolkit puts the 45 tools a founder needs in one app, and they
 work together: enter your startup details once, and your pitch deck,
 one-pager, runway and documents fill themselves.
 
@@ -71,13 +71,13 @@ Every tool is open for 14 days. After that, keep using one tool a day for
 free, or go Pro for unlimited access.
 
 SUBSCRIPTION TERMS
-Startup Toolkits Pro is available as a monthly or yearly auto-renewing
+Startup Toolkit Pro is available as a monthly or yearly auto-renewing
 subscription. Payment is charged to your Apple ID account at confirmation
 of purchase. Subscriptions renew automatically unless cancelled at least
 24 hours before the end of the current period; your account is charged
 for renewal within 24 hours before the end of the period. Manage or cancel
-in your App Store account settings. Any unused portion of a free trial is
-forfeited when you purchase a subscription.
+in your App Store account settings. Every tool is free for the first 14
+days after install, with no purchase or sign-up needed.
 
 Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 Privacy Policy: https://www.kahramanapp.com/privacy
@@ -89,19 +89,19 @@ next best step.
 
 ## In-app purchases (App Store Connect)
 
-Subscription group: **Startup Toolkits Pro**
+Subscription group: **Startup Toolkit Pro**
 
 | Reference name | Product ID | Duration | Price (assumption, §6) | Intro offer |
 |---|---|---|---|---|
-| Pro Yearly | [BUNDLE PREFIX].pro.yearly | 1 year | $49.99 | Free, 2 weeks (verify the 2-week option is listed) |
-| Pro Monthly | [BUNDLE PREFIX].pro.monthly | 1 month | $6.99 | Free, 2 weeks |
+| Pro Yearly | com.kahramanapp.startuptoolkit.pro.yearly | 1 year | $49.99 | None |
+| Pro Monthly | com.kahramanapp.startuptoolkit.pro.monthly | 1 month | $6.99 | None |
 
-Localized display name: "Startup Toolkits Pro". Description (≤55):
+Localized display name: "Startup Toolkit Pro". Description (≤55):
 "Unlimited access to all 45 founder tools" (40).
 
-RevenueCat: entitlement `pro` attached to both products; current offering
-with the yearly product in the Annual package and the monthly product in
-the Monthly package. A review screenshot of the paywall is required for
+Product IDs: `com.kahramanapp.startuptoolkit.pro.yearly` and
+`com.kahramanapp.startuptoolkit.pro.monthly` (no intro offer; the app has
+its own 14-day trial). A review screenshot of the paywall is required for
 each product.
 
 ## App Review notes
@@ -114,7 +114,17 @@ each product.
 
 ## Screenshots
 
-iPhone 6.5" (1242 × 2688) captures are in `docs/store/screenshots/`.
-Before submission, also provide the size App Store Connect currently
-requires as mandatory (at the time of writing the 6.9" display class,
-1320 × 2868), captured from the matching simulator.
+Ten per language (en, tr, fr, es, de), uploaded to App Store Connect:
+
+- iPhone 6.9" (1320 × 2868): `docs/store/screenshots/iphone-6.9/<lang>/`
+- iPad 13" (2064 × 2752): `docs/store/screenshots/ipad-13/<lang>/`
+- iPhone Duo, unfolded (1398 × 2034): `docs/store/screenshots/iphone-duo/<lang>/`
+- Product page header (3840 × 1646) and search results asset
+  (1920 × 1280): `docs/store/banners/{header,search}/<lang>.png`, made by
+  `tool/store_screenshots/banners.py` from the iPhone captures.
+
+Headlines are in `tool/store_screenshots/captions.json`. To regenerate
+after an app or caption change, see the commands at the top of
+`tool/store_screenshots/capture_test.dart` (add `DEVICE=ipad` and the
+`ipad` argument for the iPad set). The old 6.5" captures in
+`docs/store/screenshots/iphone-6.5/` predate the current design.

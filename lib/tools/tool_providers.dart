@@ -7,6 +7,7 @@ import '../core/storage/storage_providers.dart';
 import '../engines/list_engine.dart';
 import '../l10n/locale_providers.dart';
 import '../project/field_mapper.dart';
+import '../project/project.dart';
 import '../project/project_providers.dart';
 import 'catalog/catalog.dart';
 import 'tool_def.dart';
@@ -31,6 +32,21 @@ class FavoritesNotifier extends Notifier<Set<String>> {
   }
 }
 
+/// Tools in the app language with the examples of the project's scenario.
+ToolCatalog catalogFor(Ref ref) => ToolCatalog.of(
+  ref.read(appLocaleProvider).languageCode,
+  ref.read(projectProvider).scenario,
+);
+
+/// True once the user told us about their startup (onboarding or Project).
+/// Before that, tools run as a demo with example data.
+bool hasProject(Project project) => project.filledCount > 0;
+
+/// Opening values: the example in demo mode, otherwise empty written
+/// fields so the user's document never shows another startup's content.
+Map<String, Object?> baseValues(ToolDef tool, Project project) =>
+    hasProject(project) ? tool.starterValues : tool.defaults;
+
 /// Current inputs of a calculator or generator.
 ///
 /// Opening order: example data, then the user's last values, then project
@@ -48,9 +64,8 @@ class ToolValuesNotifier extends AsyncNotifier<Map<String, Object?>> {
 
   final String toolId;
 
-  /// The tool in the current language.
-  ToolDef get tool =>
-      ToolCatalog.of(ref.read(appLocaleProvider).languageCode).byId(toolId)!;
+  /// The tool in the current language and the project's scenario.
+  ToolDef get tool => catalogFor(ref).byId(toolId)!;
 
   ToolValuesStore get _store =>
       ToolValuesStore(ref.read(keyValueStoreProvider));
@@ -58,6 +73,7 @@ class ToolValuesNotifier extends AsyncNotifier<Map<String, Object?>> {
   @override
   Future<Map<String, Object?>> build() async {
     ref.watch(appLocaleProvider);
+    ref.watch(projectProvider.select((p) => p.scenario));
     final tool = this.tool;
     final saved = await _store.load(toolId) ?? const {};
     final edited = {
@@ -65,7 +81,11 @@ class ToolValuesNotifier extends AsyncNotifier<Map<String, Object?>> {
         if (!examplesOf(toolId, e.key).contains(e.value)) e.key: e.value,
     };
     final project = ref.read(projectProvider);
-    return {...tool.defaults, ...edited, ...FieldMapper.prefill(tool, project)};
+    return {
+      ...baseValues(tool, project),
+      ...edited,
+      ...FieldMapper.prefill(tool, project),
+    };
   }
 
   void set(String key, Object? value) {
@@ -77,12 +97,13 @@ class ToolValuesNotifier extends AsyncNotifier<Map<String, Object?>> {
     ref.read(projectProvider.notifier).syncFrom(tool, {key: value});
   }
 
-  /// Back to example data (plus project data).
+  /// Back to the opening values (plus project data).
   void reset() {
     unawaited(_store.clear(toolId));
+    final project = ref.read(projectProvider);
     state = AsyncData({
-      ...tool.defaults,
-      ...FieldMapper.prefill(tool, ref.read(projectProvider)),
+      ...baseValues(tool, project),
+      ...FieldMapper.prefill(tool, project),
     });
   }
 
@@ -108,17 +129,22 @@ class ListItemsNotifier extends AsyncNotifier<List<ListItem>> {
   final String toolId;
   static int _seq = 0;
 
-  ToolDef get tool =>
-      ToolCatalog.of(ref.read(appLocaleProvider).languageCode).byId(toolId)!;
+  ToolDef get tool => catalogFor(ref).byId(toolId)!;
 
   ListStore get _store => ListStore(ref.read(keyValueStoreProvider));
 
   @override
   Future<List<ListItem>> build() async {
     ref.watch(appLocaleProvider);
+    ref.watch(projectProvider.select((p) => p.scenario));
     final tool = this.tool;
     final stored = await _store.load(toolId);
     if (stored == null) {
+      // Made-up investors or leads do not belong in the user's own pipeline.
+      if (hasProject(ref.read(projectProvider)) &&
+          !templateSampleTools.contains(toolId)) {
+        return const [];
+      }
       return [
         for (var i = 0; i < tool.samples.length; i++)
           ListItem(
@@ -132,7 +158,8 @@ class ListItemsNotifier extends AsyncNotifier<List<ListItem>> {
     return [for (final item in stored) _inLanguage(item, tool)];
   }
 
-  /// An untouched sample row in the current language; other rows as saved.
+  /// An untouched sample row in the current language and scenario; other
+  /// rows as saved.
   ListItem _inLanguage(ListItem item, ToolDef tool) {
     final index = int.tryParse(item.id.replaceFirst('sample-', ''));
     if (!item.id.startsWith('sample-') ||

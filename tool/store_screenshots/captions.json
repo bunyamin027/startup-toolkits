@@ -1,0 +1,72 @@
+{
+  "01_home": {
+    "en": ["Your startup's", "mission control", "See the next best step, every day"],
+    "tr": ["Girişiminizin", "kontrol merkezi", "Her gün atılacak bir sonraki adım"],
+    "fr": ["Le centre de contrôle", "de votre startup", "La prochaine étape, chaque jour"],
+    "es": ["El centro de control", "de tu startup", "El siguiente paso, cada día"],
+    "de": ["Die Mission Control", "für dein Startup", "Jeden Tag der nächste Schritt"]
+  },
+  "02_pitchDeck": {
+    "en": ["Pitch deck", "in seconds", "Built from your startup details"],
+    "tr": ["Yatırım sunumu", "saniyeler içinde", "Girişim bilgilerinizden hazırlanır"],
+    "fr": ["Votre pitch deck", "en quelques secondes", "Créé à partir de votre projet"],
+    "es": ["Tu pitch deck", "en segundos", "Creado con los datos de tu startup"],
+    "de": ["Dein Pitch Deck", "in Sekunden", "Erstellt aus deinen Startup-Daten"]
+  },
+  "03_runway": {
+    "en": ["Know your", "runway", "Cash, burn and months left at a glance"],
+    "tr": ["Nakit ömrünüzü", "her an bilin", "Nakit, harcama ve kalan ay tek bakışta"],
+    "fr": ["Connaissez", "votre runway", "Trésorerie, burn et mois restants"],
+    "es": ["Conoce", "tu runway", "Caja, burn y meses restantes de un vistazo"],
+    "de": ["Kenne deine", "Runway", "Kontostand, Burn und Restmonate im Blick"]
+  },
+  "04_investorTracker": {
+    "en": ["Track every", "investor", "From first intro to committed"],
+    "tr": ["Her yatırımcıyı", "takip edin", "İlk tanışmadan taahhüde kadar"],
+    "fr": ["Suivez chaque", "investisseur", "Du premier contact à l'engagement"],
+    "es": ["Sigue a cada", "inversor", "Del primer contacto al compromiso"],
+    "de": ["Behalte jeden", "Investor im Blick", "Vom ersten Kontakt bis zur Zusage"]
+  },
+  "05_project": {
+    "en": ["Type it once.", "Every tool fills itself.", "13 details power all 45 tools"],
+    "tr": ["Bir kez yazın,", "tüm araçlar dolsun", "13 bilgi, 45 aracın tamamını doldurur"],
+    "fr": ["Saisissez une fois,", "tout se remplit", "13 infos alimentent les 45 outils"],
+    "es": ["Escríbelo una vez,", "todo se rellena", "13 datos alimentan las 45 herramientas"],
+    "de": ["Einmal eingeben,", "alles füllt sich", "13 Angaben für alle 45 Tools"]
+  },
+  "06_leanCanvas": {
+    "en": ["Validate", "your idea", "Lean Canvas, SWOT, personas and more"],
+    "tr": ["Fikrinizi", "doğrulayın", "Lean Canvas, SWOT, kullanıcı profilleri"],
+    "fr": ["Validez", "votre idée", "Lean Canvas, SWOT, personas et plus"],
+    "es": ["Valida", "tu idea", "Lean Canvas, DAFO, buyer personas y más"],
+    "de": ["Validiere", "deine Idee", "Lean Canvas, SWOT, Personas und mehr"]
+  },
+  "07_capTable": {
+    "en": ["Model your", "next round", "Cap table and valuation, instantly"],
+    "tr": ["Sonraki turunuzu", "modelleyin", "Ortaklık tablosu ve değerleme anında"],
+    "fr": ["Simulez votre", "prochaine levée", "Table de capitalisation et valorisation"],
+    "es": ["Simula tu", "próxima ronda", "Tabla de capitalización y valoración"],
+    "de": ["Plane deine", "nächste Runde", "Cap Table und Bewertung sofort"]
+  },
+  "08_nda": {
+    "en": ["Contracts", "ready to send", "NDA, agreements, privacy policy"],
+    "tr": ["Sözleşmeler", "göndermeye hazır", "NDA, sözleşmeler, gizlilik politikası"],
+    "fr": ["Des contrats", "prêts à envoyer", "NDA, contrats, politique de confidentialité"],
+    "es": ["Contratos", "listos para enviar", "NDA, contratos, política de privacidad"],
+    "de": ["Verträge,", "bereit zum Versand", "NDA, Verträge, Datenschutzerklärung"]
+  },
+  "09_catalog": {
+    "en": ["45 tools.", "One app.", "Finance, legal, marketing, team"],
+    "tr": ["45 araç.", "Tek uygulama.", "Finans, hukuk, pazarlama, ekip"],
+    "fr": ["45 outils.", "Une seule app.", "Finance, juridique, marketing, équipe"],
+    "es": ["45 herramientas.", "Una sola app.", "Finanzas, legal, marketing, equipo"],
+    "de": ["45 Tools.", "Eine App.", "Finanzen, Recht, Marketing, Team"]
+  },
+  "10_unitEconomics": {
+    "en": ["The numbers", "investors ask for", "LTV, CAC and payback in one place"],
+    "tr": ["Yatırımcıların", "sorduğu rakamlar", "LTV, CAC ve geri ödeme süresi"],
+    "fr": ["Les chiffres", "que veulent les VC", "LTV, CAC et délai de récupération"],
+    "es": ["Las cifras que", "piden los inversores", "LTV, CAC y periodo de recuperación"],
+    "de": ["Die Zahlen,", "die Investoren wollen", "LTV, CAC und Amortisation"]
+  }
+}

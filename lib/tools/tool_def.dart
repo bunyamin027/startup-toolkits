@@ -31,6 +31,19 @@ enum Goal {
   final String label;
 }
 
+/// What kind of startup the user builds. It picks the example scenario
+/// the tools open with, so hints and demo data look like the user's world.
+/// The base catalog is the software (SaaS) scenario; R&D is the default
+/// example for users who have not picked one.
+enum Sector {
+  rnd,
+  saas,
+  ecommerce,
+  mobileApp;
+
+  static const fallback = Sector.rnd;
+}
+
 enum FieldType {
   text,
   multiline,
@@ -109,6 +122,12 @@ class FieldDef {
     baseLabel: label == null ? baseLabel : mappingLabel,
     optionLabels: optionLabels ?? this.optionLabels,
   );
+
+  /// Free text the user writes (as opposed to numbers and choices).
+  bool get isWritten => switch (type) {
+    FieldType.text || FieldType.multiline || FieldType.email => true,
+    _ => false,
+  };
 
   bool get isNumeric => switch (type) {
     FieldType.number ||
@@ -265,9 +284,18 @@ class ToolDef {
     return null;
   }
 
-  /// Example values the tool opens with.
+  /// Example values the tool opens with before the user describes their
+  /// startup (demo mode).
   Map<String, Object?> get defaults => {
     for (final f in fields) f.key: f.defaultValue,
+  };
+
+  /// What the tool opens with once the user has a project: written fields
+  /// start empty, because another startup's problem or customers would be
+  /// misleading in the user's own document. Numbers and choices keep their
+  /// examples, which are neutral and let calculators show a result at once.
+  Map<String, Object?> get starterValues => {
+    for (final f in fields) f.key: f.isWritten ? '' : f.defaultValue,
   };
 
   /// Returns a description of what is wrong, or null when the definition is

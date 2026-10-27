@@ -8,6 +8,7 @@ import '../project/project_providers.dart';
 import '../project/project_store.dart';
 import '../tools/tool_providers.dart';
 import '../tools/tool_stores.dart';
+import 'currency.dart';
 import 'storage/key_value_store.dart';
 import 'storage/storage_providers.dart';
 import 'theme/theme_providers.dart';
@@ -23,6 +24,7 @@ Future<List<Override>> loadAppState(KeyValueStore kv, DateTime now) async {
     onboarded,
     locale,
     theme,
+    currency,
   ) = await (
     ProjectStore(kv).load(),
     FavoritesStore(kv).load(),
@@ -31,6 +33,7 @@ Future<List<Override>> loadAppState(KeyValueStore kv, DateTime now) async {
     OnboardingStore(kv).load(),
     LocaleStore(kv).load(),
     ThemeModeStore(kv).load(),
+    CurrencyStore(kv).load(),
   ).wait;
   return [
     keyValueStoreProvider.overrideWithValue(kv),
@@ -41,19 +44,23 @@ Future<List<Override>> loadAppState(KeyValueStore kv, DateTime now) async {
     initialOnboardingDoneProvider.overrideWithValue(onboarded),
     initialLocaleProvider.overrideWithValue(locale),
     initialThemeModeProvider.overrideWithValue(theme),
+    initialCurrencyProvider.overrideWithValue(currency),
   ];
 }
 
 /// Wipes local data (Profile → Delete all data) and returns fresh state.
 Future<List<Override>> resetAppState(KeyValueStore kv, DateTime now) async {
   // The trial clock survives a reset so deleting data cannot restart it.
-  // Language and appearance are settings, not data, so they survive too.
+  // Language, appearance and currency are settings, not data, so they
+  // survive too.
   final entitlement = await EntitlementStore(kv).load(now);
   final locale = await LocaleStore(kv).load();
   final theme = await ThemeModeStore(kv).load();
+  final currency = await CurrencyStore(kv).load();
   await kv.clear();
   await LocaleStore(kv).save(locale);
   await ThemeModeStore(kv).save(theme);
+  await CurrencyStore(kv).save(currency);
   await EntitlementStore(kv).save(
     Entitlement(
       firstLaunch: entitlement.firstLaunch,

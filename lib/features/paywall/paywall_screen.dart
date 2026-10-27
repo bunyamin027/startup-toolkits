@@ -14,6 +14,7 @@ import '../../core/theme/app_tokens.dart';
 import '../../core/theme/text_scale.dart';
 import '../../core/widgets/app_card.dart';
 import '../../tools/catalog/catalog.dart';
+import '../../tools/tool_def.dart';
 import '../tool/tool_actions.dart';
 import '../../l10n/l10n.dart';
 
@@ -88,11 +89,10 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
-    final text = Theme.of(context).textTheme;
     return Scaffold(
       body: Stack(
         children: [
-          const Positioned.fill(child: _FloatingIcons()),
+          const Positioned.fill(child: _Glow()),
           SafeArea(
             child: FutureBuilder<List<PlanOffer>>(
               future: _offers,
@@ -114,66 +114,55 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
                 );
                 return Column(
                   children: [
-                    Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: IconButton(
-                        tooltip: context.l10n.commonClose,
-                        onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.close),
-                      ),
+                    Row(
+                      children: [
+                        IconButton(
+                          tooltip: context.l10n.commonClose,
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.close),
+                        ),
+                        const Spacer(),
+                        const _ProBadge(),
+                        const SizedBox(width: AppSpace.edge),
+                      ],
                     ),
                     Expanded(
                       child: ListView(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                          AppSpace.edge,
-                          40,
-                          AppSpace.edge,
-                          16,
-                        ),
+                        padding: const EdgeInsets.only(top: 8, bottom: 16),
                         children: [
-                          Text(
-                            context.l10n.paywallTitle,
-                            style: text.displaySmall,
-                          ),
-                          const SizedBox(height: 18),
-                          _Benefit(
-                            context.l10n.paywallBenefitAll(allTools.length),
-                          ),
-                          _Benefit(context.l10n.paywallBenefitAutofill),
-                          _Benefit(context.l10n.paywallBenefitPrivate),
-                          const SizedBox(height: 24),
-                          if (loading)
-                            const Center(child: CircularProgressIndicator())
-                          else if (offers.isEmpty)
-                            AppCard(
-                              child: Text(
-                                context.l10n.paywallUnavailable,
-                                style: text.bodyMedium,
-                              ),
-                            )
-                          else
-                            for (final o in offers) ...[
-                              _PlanCard(
-                                offer: o,
-                                selected: o == selected,
-                                savings: o.period == PlanPeriod.yearly
-                                    ? yearlySavings(offers)
-                                    : null,
-                                onTap: () {
-                                  setState(() => _period = o.period);
-                                  _analytics.log(AnalyticsEvent.planSelected, {
-                                    'plan': o.period.name,
-                                  });
-                                },
-                              ),
-                              const SizedBox(height: AppSpace.gapM),
-                            ],
-                          if (_billing.isPreview)
-                            Text(
-                              context.l10n.paywallPreview,
-                              textAlign: TextAlign.center,
-                              style: text.bodySmall?.copyWith(color: t.blue),
+                          const _ToolMarquee(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpace.edge,
                             ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                const SizedBox(height: 26),
+                                // Plans come first so they show above the
+                                // button without scrolling.
+                                ..._plans(context, loading, offers, selected),
+                                const SizedBox(height: 14),
+                                _Benefit(
+                                  Icons.all_inclusive_rounded,
+                                  t.accent,
+                                  context.l10n.paywallBenefitAll(
+                                    allTools.length,
+                                  ),
+                                ),
+                                _Benefit(
+                                  Icons.auto_awesome_rounded,
+                                  t.blue,
+                                  context.l10n.paywallBenefitAutofill,
+                                ),
+                                _Benefit(
+                                  Icons.lock_rounded,
+                                  t.muted,
+                                  context.l10n.paywallBenefitPrivate,
+                                ),
+                              ],
+                            ),
+                          ),
                           if (scrollFooter) footer,
                         ],
                       ),
@@ -188,23 +177,125 @@ class _PaywallScreenState extends ConsumerState<PaywallScreen> {
       ),
     );
   }
+
+  List<Widget> _plans(
+    BuildContext context,
+    bool loading,
+    List<PlanOffer> offers,
+    PlanOffer? selected,
+  ) {
+    final t = context.tokens;
+    final text = Theme.of(context).textTheme;
+    return [
+      if (loading)
+        const Center(child: CircularProgressIndicator())
+      else if (offers.isEmpty)
+        AppCard(
+          child: Text(context.l10n.paywallUnavailable, style: text.bodyMedium),
+        )
+      else
+        for (final o in offers) ...[
+          _PlanCard(
+            offer: o,
+            selected: o == selected,
+            savings: o.period == PlanPeriod.yearly
+                ? yearlySavings(offers)
+                : null,
+            // Tapping a plan selects it and goes straight to the store's
+            // payment sheet.
+            onTap: _busy
+                ? null
+                : () {
+                    setState(() => _period = o.period);
+                    unawaited(_buy(o));
+                    _analytics.log(AnalyticsEvent.planSelected, {
+                      'plan': o.period.name,
+                    });
+                  },
+          ),
+          const SizedBox(height: AppSpace.gapM),
+        ],
+      if (_billing.isPreview)
+        Text(
+          context.l10n.paywallPreview,
+          textAlign: TextAlign.center,
+          style: text.bodySmall?.copyWith(color: t.blue),
+        ),
+    ];
+  }
+}
+
+/// Soft color behind the top of the page.
+class _Glow extends StatelessWidget {
+  const _Glow();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.center,
+          colors: [t.blue.withValues(alpha: 0.22), t.bg.withValues(alpha: 0)],
+        ),
+      ),
+    );
+  }
+}
+
+class _ProBadge extends StatelessWidget {
+  const _ProBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return ExcludeSemantics(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: [t.accent, t.blue]),
+          borderRadius: BorderRadius.circular(AppRadius.chip),
+        ),
+        child: Text(
+          'PRO',
+          style: TextStyle(
+            color: t.onAccent,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 1.5,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _Benefit extends StatelessWidget {
-  const _Benefit(this.text);
+  const _Benefit(this.icon, this.color, this.text);
 
+  final IconData icon;
+  final Color color;
   final String text;
 
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.check_circle_rounded, color: t.accent, size: 22),
-          const SizedBox(width: 10),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: t.surface2,
+              borderRadius: BorderRadius.circular(AppRadius.iconBox - 4),
+              border: Border.all(color: t.border),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(text, style: Theme.of(context).textTheme.bodyLarge),
           ),
@@ -225,14 +316,30 @@ class _PlanCard extends StatelessWidget {
   final PlanOffer offer;
   final bool selected;
   final double? savings;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
     final text = Theme.of(context).textTheme;
     final yearly = offer.period == PlanPeriod.yearly;
-    return Semantics(
+    // At large text sizes the prices go under the plan name.
+    final stacked = largeText(context);
+    final prices = Column(
+      crossAxisAlignment: stacked
+          ? CrossAxisAlignment.start
+          : CrossAxisAlignment.end,
+      children: [
+        // The billed amount is the most prominent price.
+        Text(
+          perPeriod(context.l10n, offer),
+          style: text.titleLarge?.copyWith(fontSize: 17),
+        ),
+        if (offer.monthlyEquivalentIn(context.fmt) case final monthly?)
+          Text(context.l10n.paywallPerMonth(monthly), style: text.bodySmall),
+      ],
+    );
+    final card = Semantics(
       selected: selected,
       button: true,
       child: Material(
@@ -307,29 +414,45 @@ class _PlanCard extends StatelessWidget {
                           context.l10n.paywallDaysFree(offer.freeTrialDays!),
                           style: text.bodySmall,
                         ),
+                      if (stacked) ...[const SizedBox(height: 6), prices],
                     ],
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // The billed amount is the most prominent price.
-                    Text(
-                      perPeriod(context.l10n, offer),
-                      style: text.titleLarge?.copyWith(fontSize: 17),
-                    ),
-                    if (offer.monthlyEquivalentIn(context.fmt)
-                        case final monthly?)
-                      Text(
-                        context.l10n.paywallPerMonth(monthly),
-                        style: text.bodySmall,
-                      ),
-                  ],
-                ),
+                if (!stacked) prices,
               ],
             ),
           ),
         ),
+      ),
+    );
+    if (!yearly) return card;
+    // The ribbon sits on the card's top edge.
+    return Padding(
+      padding: const EdgeInsets.only(top: 11),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          card,
+          PositionedDirectional(
+            top: -11,
+            end: 16,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [t.accent, t.blue]),
+                borderRadius: BorderRadius.circular(AppRadius.chip),
+              ),
+              child: Text(
+                context.l10n.paywallBestValue,
+                style: TextStyle(
+                  color: t.onAccent,
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -469,106 +592,139 @@ class _Link extends StatelessWidget {
   }
 }
 
-/// Tool icons drifting slowly behind the headline (§7.3: 5–9 s loops).
-/// Still when motion is reduced.
-class _FloatingIcons extends StatefulWidget {
-  const _FloatingIcons();
+/// Two rows of tool chips gliding in opposite directions: everything the
+/// subscription unlocks, at a glance. Still when motion is reduced.
+class _ToolMarquee extends StatefulWidget {
+  const _ToolMarquee();
 
   @override
-  State<_FloatingIcons> createState() => _FloatingIconsState();
+  State<_ToolMarquee> createState() => _ToolMarqueeState();
 }
 
-class _FloatingIconsState extends State<_FloatingIcons>
+class _ToolMarqueeState extends State<_ToolMarquee>
     with SingleTickerProviderStateMixin {
-  // One slow master clock; each icon uses its own period inside it.
-  late final AnimationController _clock = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 63),
-  );
+  static const _speed = 22.0; // logical pixels per second
+  static const _rowHeight = 38.0;
 
-  // Between the status bar and the headline, right of the close button,
-  // so neither text nor controls are covered.
-  static const _spots = [
-    (0.22, 0.062, 5.0),
-    (0.40, 0.085, 7.0),
-    (0.57, 0.058, 9.0),
-    (0.73, 0.082, 6.0),
-    (0.88, 0.06, 7.5),
+  // The second row starts far in and moves back, so both rows stay filled
+  // for the ~15 minutes anyone could keep the page open.
+  final _rows = [
+    ScrollController(),
+    ScrollController(initialScrollOffset: 20000),
   ];
+  late final _ticker = createTicker(_tick);
+  Duration _last = Duration.zero;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (AppMotion.reduced(context)) {
-      _clock.stop();
-    } else if (!_clock.isAnimating) {
-      _clock.repeat();
+      if (_ticker.isActive) _ticker.stop();
+    } else if (!_ticker.isActive) {
+      _last = Duration.zero;
+      unawaited(_ticker.start());
+    }
+  }
+
+  void _tick(Duration elapsed) {
+    final dt = (elapsed - _last).inMicroseconds / 1e6;
+    _last = elapsed;
+    for (final (i, row) in _rows.indexed) {
+      if (!row.hasClients) continue;
+      final next = row.offset + (i == 0 ? _speed : -_speed) * dt;
+      row.jumpTo(math.max(0, next));
     }
   }
 
   @override
   void dispose() {
-    _clock.dispose();
+    _ticker.dispose();
+    for (final row in _rows) {
+      row.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final t = context.tokens;
-    final icons = [
-      for (final id in ['runway', 'pitchDeck', 'crm', 'nda', 'storeListing'])
-        toolById(id)!.icon,
-    ];
+    final tools = context.tools.tools;
+    final half = tools.length ~/ 2;
+    final rows = [tools.sublist(0, half), tools.sublist(half)];
+    final bg = context.tokens.bg;
     return ExcludeSemantics(
-      child: LayoutBuilder(
-        builder: (context, box) => AnimatedBuilder(
-          animation: _clock,
-          builder: (context, _) {
-            final seconds = _clock.value * 63;
-            return Stack(
-              children: [
-                PositionedDirectional(
-                  start: -60,
-                  top: -40,
-                  child: Container(
-                    width: 260,
-                    height: 260,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          t.blue.withValues(alpha: 0.28),
-                          t.blue.withValues(alpha: 0),
-                        ],
-                      ),
-                    ),
-                  ),
+      child: ShaderMask(
+        // Fades the chips out at both edges.
+        shaderCallback: (rect) => LinearGradient(
+          colors: [bg.withValues(alpha: 0), bg, bg, bg.withValues(alpha: 0)],
+          stops: const [0, 0.08, 0.92, 1],
+        ).createShader(rect),
+        blendMode: BlendMode.dstIn,
+        child: Column(
+          children: [
+            for (final (i, row) in rows.indexed) ...[
+              if (i > 0) const SizedBox(height: 8),
+              SizedBox(
+                height: MediaQuery.textScalerOf(context).scale(_rowHeight),
+                child: ListView.builder(
+                  controller: _rows[i],
+                  scrollDirection: Axis.horizontal,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  itemBuilder: (context, n) =>
+                      _ToolChip(row[n % row.length], accent: (n + i).isEven),
                 ),
-                for (final (i, (x, y, period)) in _spots.indexed)
-                  PositionedDirectional(
-                    start: box.maxWidth * x,
-                    top:
-                        box.maxHeight * y +
-                        6 * math.sin(2 * math.pi * seconds / period + i),
-                    child: Opacity(
-                      opacity: 0.55,
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: BoxDecoration(
-                          color: t.surface2,
-                          borderRadius: BorderRadius.circular(
-                            AppRadius.iconBox,
-                          ),
-                          border: Border.all(color: t.border),
-                        ),
-                        child: Icon(icons[i], color: t.accent, size: 22),
-                      ),
-                    ),
-                  ),
-              ],
-            );
-          },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ToolChip extends StatelessWidget {
+  const _ToolChip(this.tool, {required this.accent});
+
+  final ToolDef tool;
+  final bool accent;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Container(
+        padding: const EdgeInsetsDirectional.fromSTEB(6, 4, 12, 4),
+        decoration: BoxDecoration(
+          color: t.surface1,
+          borderRadius: BorderRadius.circular(AppRadius.chip + 6),
+          border: Border.all(color: t.border),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 26,
+              height: 26,
+              decoration: BoxDecoration(
+                color: t.surface2,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                tool.icon,
+                size: 15,
+                color: accent ? t.accent : t.blue,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              tool.name,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+            ),
+          ],
         ),
       ),
     );

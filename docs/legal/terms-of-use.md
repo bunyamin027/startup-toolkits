@@ -1,4 +1,4 @@
-# Terms of Use — Startup Toolkits
+# Terms of Use — Startup Toolkit
 
 **Effective date:** [EFFECTIVE DATE]
 
@@ -9,7 +9,7 @@
 > before release.
 
 These terms are an agreement between you and [COMPANY LEGAL NAME] ("we",
-"us") about your use of the Startup Toolkits app (the "App"). By using the
+"us") about your use of the Startup Toolkit app (the "App"). By using the
 App you agree to them.
 
 ## 1. What the App is

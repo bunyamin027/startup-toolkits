@@ -8,30 +8,23 @@ URLs, decisions) · ⚠️ verify before submitting.
 - ⬜ Move the project out of the iCloud-synced Desktop (for example to
   `~/Developer`). iOS builds fail inside iCloud folders with "resource fork,
   Finder information, or similar detritus not allowed".
-- ⬜ `cd ios && pod install --repo-update` once (RevenueCat pods).
 - ⬜ Android: run `flutter doctor --android-licenses` and accept the SDK
   licenses.
-- ⬜ Decide the final bundle ID / application ID. Current placeholders:
-  iOS `com.startuptoolkits.startupToolkits`, Android
-  `com.startuptoolkits.startup_toolkits`. They cannot change after the
-  first upload.
+- ✅ Bundle ID / application ID: `com.kahramanapp.startuptoolkit` on
+  both platforms. It cannot change after the first upload.
 - ⬜ Android release signing: create an upload keystore and
   `android/key.properties`, and point the `release` build type at it
   (today it signs with the debug key).
 
 ## 2. Accounts and products
 
-- ⬜ App Store Connect app record (name **Startup Toolkits**, primary
+- ⬜ App Store Connect app record (name **Startup Toolkit: 45 in 1**; the home-screen name stays "Startup Toolkit", primary
   language English).
-- ⬜ Subscription group and products as in
-  `docs/store/app-store-listing.md`, with the 2-week free intro offer.
-  ⚠️ Confirm App Store Connect lists a "2 weeks" free trial duration.
-- ⬜ RevenueCat project: Apple and Google apps, entitlement `pro`, current
-  offering with Annual and Monthly packages.
-- ⬜ Google Play Console app and matching subscriptions.
-- ⬜ Decide open decision #3 (trial type). Default in code: 14-day in-app
-  trial **and** the store intro offer shown on the paywall when eligible.
-  For store-only, set `Entitlement.trialLength` to zero.
+- ✅ Subscription group and products as in
+  `docs/store/app-store-listing.md`, prices set in all territories. No
+  intro offer: the trial is the app's own 14 days.
+- ⬜ Google Play Console app and subscriptions with the same product IDs.
+- ✅ Trial type: 14-day in-app trial only.
 
 ## 3. Legal and URLs
 
@@ -43,23 +36,17 @@ URLs, decisions) · ⚠️ verify before submitting.
 ## 4. Build
 
 ```sh
-flutter build ipa --release \
-  --dart-define=RC_APPLE_KEY=appl_xxx \
-  --dart-define=TERMS_URL=https://… \
-  --dart-define=PRIVACY_URL=https://…
-
-flutter build appbundle --release \
-  --dart-define=RC_GOOGLE_KEY=goog_xxx \
-  --dart-define=TERMS_URL=https://… \
-  --dart-define=PRIVACY_URL=https://…
+flutter build ipa --release
+flutter build appbundle --release
 ```
 
-- ✅ Version 1.0.0 (build 1) in `pubspec.yaml`; Profile shows it (a test
+Archiving from Xcode (Product → Archive) works too; no build-time keys
+are needed.
+
+- ✅ Version 1.0.0 (build 2) in `pubspec.yaml`; Profile shows it (a test
   keeps them in sync). Bump the build number for every upload.
 - ✅ Release builds compile for iOS (unsigned) and Android (debug APK)
   as of this checklist.
-- ⚠️ A release build **without** a RevenueCat key disables purchases on
-  purpose. Never upload one.
 
 ## 5. Store listing (`docs/store/`)
 
@@ -72,7 +59,6 @@ flutter build appbundle --release \
   (6.9" at the time of writing) from the matching simulator.
 - ⬜ Paywall screenshot for each subscription's App Review information.
 - ✅ Privacy label and Data safety answers (`docs/store/privacy-labels.md`).
-  ⚠️ Re-check against RevenueCat's current guidance.
 
 ## 6. Quality gates (automated, `flutter test`)
 
@@ -111,4 +97,4 @@ accounts for purchases.
 
 - ⬜ App Review notes from `docs/store/app-store-listing.md`.
 - ⬜ Export compliance: the app uses only standard HTTPS (exempt).
-- ⬜ Phased release on; monitor RevenueCat for the first purchases.
+- ⬜ Phased release on; monitor App Store Connect sales for the first purchases.

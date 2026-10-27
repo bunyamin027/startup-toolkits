@@ -9,7 +9,7 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appName => 'Startup Toolkits';
+  String get appName => 'Startup Toolkit';
 
   @override
   String get commonSave => 'Kaydet';
@@ -154,7 +154,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get fieldMonthlyRevenue => 'Aylık gelir';
 
   @override
-  String get hintStartupName => 'ör. Nimbly';
+  String get hintStartupName => 'ör. Terralab';
 
   @override
   String get hintOneLiner =>
@@ -323,6 +323,44 @@ class AppLocalizationsTr extends AppLocalizations {
   String get welcomeStart => 'Başlayalım';
 
   @override
+  String get welcomeReadyFor => 'Sizin için hazır';
+
+  @override
+  String get welcomeFillsInto => 'Otomatik dolacak';
+
+  @override
+  String get launchReady => 'Kontrol merkeziniz hazır';
+
+  @override
+  String launchFirstStep(String step) {
+    return 'İlk adım: $step';
+  }
+
+  @override
+  String get homeStartStep => 'Başla';
+
+  @override
+  String get homeSeeAll => 'Tümü';
+
+  @override
+  String get sectorRnd => 'Ar-Ge / derin teknoloji';
+
+  @override
+  String get sectorSaas => 'Yazılım / SaaS';
+
+  @override
+  String get sectorEcommerce => 'E-ticaret / tüketici ürünü';
+
+  @override
+  String get sectorMobileApp => 'Mobil uygulama';
+
+  @override
+  String get welcomeSectorTitle => 'Ne geliştiriyorsunuz?';
+
+  @override
+  String get projectSetSector => 'Kategori seçin';
+
+  @override
   String get homeMissionControl => 'KONTROL MERKEZİ';
 
   @override
@@ -465,7 +503,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get projectCopyBrief => 'Proje özetini kopyala';
 
   @override
-  String get projectUnlockMore => 'Ekledikçe daha fazlası açılır';
+  String projectNextFields(String step) {
+    return '$step adımı için ekleyin';
+  }
 
   @override
   String get projectDetails => 'Proje ayrıntıları';
@@ -530,6 +570,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profileLanguageSystem => 'Sistem varsayılanı';
 
   @override
+  String get profileCurrency => 'Para birimi';
+
+  @override
+  String profileCurrencyAuto(String currency) {
+    return 'Otomatik ($currency)';
+  }
+
+  @override
+  String get profileCurrencyAutoNote => 'Bölgenize göre seçilir.';
+
+  @override
+  String get profileCurrencyNote =>
+      'Yalnızca sembol değişir; tutarlar dönüştürülmez.';
+
+  @override
   String get profileAppearance => 'Görünüm';
 
   @override
@@ -545,11 +600,8 @@ class AppLocalizationsTr extends AppLocalizations {
   String get profileMotion => 'Hareket';
 
   @override
-  String get profileMotionValue => 'Sistem ayarını izler';
-
-  @override
   String get profileMotionNote =>
-      'Animasyonları durdurmak için sistem ayarlarında Hareketi Azalt seçeneğini açın.';
+      'Animasyonlar, sistem ayarlarındaki Hareketi Azalt seçeneğine uyar.';
 
   @override
   String get profileYourData => 'Verileriniz';
@@ -608,7 +660,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get privacyPolicy => 'Gizlilik Politikası';
 
   @override
-  String get paywallTitle => 'Tüm araçlar.\nHer gün.';
+  String get paywallBestValue => 'En avantajlı';
 
   @override
   String paywallBenefitAll(int count) {
@@ -771,10 +823,26 @@ class AppLocalizationsTr extends AppLocalizations {
   String get toolSaveToProject => 'Projeye kaydet';
 
   @override
+  String toolFillTitle(int filled, int total) {
+    return '$total alandan $filled tanesi dolu';
+  }
+
+  @override
+  String toolFillBody(String tool) {
+    return 'Kalan alanları doldurarak bu $tool belgesini kendi girişiminize göre tamamlayın.';
+  }
+
+  @override
+  String get toolFillAction => 'Doldur';
+
+  @override
   String get toolInputs => 'Girdiler';
 
   @override
   String get toolResult => 'Sonuç';
+
+  @override
+  String get listTotal => 'Toplam';
 
   @override
   String get listAll => 'Tümü';

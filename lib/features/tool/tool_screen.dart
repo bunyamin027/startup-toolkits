@@ -53,7 +53,14 @@ class _ToolScreenState extends ConsumerState<ToolScreen> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text(tool.name),
+        // Long names ("Ortaklık tablosu (cap table) simülatörü") wrap to a
+        // second line instead of being cut off.
+        title: Text(
+          tool.name,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 17, height: 1.2),
+        ),
         backgroundColor: Colors.transparent,
         actions: [
           if (tool.kind != ToolKind.list)

@@ -36,9 +36,9 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
     final t = context.tokens;
     final text = Theme.of(context).textTheme;
     final name = project[ProjectField.startupName].trim();
-    final missing = ProjectField.values
-        .where((f) => !project.isFilled(f))
-        .toList();
+    // Only the fields the next launch step asks for; the full list is in
+    // Project details below.
+    final missing = nextBestStep(project, used)?.missing ?? const [];
     final tools = _toolsByFill(project);
     final shownTools = _allTools ? tools : tools.take(5).toList();
 
@@ -84,20 +84,44 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                     ),
                   ),
                   const SizedBox(height: 14),
-                  ActionChip(
-                    avatar: Icon(
-                      project.goal == null
-                          ? Icons.flag_outlined
-                          : goalIcon(project.goal!),
-                      size: 18,
-                      color: t.accent,
-                    ),
-                    label: Text(
-                      project.goal == null
-                          ? context.l10n.projectSetGoal
-                          : context.l10n.goal(project.goal!),
-                    ),
-                    onPressed: () => showSheet(context, const GoalSheet()),
+                  // Goal and category: what the project aims at and what
+                  // kind of startup it is (tool examples follow it).
+                  Wrap(
+                    spacing: AppSpace.gapS,
+                    runSpacing: AppSpace.gapS,
+                    children: [
+                      ActionChip(
+                        avatar: Icon(
+                          project.goal == null
+                              ? Icons.flag_outlined
+                              : goalIcon(project.goal!),
+                          size: 18,
+                          color: t.accent,
+                        ),
+                        label: Text(
+                          project.goal == null
+                              ? context.l10n.projectSetGoal
+                              : context.l10n.goal(project.goal!),
+                        ),
+                        onPressed: () => showSheet(context, const GoalSheet()),
+                      ),
+                      ActionChip(
+                        avatar: Icon(
+                          project.sector == null
+                              ? Icons.category_outlined
+                              : sectorIcon(project.sector!),
+                          size: 18,
+                          color: t.accent,
+                        ),
+                        label: Text(
+                          project.sector == null
+                              ? context.l10n.projectSetSector
+                              : context.l10n.sector(project.sector!),
+                        ),
+                        onPressed: () =>
+                            showSheet(context, const SectorSheet()),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpace.gapS),
                   Wrap(
@@ -185,7 +209,11 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SectionLabel(context.l10n.projectUnlockMore),
+                  SectionLabel(
+                    context.l10n.projectNextFields(
+                      context.l10n.stepName(nextBestStep(project, used)!.step),
+                    ),
+                  ),
                   Wrap(
                     spacing: AppSpace.gapS,
                     runSpacing: AppSpace.gapS,

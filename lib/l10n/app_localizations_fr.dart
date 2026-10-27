@@ -9,7 +9,7 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
-  String get appName => 'Startup Toolkits';
+  String get appName => 'Startup Toolkit';
 
   @override
   String get commonSave => 'Enregistrer';
@@ -154,7 +154,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get fieldMonthlyRevenue => 'Revenu mensuel';
 
   @override
-  String get hintStartupName => 'ex. Nimbly';
+  String get hintStartupName => 'ex. Terralab';
 
   @override
   String get hintOneLiner => 'Ce que vous faites, pour qui, en une phrase';
@@ -324,6 +324,44 @@ class AppLocalizationsFr extends AppLocalizations {
   String get welcomeStart => 'Commencer';
 
   @override
+  String get welcomeReadyFor => 'Prêts pour vous';
+
+  @override
+  String get welcomeFillsInto => 'Se remplit automatiquement';
+
+  @override
+  String get launchReady => 'Votre centre de contrôle est prêt';
+
+  @override
+  String launchFirstStep(String step) {
+    return 'Première étape : $step';
+  }
+
+  @override
+  String get homeStartStep => 'Commencer';
+
+  @override
+  String get homeSeeAll => 'Tout voir';
+
+  @override
+  String get sectorRnd => 'R&D / deeptech';
+
+  @override
+  String get sectorSaas => 'Logiciel / SaaS';
+
+  @override
+  String get sectorEcommerce => 'E-commerce / produit grand public';
+
+  @override
+  String get sectorMobileApp => 'Application mobile';
+
+  @override
+  String get welcomeSectorTitle => 'Que construisez-vous ?';
+
+  @override
+  String get projectSetSector => 'Choisir une catégorie';
+
+  @override
   String get homeMissionControl => 'CENTRE DE CONTRÔLE';
 
   @override
@@ -467,7 +505,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get projectCopyBrief => 'Copier la fiche projet';
 
   @override
-  String get projectUnlockMore => 'À ajouter pour aller plus loin';
+  String projectNextFields(String step) {
+    return 'À compléter pour l’étape $step';
+  }
 
   @override
   String get projectDetails => 'Détails du projet';
@@ -533,6 +573,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileLanguageSystem => 'Langue du système';
 
   @override
+  String get profileCurrency => 'Devise';
+
+  @override
+  String profileCurrencyAuto(String currency) {
+    return 'Automatique ($currency)';
+  }
+
+  @override
+  String get profileCurrencyAutoNote => 'Selon votre région.';
+
+  @override
+  String get profileCurrencyNote =>
+      'Seul le symbole change ; les montants ne sont pas convertis.';
+
+  @override
   String get profileAppearance => 'Apparence';
 
   @override
@@ -548,11 +603,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileMotion => 'Animations';
 
   @override
-  String get profileMotionValue => 'Suit le système';
-
-  @override
   String get profileMotionNote =>
-      'Activez Réduire les animations dans les réglages du système pour les arrêter.';
+      'Les animations suivent le réglage Réduire les animations du système.';
 
   @override
   String get profileYourData => 'Vos données';
@@ -612,7 +664,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get privacyPolicy => 'Politique de confidentialité';
 
   @override
-  String get paywallTitle => 'Chaque outil.\nChaque jour.';
+  String get paywallBestValue => 'Meilleure offre';
 
   @override
   String paywallBenefitAll(int count) {
@@ -774,10 +826,26 @@ class AppLocalizationsFr extends AppLocalizations {
   String get toolSaveToProject => 'Enregistrer dans le projet';
 
   @override
+  String toolFillTitle(int filled, int total) {
+    return '$filled champs remplis sur $total';
+  }
+
+  @override
+  String toolFillBody(String tool) {
+    return 'Complétez le reste pour adapter ce $tool à votre startup.';
+  }
+
+  @override
+  String get toolFillAction => 'Compléter';
+
+  @override
   String get toolInputs => 'Saisies';
 
   @override
   String get toolResult => 'Résultat';
+
+  @override
+  String get listTotal => 'Total';
 
   @override
   String get listAll => 'Tout';

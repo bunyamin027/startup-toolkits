@@ -99,7 +99,8 @@ FieldDef percent(
   step: step,
 );
 
-/// 1–5 rating slider.
+/// 1–5 rating slider. A rating is never project data ("Market size: 4"),
+/// so it never auto-fills even when its label matches a project field.
 FieldDef score(String key, String label, int example, {String? hint}) =>
     FieldDef(
       key: key,
@@ -110,6 +111,7 @@ FieldDef score(String key, String label, int example, {String? hint}) =>
       min: 1,
       max: 5,
       step: 1,
+      autofill: false,
     );
 
 FieldDef choice(

@@ -1,15 +1,15 @@
-# Privacy Policy — Startup Toolkits
+# Privacy Policy — Startup Toolkit
 
 **Effective date:** [EFFECTIVE DATE]
 
 > Drafting note (remove before publishing): placeholders are in [BRACKETS].
 > This draft describes how version 0.1 of the app works: no accounts, data
-> stored on the device, purchases through Apple or Google via RevenueCat,
-> no analytics service. If you add analytics, crash reporting, accounts or
+> stored on the device, purchases directly through Apple or Google, no
+> analytics service and no servers of our own. If you add analytics, crash reporting, accounts or
 > cloud sync, update this policy and the store privacy forms first. Have a
 > lawyer review it for the countries you sell in.
 
-[COMPANY LEGAL NAME] ("we", "us") makes the Startup Toolkits app (the
+[COMPANY LEGAL NAME] ("we", "us") makes the Startup Toolkit app (the
 "App"). This policy explains what information the App handles and why.
 
 ## The short version
@@ -42,14 +42,11 @@ own privacy terms.
 Subscriptions are sold by Apple (App Store) or Google (Google Play). They
 process your payment under their own privacy policies.
 
-We use **RevenueCat** ([revenuecat.com](https://www.revenuecat.com)) to
-check whether your subscription is active. To do that, RevenueCat receives
-a random, anonymous app user ID created by the App, your purchase receipts
-and transaction history, and basic technical data such as device type,
-operating system version, app version, country and IP address. We do not
-link this to your name or email, because we do not collect them.
-RevenueCat's privacy policy:
-[revenuecat.com/privacy](https://www.revenuecat.com/privacy).
+The App checks whether your subscription is active by reading the
+purchase records that the App Store or Google Play keeps on your device.
+These records are not sent to us or to any other company. We see only the
+sales reports Apple and Google provide to every developer, which do not
+identify you.
 
 ## Sharing and copying
 
@@ -73,8 +70,9 @@ we do not knowingly collect their information.
 Because your content stays on your device, you control it directly: you
 can view, change, export (Copy or Share) and delete it in the App.
 
-For the limited purchase data described above, you can contact us at
-kahramandev01@gmail.com to ask about access or deletion. Depending on where you
+For questions about your data, contact us at kahramandev01@gmail.com.
+Purchase records are held by Apple or Google; manage them in your store
+account. Depending on where you
 live (for example the EU/UK under GDPR, California under CCPA/CPRA, or
 Türkiye under KVKK), you may have further rights, including the right to
 complain to your local data protection authority.
@@ -82,7 +80,7 @@ complain to your local data protection authority.
 ## Security
 
 Data on your device is protected by your device's own security (passcode,
-encryption). Communication with RevenueCat uses encrypted connections.
+encryption). The App does not send your information to any server.
 
 ## Changes to this policy
 

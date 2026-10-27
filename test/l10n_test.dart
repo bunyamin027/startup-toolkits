@@ -129,29 +129,35 @@ void main() {
 
       await switchTo(tester, c, 'fr');
       expect(find.textContaining('SEGMENT DE CLIENTÈLE'), findsOneWidget);
-      expect(find.textContaining('en France'), findsOneWidget);
+      expect(find.textContaining('en zones sèches'), findsOneWidget);
       expect(find.text('Modifier'), findsOneWidget);
     });
 
     testWidgets('edited values stay, examples follow', (tester) async {
       final c = await pumpApp(tester, const ToolScreen(toolId: 'leanCanvas'));
-      c.read(toolValuesProvider('leanCanvas').notifier).set('uvp', 'Our own');
+      // Channels is not a project field, so the tool stays in demo mode.
+      c
+          .read(toolValuesProvider('leanCanvas').notifier)
+          .set('channels', 'Our own');
       await tester.pumpAndSettle();
 
       await switchTo(tester, c, 'es');
       final out = find.textContaining('PROPUESTA DE VALOR ÚNICA');
       expect(out, findsOneWidget);
       expect(find.textContaining('Our own'), findsOneWidget);
-      expect(find.textContaining('en España'), findsOneWidget);
+      expect(find.textContaining('en zonas secas'), findsOneWidget);
     });
 
     testWidgets('choices show translated, templates follow', (tester) async {
       final c = await pumpApp(tester, const ToolScreen(toolId: 'appPrivacy'));
       await switchTo(tester, c, 'tr');
-      final output = tester.widget<SelectableText>(find.byType(SelectableText));
+      final output = tester
+          .widget<SelectableText>(find.byType(SelectableText))
+          .textSpan!
+          .toPlainText();
       // The stored choice is English; the policy shows it in Turkish.
-      expect(output.data, contains('HESAPLAR\nHesap gerekmiyor.'));
-      expect(output.data, endsWith('Kullanmadan önce bir avukata inceletin.'));
+      expect(output, contains('HESAPLAR\nHesap gerekmiyor.'));
+      expect(output, endsWith('Kullanmadan önce bir avukata inceletin.'));
       await tester.tap(find.text('Düzenle'));
       await tester.pumpAndSettle();
       expect(find.text('Hesap gerekmiyor'), findsOneWidget);
@@ -165,12 +171,15 @@ void main() {
 
       await switchTo(tester, c, 'tr');
       expect(find.text('Yapılıyor  2'), findsOneWidget);
-      expect(find.text('Banka entegrasyonunda hata yönetimi'), findsOneWidget);
+      expect(
+        find.text('4 numaralı sensör partisini kalibre et'),
+        findsOneWidget,
+      );
       expect(find.text('Görev ekle'), findsOneWidget);
 
       await switchTo(tester, c, 'de');
       expect(find.text('Aufgabe hinzufügen'), findsOneWidget);
-      expect(find.text('Fehlerbehandlung beim Bankabgleich'), findsOneWidget);
+      expect(find.text('Sondencharge Nr. 4 kalibrieren'), findsOneWidget);
     });
   });
 }

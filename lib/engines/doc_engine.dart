@@ -40,7 +40,13 @@ abstract final class DocEngine {
 
   /// Picks the template for the tool's current choice and renders it in
   /// the tool's language.
-  static String renderTool(ToolDef tool, Map<String, Object?> values) {
+  /// [fmt] carries the app currency; defaults to dollars in the tool's
+  /// language (tests, catalog checks).
+  static String renderTool(
+    ToolDef tool,
+    Map<String, Object?> values, {
+    Fmt? fmt,
+  }) {
     final template = templateFor(tool, values);
     final labels = {for (final f in tool.fields) f.key: f.label};
     // Choices are stored in English; the text shows them translated.
@@ -54,7 +60,7 @@ abstract final class DocEngine {
       template,
       shown,
       labels: labels,
-      fmt: Fmt.of(tool.language),
+      fmt: fmt ?? Fmt.of(tool.language),
     );
     return tool.legalDisclaimer
         ? '$body\n\n${legalNoticeIn(tool.language)}'

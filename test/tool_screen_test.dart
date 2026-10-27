@@ -67,7 +67,7 @@ void main() {
         const ToolScreen(toolId: 'onePager'),
         kv: kv,
       );
-      expect(find.textContaining('NIMBLY'), findsOneWidget);
+      expect(find.textContaining('TERRALAB'), findsOneWidget);
 
       await tester.tap(find.text('Edit'));
       await tester.pumpAndSettle();
@@ -143,12 +143,15 @@ void main() {
 
     testWidgets('swipe deletes and undo restores', (tester) async {
       await pumpApp(tester, const ToolScreen(toolId: 'kanban'));
-      await tester.drag(find.text('Set up analytics'), const Offset(-600, 0));
+      await tester.drag(
+        find.text('Install probes at pilot farm 12'),
+        const Offset(-600, 0),
+      );
       await tester.pumpAndSettle();
-      expect(find.text('Set up analytics'), findsNothing);
+      expect(find.text('Install probes at pilot farm 12'), findsNothing);
       await tester.tap(find.text('Undo'));
       await tester.pumpAndSettle();
-      expect(find.text('Set up analytics'), findsOneWidget);
+      expect(find.text('Install probes at pilot farm 12'), findsOneWidget);
     });
   });
 

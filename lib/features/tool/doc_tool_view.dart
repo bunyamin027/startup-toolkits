@@ -35,7 +35,8 @@ class _DocToolViewState extends ConsumerState<DocToolView> {
     if (values == null) return const Center(child: CircularProgressIndicator());
 
     final notifier = ref.read(toolValuesProvider(tool.id).notifier);
-    final output = DocEngine.renderTool(tool, values);
+    final output = DocEngine.renderTool(tool, values, fmt: context.fmt);
+    final (filled, total) = writtenProgress(tool, values);
     final selector = tool.templateField == null
         ? null
         : tool.field(tool.templateField!);
@@ -90,14 +91,26 @@ class _DocToolViewState extends ConsumerState<DocToolView> {
                   ),
                   const SizedBox(height: AppSpace.gapL),
                 ],
+                if (filled < total) ...[
+                  _FillCard(
+                    tool: tool,
+                    filled: filled,
+                    total: total,
+                    onFill: () => setState(() => _tab = _Tab.edit),
+                  ),
+                  const SizedBox(height: AppSpace.gapL),
+                ],
                 RiseIn(
                   index: 0,
                   child: AppCard(
-                    child: SelectableText(
-                      output,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        height: 1.5,
-                        fontSize: 15,
+                    child: SelectableText.rich(
+                      outputSpan(
+                        output,
+                        Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          height: 1.5,
+                          fontSize: 15,
+                        ),
+                        context.tokens.accent,
                       ),
                     ),
                   ),
@@ -131,6 +144,102 @@ class _DocToolViewState extends ConsumerState<DocToolView> {
           onSaveToProject: saveToProjectAction(context, ref, tool),
         ),
       ],
+    );
+  }
+}
+
+/// [output] with its section headings ("2. CUSTOMER SEGMENT",
+/// "TOTAL DUE: $1,830") in bold accent; copied text stays plain.
+TextSpan outputSpan(String output, TextStyle base, Color heading) {
+  final bold = base.copyWith(fontWeight: FontWeight.w700, color: heading);
+  final lines = output.split('\n');
+  return TextSpan(
+    style: base,
+    children: [
+      for (final (i, line) in lines.indexed)
+        TextSpan(
+          text: i == lines.length - 1 ? line : '$line\n',
+          style: isHeading(line) ? bold : null,
+        ),
+    ],
+  );
+}
+
+/// A line whose lead (up to the first colon) is written in capitals and
+/// has at least four letters, so "KDV (%8): …" or "Konu: …" are not.
+bool isHeading(String line) {
+  final t = line.trim();
+  if (t.isEmpty || t.startsWith('•')) return false;
+  final colon = t.indexOf(':');
+  final lead = colon < 0 ? t : t.substring(0, colon);
+  final letters = lead.replaceAll(RegExp(r'[^\p{L}]', unicode: true), '');
+  return letters.length >= 4 &&
+      letters == letters.toUpperCase() &&
+      letters != letters.toLowerCase();
+}
+
+/// Written fields the current template uses, and how many hold text.
+(int, int) writtenProgress(ToolDef tool, Map<String, Object?> values) {
+  final used = DocEngine.placeholderKeys(DocEngine.templateFor(tool, values));
+  final written = [
+    for (final f in tool.fields)
+      if (f.isWritten && used.contains(f.key)) f,
+  ];
+  final filled = written
+      .where((f) => fieldText(values[f.key]).trim().isNotEmpty)
+      .length;
+  return (filled, written.length);
+}
+
+/// Shown while the document still has empty fields: says how far along it
+/// is and jumps to the Edit tab.
+class _FillCard extends StatelessWidget {
+  const _FillCard({
+    required this.tool,
+    required this.filled,
+    required this.total,
+    required this.onFill,
+  });
+
+  final ToolDef tool;
+  final int filled;
+  final int total;
+  final VoidCallback onFill;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    final text = Theme.of(context).textTheme;
+    return AppCard(
+      color: t.surface2,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  context.l10n.toolFillTitle(filled, total),
+                  style: text.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  context.l10n.toolFillBody(tool.name),
+                  style: text.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpace.gapM),
+          FilledButton(
+            onPressed: onFill,
+            style: FilledButton.styleFrom(
+              minimumSize: const Size(0, AppSpace.minTouch),
+            ),
+            child: Text(context.l10n.toolFillAction),
+          ),
+        ],
+      ),
     );
   }
 }

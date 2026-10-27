@@ -116,8 +116,14 @@ class _TextInputState extends State<_TextInput> {
           : TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: f.label,
+        // The example shows how to answer without pretending to be the
+        // user's data; it disappears as soon as they type.
+        hintText: f.isWritten && fieldText(f.defaultValue).isNotEmpty
+            ? context.l10n.commonExample(fieldText(f.defaultValue))
+            : null,
+        hintMaxLines: multiline ? 4 : 1,
         helperText: f.hint,
-        prefixText: f.type == FieldType.money ? r'$ ' : null,
+        prefixText: f.type == FieldType.money ? '${context.fmt.symbol} ' : null,
         suffixText: f.type == FieldType.percent ? '%' : null,
       ),
     );
@@ -217,7 +223,9 @@ class _SliderInput extends StatelessWidget {
             FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
           ],
           decoration: InputDecoration(
-            prefixText: field.type == FieldType.money ? r'$ ' : null,
+            prefixText: field.type == FieldType.money
+                ? '${context.fmt.symbol} '
+                : null,
             suffixText: field.type == FieldType.percent ? '%' : null,
           ),
           onSubmitted: (s) => Navigator.pop(context, Inputs.toNumber(s)),

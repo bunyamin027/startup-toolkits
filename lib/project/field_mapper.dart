@@ -24,7 +24,10 @@ abstract final class FieldMapper {
         'developer',
       ],
     ),
-    (ProjectField.oneLiner, ['one-liner', 'one-line description']),
+    (
+      ProjectField.oneLiner,
+      ['one-liner', 'one-line description', 'value proposition'],
+    ),
     (ProjectField.problem, ['problem']),
     (ProjectField.solution, ['solution']),
     (ProjectField.marketSize, ['market size']),

@@ -37,10 +37,11 @@ void main() {
       await pumpApp(tester, const AppShell(), direction: rtl);
       final header = tester.getTopRight(find.text('MISSION CONTROL'));
       expect(header.dx, closeTo(iPhone15.width - 20, 1));
-      // The chevron sits at the start (left) of a tile in RTL.
-      final tile = tester.getRect(find.text('Lean Canvas').first);
-      final chevron = tester.getCenter(find.byIcon(Icons.chevron_right).first);
-      expect(chevron.dx, lessThan(tile.left));
+      // The tool carousel starts at the right edge and runs leftwards.
+      final first = tester.getCenter(find.text('Lean Canvas').last);
+      final second = tester.getCenter(find.text('Runway & burn rate').last);
+      expect(first.dx, greaterThan(second.dx));
+      expect(first.dx, greaterThan(iPhone15.width / 2));
     });
 
     testWidgets('paywall', (tester) async {

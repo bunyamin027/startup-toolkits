@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 
-import 'billing/billing_config.dart';
 import 'billing/billing_service.dart';
 import 'billing/entitlement_providers.dart';
-import 'billing/revenuecat_billing.dart';
+import 'billing/store_billing.dart';
 import 'core/bootstrap.dart';
+import 'core/currency.dart';
 import 'core/storage/key_value_store.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_providers.dart';
@@ -33,16 +33,15 @@ Future<void> main() async {
   );
 }
 
-/// RevenueCat when a key was passed at build time; otherwise a preview
-/// store in debug builds and no purchases in release builds.
+/// The App Store / Google Play in profile and release builds (TestFlight
+/// included); a preview store in debug builds, where the store has no
+/// products to offer.
 BillingService pickBillingService() {
-  final key = switch (defaultTargetPlatform) {
-    TargetPlatform.iOS || TargetPlatform.macOS => BillingConfig.appleKey,
-    TargetPlatform.android => BillingConfig.googleKey,
-    _ => '',
+  if (kDebugMode) return PreviewBillingService();
+  return switch (defaultTargetPlatform) {
+    TargetPlatform.iOS || TargetPlatform.android => StoreBillingService(),
+    _ => UnavailableBillingService(),
   };
-  if (key.isNotEmpty) return RevenueCatBillingService(key);
-  return kDebugMode ? PreviewBillingService() : UnavailableBillingService();
 }
 
 /// Owns the provider scope so "Delete all data" can rebuild it from
@@ -139,7 +138,13 @@ class _StartupToolkitsAppState extends ConsumerState<StartupToolkitsApp>
       // Tab screens have no app bar, so the status bar style is set here.
       builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
         value: AppTheme.overlayStyle(Theme.of(context).brightness),
-        child: child!,
+        child: CurrencyScope(
+          code: ref.watch(appCurrencyProvider),
+          child: SectorScope(
+            sector: ref.watch(projectProvider.select((p) => p.scenario)),
+            child: child!,
+          ),
+        ),
       ),
       home: onboarded ? const AppShell() : const WelcomeScreen(),
     );

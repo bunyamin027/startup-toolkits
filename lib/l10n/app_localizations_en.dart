@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Startup Toolkits';
+  String get appName => 'Startup Toolkit';
 
   @override
   String get commonSave => 'Save';
@@ -154,7 +154,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldMonthlyRevenue => 'Monthly revenue';
 
   @override
-  String get hintStartupName => 'e.g. Nimbly';
+  String get hintStartupName => 'e.g. Terralab';
 
   @override
   String get hintOneLiner => 'What you do, for whom, in one sentence';
@@ -320,6 +320,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get welcomeStart => 'Start building';
 
   @override
+  String get welcomeReadyFor => 'Ready for you';
+
+  @override
+  String get welcomeFillsInto => 'Fills in automatically';
+
+  @override
+  String get launchReady => 'Your mission control is ready';
+
+  @override
+  String launchFirstStep(String step) {
+    return 'First step: $step';
+  }
+
+  @override
+  String get homeStartStep => 'Start';
+
+  @override
+  String get homeSeeAll => 'See all';
+
+  @override
+  String get sectorRnd => 'R&D / deep tech';
+
+  @override
+  String get sectorSaas => 'Software / SaaS';
+
+  @override
+  String get sectorEcommerce => 'E-commerce / consumer product';
+
+  @override
+  String get sectorMobileApp => 'Mobile app';
+
+  @override
+  String get welcomeSectorTitle => 'What are you building?';
+
+  @override
+  String get projectSetSector => 'Choose a category';
+
+  @override
   String get homeMissionControl => 'MISSION CONTROL';
 
   @override
@@ -461,7 +499,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectCopyBrief => 'Copy project brief';
 
   @override
-  String get projectUnlockMore => 'Add to unlock more';
+  String projectNextFields(String step) {
+    return 'Add for the $step step';
+  }
 
   @override
   String get projectDetails => 'Project details';
@@ -526,6 +566,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileLanguageSystem => 'System default';
 
   @override
+  String get profileCurrency => 'Currency';
+
+  @override
+  String profileCurrencyAuto(String currency) {
+    return 'Automatic ($currency)';
+  }
+
+  @override
+  String get profileCurrencyAutoNote => 'Follows your region.';
+
+  @override
+  String get profileCurrencyNote =>
+      'Changes the symbol only; amounts are not converted.';
+
+  @override
   String get profileAppearance => 'Appearance';
 
   @override
@@ -541,11 +596,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileMotion => 'Motion';
 
   @override
-  String get profileMotionValue => 'Follows system';
-
-  @override
   String get profileMotionNote =>
-      'Turn on Reduce Motion in system settings to stop animations.';
+      'Animations follow Reduce Motion in your system settings.';
 
   @override
   String get profileYourData => 'Your data';
@@ -603,7 +655,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyPolicy => 'Privacy Policy';
 
   @override
-  String get paywallTitle => 'Every tool.\nEvery day.';
+  String get paywallBestValue => 'Best value';
 
   @override
   String paywallBenefitAll(int count) {
@@ -766,10 +818,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolSaveToProject => 'Save to project';
 
   @override
+  String toolFillTitle(int filled, int total) {
+    return '$filled of $total fields filled';
+  }
+
+  @override
+  String toolFillBody(String tool) {
+    return 'Fill in the rest to make this $tool your own.';
+  }
+
+  @override
+  String get toolFillAction => 'Fill in';
+
+  @override
   String get toolInputs => 'Inputs';
 
   @override
   String get toolResult => 'Result';
+
+  @override
+  String get listTotal => 'Total';
 
   @override
   String get listAll => 'All';

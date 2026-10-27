@@ -17,6 +17,7 @@ final mobileAppTools = <ToolDef>[
     fields: [
       text('app', 'App name', 'Nimbly'),
       text('subtitle', 'Subtitle (30 chars)', 'Bookkeeping for freelancers'),
+      text('oneLiner', 'One-liner', 'bookkeeping that does itself'),
       text('audience', 'Audience', 'freelancers'),
       para(
         'features',
@@ -40,7 +41,8 @@ PROMOTIONAL TEXT
 {proof}. Get your evenings back.
 
 DESCRIPTION
-{app} is bookkeeping that does itself, built for {audience}.
+{app}: {oneLiner}
+Built for {audience}.
 
 WHAT YOU GET
 {features|bullets}
@@ -69,6 +71,12 @@ Check limits before you submit: name 30 characters, subtitle 30, promotional tex
       text('secondary', 'Secondary keyword', 'expense'),
       text('audience', 'Audience', 'freelancer'),
       text(
+        'keywords',
+        'More keywords',
+        'tracker,receipt,tax,invoice,budget,accounting,income,scanner',
+        hint: 'Comma separated, no spaces',
+      ),
+      text(
         'competitor',
         'Competitor',
         'LedgerPro',
@@ -76,7 +84,7 @@ Check limits before you submit: name 30 characters, subtitle 30, promotional tex
       ),
     ],
     template: r'''KEYWORD FIELD (100 characters, comma separated, no spaces)
-{primary|lower},{secondary|lower},tracker,receipt,tax,invoice,{audience|lower},budget,accounting,income,scanner
+{primary|lower},{secondary|lower},{audience|lower},{keywords|lower}
 
 TITLE + SUBTITLE IDEAS
 • {app}: {primary|cap} & {secondary|cap}s

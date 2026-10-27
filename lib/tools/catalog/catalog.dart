@@ -11,6 +11,7 @@ import '../l10n/sales_text.dart';
 import '../l10n/team_text.dart';
 import '../l10n/tool_text.dart';
 import '../tool_def.dart';
+import '../scenarios/scenario.dart';
 import 'finance.dart';
 import 'growth.dart';
 import 'idea_validation.dart';
@@ -60,27 +61,39 @@ const _texts = [
 /// Languages with translated tools, English first.
 const toolLanguages = ['en', 'tr', 'fr', 'es', 'de'];
 
+/// Trackers whose sample rows are a useful starting template (onboarding
+/// steps) rather than made-up people and deals. Only these keep their
+/// samples once the user has a project.
+const templateSampleTools = {'onboardingChecklist'};
+
 /// Translations of [language] by tool id; empty for English.
 Map<String, ToolText> toolTextsIn(String language) => {
   for (final category in _texts) ...?category[language],
 };
 
-/// The 45 tools with their text in one language. Screens get theirs from
-/// `context.tools`, so a language change redraws them at once.
+/// The 45 tools with their text in one language and the examples of one
+/// scenario. Screens get theirs from `context.tools`, so a language or
+/// scenario change redraws them at once. Without a [sector] the base
+/// (software) scenario is used, as written in the catalog files.
 class ToolCatalog {
   ToolCatalog._(this.language, this.tools)
     : _index = {for (final t in tools) t.id: t};
 
-  factory ToolCatalog.of(String language) => _catalogs[language] ??= () {
-    if (!toolLanguages.contains(language) || language == 'en') {
-      return ToolCatalog._('en', allTools);
-    }
-    final texts = toolTextsIn(language);
-    final calc = calcTexts[language];
-    return ToolCatalog._(language, [
-      for (final t in allTools) localizeTool(t, language, texts[t.id], calc),
-    ]);
-  }();
+  factory ToolCatalog.of(String language, [Sector sector = Sector.saas]) {
+    final lang = toolLanguages.contains(language) ? language : 'en';
+    return _catalogs['$lang|${sector.name}'] ??= () {
+      final texts = toolTextsIn(lang);
+      final calc = calcTexts[lang];
+      return ToolCatalog._(lang, [
+        for (final t in allTools)
+          applyScenario(
+            lang == 'en' ? t : localizeTool(t, lang, texts[t.id], calc),
+            sector,
+            lang,
+          ),
+      ]);
+    }();
+  }
 
   static final _catalogs = <String, ToolCatalog>{};
 
@@ -98,13 +111,18 @@ class ToolCatalog {
 /// one of them was never edited, so it follows the current language.
 Set<Object?> examplesOf(String toolId, String fieldKey) => {
   for (final language in toolLanguages)
-    ToolCatalog.of(language).byId(toolId)?.field(fieldKey)?.defaultValue,
+    for (final sector in Sector.values)
+      ToolCatalog.of(
+        language,
+        sector,
+      ).byId(toolId)?.field(fieldKey)?.defaultValue,
 };
 
-/// The sample row at [index] in every language.
+/// The sample row at [index] in every language and scenario.
 List<SampleItem> sampleVariants(String toolId, int index) => [
   for (final language in toolLanguages)
-    if (ToolCatalog.of(language).byId(toolId)?.samples case final s?
-        when index < s.length)
-      s[index],
+    for (final sector in Sector.values)
+      if (ToolCatalog.of(language, sector).byId(toolId)?.samples case final s?
+          when index < s.length)
+        s[index],
 ];

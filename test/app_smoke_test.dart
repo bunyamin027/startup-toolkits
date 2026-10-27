@@ -19,11 +19,11 @@ void main() {
     expect(find.text('MISSION CONTROL'), findsOneWidget);
     expect(find.text('Rocketly'), findsOneWidget);
     expect(find.text('Trial · 14 days left'), findsOneWidget);
+    // One mission card: the step, what it adds and a Start button.
+    expect(find.text('STEP 1 OF 5 · IDEA'), findsOneWidget);
     expect(find.text('Shape the idea'), findsOneWidget);
-    expect(
-      find.textContaining('Lean Canvas · Adds problem, solution'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Adds problem, solution'), findsOneWidget);
+    expect(find.text('Start · Lean Canvas'), findsOneWidget);
     expect(find.text('START HERE · RAISE FUNDING'), findsOneWidget);
     expect(find.text('Pitch deck wizard'), findsOneWidget);
   });
@@ -55,7 +55,7 @@ void main() {
   ) async {
     await pumpRoot(tester);
     await onboard(tester);
-    await tester.tap(find.text('Shape the idea'));
+    await tester.tap(find.text('Start · Lean Canvas'));
     await tester.pumpAndSettle();
     expect(find.textContaining('LEAN CANVAS: Rocketly'), findsOneWidget);
 
@@ -68,7 +68,7 @@ void main() {
   testWidgets('search opens Discover and filters tools', (tester) async {
     await pumpRoot(tester);
     await onboard(tester);
-    await tester.tap(find.text('Search 45 tools'));
+    await tester.tap(find.byTooltip('Search tools'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'invoice');
     await tester.pumpAndSettle();
@@ -85,6 +85,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('2/13'), findsOneWidget);
 
+    await tester.ensureVisible(find.widgetWithText(ActionChip, 'Problem'));
+    await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ActionChip, 'Problem'));
     await tester.pumpAndSettle();
     await tester.enterText(
@@ -92,6 +94,12 @@ void main() {
       'Founders waste months on fundraising admin',
     );
     await tester.tap(find.widgetWithText(FilledButton, 'Save'));
+    await tester.pumpAndSettle();
+    // Back to the top, where the completion ring is.
+    await tester.drag(
+      find.byType(ListView).hitTestable().first,
+      const Offset(0, 1500),
+    );
     await tester.pumpAndSettle();
     expect(find.text('3/13'), findsOneWidget);
     await scrollTo(

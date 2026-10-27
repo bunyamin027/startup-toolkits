@@ -108,7 +108,7 @@ Değerlendirme: Her cevabı mülakattan hemen sonra, başkalarıyla konuşmadan 
 3. Hızlı çıkarmak ile sağlam kurmak arasında nasıl karar verirsiniz?
 4. Kodunuzu nasıl test edersiniz? Neleri test etmezsiniz?
 5. Performansı iyileştirdiğiniz bir durumu anlatın. İyileşmeyi nasıl ölçtünüz?
-6. Pratik görev: İnternetsiz çalışıp bağlantı gelince eşitlenen bir gider takip uygulamasının veri modelini tasarlayın.
+6. Pratik görev: {company} ürününün ana özelliği için veri modelini tasarlayın.
 7. Başkasının yazdığı kodu nasıl incelersiniz?
 
 Değerlendirme: Problem çözme, iletişim ve sorumluluk alma becerilerini 1 ile 4 arasında puanlayın.''',
@@ -119,7 +119,7 @@ Değerlendirme: Problem çözme, iletişim ve sorumluluk alma becerilerini 1 ile
 3. Kullanıcı araştırmasının fikrinizi değiştirdiği bir durumu anlatın.
 4. Zaman darken yazılımcılarla nasıl çalışırsınız?
 5. Her gün kullandığınız bir uygulamayı eleştirir misiniz?
-6. Pratik görev: Bir muhasebe uygulamasının ilk kullanım deneyimi için taslak çizin.
+6. Pratik görev: {company} için ilk kullanım deneyiminin taslağını çizin.
 
 Değerlendirme: Tasarım becerisi, ürün bakış açısı ve iş birliğini 1 ile 4 arasında puanlayın.''',
       'Sales': r'''SATIŞ MÜLAKATI: {title} · {company}
@@ -128,7 +128,7 @@ Değerlendirme: Tasarım becerisi, ürün bakış açısı ve iş birliğini 1 i
 2. Kaybettiğiniz bir satışı anlatın. Neyi farklı yapardınız?
 3. Sıfırdan bir satış hunisini nasıl oluşturursunuz?
 4. Bir müşteri adayının size uygun olup olmadığını nasıl değerlendirirsiniz? Hangi soruları sorarsınız?
-5. Rol çalışması: {company} ürününü şüpheci bir serbest çalışana iki dakikada anlatın.
+5. Rol çalışması: {company} ürününü şüpheci bir müşteriye iki dakikada anlatın.
 6. Satış rakamlarınızı haftadan haftaya nasıl takip edersiniz?
 
 Değerlendirme: Müşteri bulma, ihtiyaç analizi, satışı kapatma ve öğrenmeye açıklığı 1 ile 4 arasında puanlayın.''',
@@ -288,7 +288,7 @@ Notation : notez chaque réponse de 1 à 4 juste après l’entretien, avant d�
 3. Comment arbitrez-vous entre livrer vite et bien construire ?
 4. Comment testez-vous votre code ? Que ne testez-vous pas ?
 5. Racontez une amélioration de performance. Comment l’avez-vous mesurée ?
-6. Cas pratique : concevez le modèle de données d’un suivi de dépenses avec synchronisation hors ligne.
+6. Cas pratique : concevez le modèle de données de la fonctionnalité principale de {company}.
 7. Comment relisez-vous le code de quelqu’un d’autre ?
 
 Notation : notez résolution de problèmes, communication et sens des responsabilités de 1 à 4.''',
@@ -299,7 +299,7 @@ Notation : notez résolution de problèmes, communication et sens des responsabi
 3. Racontez une fois où la recherche vous a fait changer d’avis.
 4. Comment travaillez-vous avec les développeurs quand le temps manque ?
 5. Critiquez une app que vous utilisez tous les jours.
-6. Cas pratique : esquissez la première utilisation d’une app de comptabilité.
+6. Cas pratique : esquissez la première utilisation de {company}.
 
 Notation : notez savoir-faire, vision produit et collaboration de 1 à 4.''',
       'Sales': r'''ENTRETIEN VENTE : {title} chez {company}
@@ -308,7 +308,7 @@ Notation : notez savoir-faire, vision produit et collaboration de 1 à 4.''',
 2. Parlez-moi d’une affaire perdue. Que feriez-vous autrement ?
 3. Comment construisez-vous un pipeline en partant de zéro ?
 4. Comment qualifiez-vous un prospect ? Quelles questions posez-vous ?
-5. Jeu de rôle : présentez {company} à un freelance sceptique en deux minutes.
+5. Jeu de rôle : présentez {company} à un client sceptique en deux minutes.
 6. Comment suivez-vous vos chiffres semaine après semaine ?
 
 Notation : notez prospection, découverte, closing et capacité à progresser de 1 à 4.''',
@@ -469,7 +469,7 @@ Puntuación: puntúa cada respuesta de 1 a 4 justo después de la entrevista, an
 3. ¿Cómo decides entre publicar rápido y construirlo bien?
 4. ¿Cómo pruebas tu código? ¿Qué no pruebas?
 5. Describe una vez que mejoraste el rendimiento. ¿Cómo lo mediste?
-6. Práctica: diseña el modelo de datos de un control de gastos con sincronización sin conexión.
+6. Práctica: diseña el modelo de datos de la función principal de {company}.
 7. ¿Cómo revisas el código de otra persona?
 
 Puntuación: puntúa resolución de problemas, comunicación y responsabilidad de 1 a 4.''',
@@ -480,7 +480,7 @@ Puntuación: puntúa resolución de problemas, comunicación y responsabilidad d
 3. Cuéntame una vez que la investigación te hizo cambiar de opinión.
 4. ¿Cómo trabajas con ingeniería cuando hay poco tiempo?
 5. Critica una app que uses todos los días.
-6. Práctica: boceta la primera experiencia de uso de una app de contabilidad.
+6. Práctica: boceta la primera experiencia de uso de {company}.
 
 Puntuación: puntúa oficio, visión de producto y colaboración de 1 a 4.''',
       'Sales': r'''ENTREVISTA DE VENTAS: {title} en {company}
@@ -489,7 +489,7 @@ Puntuación: puntúa oficio, visión de producto y colaboración de 1 a 4.''',
 2. Háblame de una venta que perdiste. ¿Qué harías distinto?
 3. ¿Cómo construyes un pipeline desde cero?
 4. ¿Cómo cualificas un lead? ¿Qué preguntas haces?
-5. Role play: presenta {company} a un freelancer escéptico en dos minutos.
+5. Role play: presenta {company} a un cliente escéptico en dos minutos.
 6. ¿Cómo sigues tus números semana a semana?
 
 Puntuación: puntúa prospección, descubrimiento, cierre y capacidad de aprender de 1 a 4.''',
@@ -646,7 +646,7 @@ Bewertung: jede Antwort direkt nach dem Interview mit 1–4 bewerten, bevor du d
 3. Wie entscheidest du zwischen schnell ausliefern und sauber bauen?
 4. Wie testest du deinen Code? Was testest du nicht?
 5. Beschreib eine Performance-Verbesserung. Wie hast du sie gemessen?
-6. Praxis: Entwirf das Datenmodell für einen Ausgaben-Tracker mit Offline-Sync.
+6. Praxis: Entwirf das Datenmodell für die Kernfunktion von {company}.
 7. Wie reviewst du den Code anderer?
 
 Bewertung: Problemlösung, Kommunikation und Verantwortung mit 1–4 bewerten.''',
@@ -657,7 +657,7 @@ Bewertung: Problemlösung, Kommunikation und Verantwortung mit 1–4 bewerten.''
 3. Erzähl von einem Moment, in dem Research deine Meinung geändert hat.
 4. Wie arbeitest du mit Engineers, wenn die Zeit knapp ist?
 5. Kritisiere eine App, die du jeden Tag nutzt.
-6. Praxis: Skizziere den ersten Start einer Buchhaltungs-App.
+6. Praxis: Skizziere den ersten Start von {company}.
 
 Bewertung: Handwerk, Produktdenken und Zusammenarbeit mit 1–4 bewerten.''',
       'Sales': r'''VERTRIEBSINTERVIEW: {title} bei {company}
@@ -666,7 +666,7 @@ Bewertung: Handwerk, Produktdenken und Zusammenarbeit mit 1–4 bewerten.''',
 2. Erzähl von einem verlorenen Deal. Was würdest du anders machen?
 3. Wie baust du eine Pipeline von null auf?
 4. Wie qualifizierst du einen Lead? Welche Fragen stellst du?
-5. Rollenspiel: Pitch {company} in zwei Minuten einem skeptischen Freelancer.
+5. Rollenspiel: Pitch {company} in zwei Minuten einem skeptischen Kunden.
 6. Wie verfolgst du deine Zahlen von Woche zu Woche?
 
 Bewertung: Akquise, Bedarfsanalyse, Abschluss und Lernbereitschaft mit 1–4 bewerten.''',

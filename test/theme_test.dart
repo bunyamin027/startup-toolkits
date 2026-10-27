@@ -107,6 +107,8 @@ void main() {
 
     await tester.tap(find.text('Profile'));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Appearance'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Appearance'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Dark').last);

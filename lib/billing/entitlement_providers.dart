@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/analytics.dart';
@@ -61,9 +61,9 @@ final billingSyncProvider = Provider<void>((ref) {
   final entitlement = ref.read(entitlementProvider.notifier);
   final sub = billing.subscriptionChanges.listen(entitlement.setSubscribed);
   ref.onDispose(sub.cancel);
-  unawaited(() async {
+
+  Future<void> check() async {
     try {
-      await billing.init();
       final subscribed = await billing.isSubscribed();
       if (ref.mounted && subscribed != null) {
         entitlement.setSubscribed(subscribed);
@@ -71,7 +71,21 @@ final billingSyncProvider = Provider<void>((ref) {
     } on Exception catch (e) {
       // Store problems must never block the app; tools keep working on
       // the last known plan.
-      debugPrint('Billing init failed: $e');
+      debugPrint('Billing check failed: $e');
     }
+  }
+
+  // Expiry and renewals happen while the app is closed, so check again
+  // whenever it comes back to the foreground.
+  final lifecycle = AppLifecycleListener(onResume: () => unawaited(check()));
+  ref.onDispose(lifecycle.dispose);
+  unawaited(() async {
+    try {
+      await billing.init();
+    } on Exception catch (e) {
+      debugPrint('Billing init failed: $e');
+      return;
+    }
+    await check();
   }());
 });

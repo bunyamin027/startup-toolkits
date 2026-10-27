@@ -30,7 +30,7 @@ class CalcToolView extends ConsumerWidget {
 
     final notifier = ref.read(toolValuesProvider(tool.id).notifier);
     final result = CalcEngine.run(tool.formula!, values);
-    final fmt = Fmt.of(tool.language);
+    final fmt = context.fmt;
     final heroKey = tool.heroOutput ?? result.outputs.first.key;
     final hero = result.outputs.firstWhere((o) => o.key == heroKey);
     final rest = result.outputs.where((o) => o.key != heroKey).toList();
@@ -225,9 +225,17 @@ class _ResultRow extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 48),
         child: Row(
           children: [
-            Expanded(child: Text(label, style: text.bodyMedium)),
-            const SizedBox(width: AppSpace.gapS),
-            Flexible(
+            // Label and value share the row 3:2; the value hugs the end.
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(label, style: text.bodyMedium),
+              ),
+            ),
+            const SizedBox(width: AppSpace.gapM),
+            Expanded(
+              flex: 2,
               child: Text(
                 value,
                 textAlign: TextAlign.end,

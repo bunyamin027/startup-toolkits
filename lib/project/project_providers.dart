@@ -25,6 +25,8 @@ class ProjectNotifier extends Notifier<Project> {
 
   void setGoal(Goal? goal) => _set(state.withGoal(goal));
 
+  void setSector(Sector? sector) => _set(state.withSector(sector));
+
   /// Copies the tool's mapped values into the project. Returns how many
   /// project fields changed.
   int syncFrom(ToolDef tool, Map<String, Object?> values) {

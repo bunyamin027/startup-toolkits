@@ -179,11 +179,11 @@ class _ListToolViewState extends ConsumerState<ListToolView> {
 }
 
 /// Text of an item's extra columns, money formatted.
-String itemDetails(ToolDef tool, ListItem item) => [
+String itemDetails(ToolDef tool, ListItem item, Fmt fmt) => [
   for (final f in tool.fields)
     if (fieldText(item.fields[f.key]).trim().isNotEmpty)
       f.isNumeric
-          ? formatFieldValue(f, item.fields[f.key], Fmt.of(tool.language))
+          ? formatFieldValue(f, item.fields[f.key], fmt)
           : fieldText(item.fields[f.key]),
 ].join(' · ');
 
@@ -230,13 +230,22 @@ class _Totals extends StatelessWidget {
   Widget build(BuildContext context) {
     final field = tool.field(tool.totalField!)!;
     final text = Theme.of(context).textTheme;
-    final parts = [
-      for (final s in tool.stages)
-        if (ListEngine.inStage(items, s).isNotEmpty)
-          '${tool.stageLabel(s)} '
-              '${Fmt.of(tool.language).money(ListEngine.total(items, field.key, stage: s))}',
-    ];
-    if (parts.isEmpty) return const SizedBox.shrink();
+    final fmt = context.fmt;
+    String sum(String? stage) =>
+        fmt.money(ListEngine.total(items, field.key, stage: stage));
+    // Pipelines show the whole pipeline and what is already won; ledgers
+    // (income vs expense) show each side.
+    final parts = tool.endStages.isNotEmpty
+        ? [
+            '${context.l10n.listTotal} ${sum(null)}',
+            for (final s in tool.endStages) '${tool.stageLabel(s)} ${sum(s)}',
+          ]
+        : [
+            for (final s in tool.stages)
+              if (ListEngine.inStage(items, s).isNotEmpty)
+                '${tool.stageLabel(s)} ${sum(s)}',
+          ];
+    if (items.isEmpty) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(
         AppSpace.edge + 4,
@@ -271,7 +280,7 @@ class _ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.tokens;
     final text = Theme.of(context).textTheme;
-    final details = itemDetails(tool, item);
+    final details = itemDetails(tool, item, context.fmt);
     final next = onAdvance == null
         ? null
         : ListEngine.nextStage(item.stage, tool.stages);
@@ -319,7 +328,13 @@ class _ItemCard extends StatelessWidget {
                     tool.language,
                   ),
                   onPressed: onAdvance,
-                  icon: Icon(Icons.arrow_forward_rounded, color: t.accent),
+                  // The step into the last stage completes the item.
+                  icon: Icon(
+                    next == tool.stages.last
+                        ? Icons.check_circle_outline_rounded
+                        : Icons.arrow_forward_rounded,
+                    color: t.accent,
+                  ),
                 )
               else
                 Padding(
@@ -385,7 +400,7 @@ class _CopyBar extends ConsumerWidget {
   final ToolDef tool;
   final List<ListItem> items;
 
-  String get _text => [
+  String _text(Fmt fmt) => [
     upperIn(tool.name, tool.language),
     for (final s in tool.stages)
       if (ListEngine.inStage(items, s).isNotEmpty) ...[
@@ -394,7 +409,7 @@ class _CopyBar extends ConsumerWidget {
         for (final i in ListEngine.inStage(items, s))
           [
             '• ${i.title}',
-            if (itemDetails(tool, i).isNotEmpty) itemDetails(tool, i),
+            if (itemDetails(tool, i, fmt).isNotEmpty) itemDetails(tool, i, fmt),
           ].join(' · '),
       ],
   ].join('\n');
@@ -416,7 +431,7 @@ class _CopyBar extends ConsumerWidget {
               TextButton.icon(
                 onPressed: () {
                   analytics.log(AnalyticsEvent.outputCopied, {'tool': tool.id});
-                  copyText(context, _text);
+                  copyText(context, _text(context.fmt));
                 },
                 icon: const Icon(Icons.copy, size: 18),
                 label: Text(context.l10n.listCopy),
@@ -427,7 +442,7 @@ class _CopyBar extends ConsumerWidget {
                     analytics.log(AnalyticsEvent.outputShared, {
                       'tool': tool.id,
                     });
-                    shareText(context, _text, subject: tool.name);
+                    shareText(context, _text(context.fmt), subject: tool.name);
                   },
                   icon: const Icon(Icons.ios_share, size: 18),
                   label: Text(context.l10n.commonShare),
@@ -556,7 +571,11 @@ class _ItemEditorState extends State<_ItemEditor> {
                   optionLabels: f.optionLabels,
                   hint:
                       f.hint ??
-                      context.l10n.commonExample(fieldText(f.defaultValue)),
+                      context.l10n.commonExample(
+                        f.isNumeric
+                            ? formatFieldValue(f, f.defaultValue, context.fmt)
+                            : fieldText(f.defaultValue),
+                      ),
                 ),
                 value: _fields[f.key],
                 onChanged: (v) => _fields[f.key] = v,
