@@ -1,10 +1,28 @@
 # Startup Toolkit
 
-Mini tools for founders in one Flutter app (iOS + Android).
-The single source of truth for product, design and roadmap is
-[Startup-Cebimde-Master-Plan.md](Startup-Cebimde-Master-Plan.md).
+Mini tools for founders in one Flutter app (iOS + Android).  
+Everything a solo founder, indie hacker, or early-stage team needs to plan, validate, fundraise, and launch.
 
-## Run
+The single source of truth for product, design and roadmap is [Startup-Cebimde-Master-Plan.md](Startup-Cebimde-Master-Plan.md).
+
+---
+
+## Features
+
+- **45 Founder Tools in One Place:**
+  - **Strategy & Validation:** Lean Canvas, Value Proposition, Idea Scoring, Competitor Matrix, Persona Builder.
+  - **Financial Models & Calculators:** Runway & Burn Rate, Unit Economics (LTV/CAC), Pricing Calculator, Cap Table Simulator, Valuation Estimate.
+  - **Fundraising & Pitching:** Pitch Deck Wizard, One-Pager Generator, Investor CRM / Tracker, Safe Note Generator.
+  - **Legal & Operations:** Mutual NDA, Advisory Agreement, IP Assignment, Co-founder Agreement.
+  - **Marketing & Growth:** ASO Keywords, Launch Checklist, Content Calendar, Cold Outreach Sequences.
+- **Single Source Project Sync:** Enter your startup's core information once (e.g. name, problem, solution, metrics) and all 45 tools pre-fill automatically.
+- **5 Full Languages:** English (`en`), Turkish (`tr`), French (`fr`), Spanish (`es`), and German (`de`) with dynamic currency switching (`$`, `₺`, `€`).
+- **Privacy-First & Offline:** 100% on-device storage (SharedPreferences / KeyValueStore). Zero analytics backend; no data leaves the phone.
+- **Apple & Google In-App Purchases:** Native `in_app_purchase` with StoreKit 2 & Google Play Billing, 14-day trial, and daily free quota.
+
+---
+
+## Run & Develop
 
 ```sh
 flutter pub get
@@ -13,125 +31,84 @@ flutter test
 flutter run
 ```
 
-## Release
+### Run Tests
 
-- `docs/release/checklist.md`: what is done, what needs accounts or
-  decisions, build commands and the internal test script.
-- `docs/store/`: listing text, privacy labels, screenshots.
-- `docs/legal/`: privacy policy and terms drafts (placeholders marked).
-- App icon: edit and run `python3 -I tool/icon/generate_icon.py`.
+The test suite contains over 1,000 unit, smoke, localization, accessibility (WCAG AA), and RTL tests:
 
-## Subscriptions and legal links
+```sh
+flutter test
+```
 
-Purchases go straight to the App Store / Google Play through the
-official `in_app_purchase` plugin (`lib/billing/store_billing.dart`); there
-is no backend and no key. Product IDs live in
-`lib/billing/billing_config.dart`.
+---
 
-- The subscription state is read on the device: StoreKit 2 transactions on
-  iOS, active Play purchases on Android. It is checked at launch and each
-  time the app returns to the foreground.
-- The free trial is the app's own 14 days; the store products have no
-  intro offer.
-- Debug builds use a **preview store** (placeholder prices, fake
-  purchases, labelled on the paywall); profile and release builds,
-  TestFlight included, use the real store.
-- Legal links default to Apple's standard EULA and
-  https://www.kahramanapp.com/privacy (override with `TERMS_URL` /
-  `PRIVACY_URL`). Support mail and developer name live in
-  `lib/core/app_info.dart`.
+## Store Assets (Screenshots, Previews & Banners)
 
-## Languages
+Ready-to-upload store graphics and preview videos are generated via automated test scripts in `docs/store/`:
 
-Everything the user reads ships in English, Turkish, French, Spanish and
-German, and switches at once when the language changes (no restart):
+### 1. App Store Previews (Videos)
+Located in [`docs/store/previews/iphone/`](docs/store/previews/iphone/):
+- Conforms strictly to Apple App Store specifications: H.264, 30 fps, 29.5s duration, stereo silent AAC track, 886x1920 resolution.
+- Recorded across all 5 languages (`en.mp4`, `tr.mp4`, `fr.mp4`, `es.mp4`, `de.mp4`).
+- No visible touch crosshairs; uses smooth programmatic animations and real localized sample data.
 
-- UI strings: `lib/l10n/app_{en,tr,fr,es,de}.arb`, read with `context.l10n`.
-- Tool content (names, labels, examples, templates, stages, sample rows,
-  calculator outputs and verdicts): `lib/tools/l10n/<category>_text.dart`,
-  one file per catalog category. Screens read tools through
-  `context.tools`; providers through `appLocaleProvider`.
-- Numbers: `Fmt.of(language)` (grouping, decimals, `$` placement, month
-  words). Typed numbers accept both `1,234.5` and `1.234,5`.
+To re-record previews on a booted iOS Simulator:
+```sh
+tool/store_screenshots/previews.sh <SIMULATOR_ID> docs/store/previews/iphone 886x1920 "en tr fr es de"
+```
 
-The app follows the system language; Profile → Language overrides it
-(stored under `locale.v1`, kept on "Delete all data").
+### 2. App Store Screenshots
+Located in [`docs/store/screenshots/`](docs/store/screenshots/):
+- **iPhone 6.9" (1320x2868)**: [`docs/store/screenshots/iphone-6.9/`](docs/store/screenshots/iphone-6.9/) (10 screens per language)
+- **iPad Pro 13" (2064x2752)**: [`docs/store/screenshots/ipad-13/`](docs/store/screenshots/ipad-13/) (10 screens per language)
+- **iPhone Duo (Foldable, 1398x2034)**: [`docs/store/screenshots/iphone-duo/`](docs/store/screenshots/iphone-duo/)
 
-What stays English on purpose, so saved data survives a language change:
-stage names and choice values stored in items and inputs (they are shown
-translated), and the field labels the project mapper matches on
-(`FieldDef.mappingLabel`). Saved inputs that still equal an example in any
-language, and sample rows the user has not edited, follow the new language;
-anything the user typed stays as typed.
+To generate raw screenshots and compose frames:
+```sh
+flutter test tool/store_screenshots/capture_test.dart --dart-define=OUT=/tmp/shots/raw
+python3 -I tool/store_screenshots/compose.py /tmp/shots/raw docs/store/screenshots/iphone-6.9
+```
 
-To add a language (the plan also lists pt and ar):
+### 3. Store Listing & Banners
+- **Header & Search Banners**: Located in [`docs/store/banners/`](docs/store/banners/) (header and search variations for 5 languages).
+- **Localized Listing Text**: Titles, subtitles, keywords, promotional texts, and descriptions in [`docs/store/listing_l10n.json`](docs/store/listing_l10n.json).
+- **Checklist & Guidelines**: Check release steps in [`docs/release/checklist.md`](docs/release/checklist.md) and privacy details in [`docs/store/privacy-labels.md`](docs/store/privacy-labels.md).
 
-1. Copy `app_en.arb` to `app_<code>.arb` and translate the values.
-2. Add a `'<code>'` entry to every `lib/tools/l10n/*_text.dart` map and to
-   `calcTexts`, `DocEngine._legalNotices` and `Fmt._months`.
-3. Add the code to `toolLanguages` (`catalog.dart`), `languageNames`
-   (`locale_providers.dart`) and `CFBundleLocalizations` (`Info.plist`).
-4. Run `flutter gen-l10n` and the tests. `test/tool_text_test.dart` fails on
-   any untranslated tool text or a template whose placeholders differ from
-   English; `test/l10n_test.dart` renders every screen and tool in each
-   language on an iPhone SE, so overflows from long translations fail too.
-5. Layouts already use start/end (directional) padding and alignment, and
-   `test/rtl_test.dart` renders every screen and tool right to left, so
-   Arabic needs translations only.
+---
 
-Legal templates are plain translations, not jurisdiction-checked texts;
-every language appends the "not legal advice" notice in that language.
+## Subscriptions and Billing
 
-## Analytics
+Purchases communicate directly with the App Store and Google Play using the official `in_app_purchase` plugin ([`lib/billing/store_billing.dart`](lib/billing/store_billing.dart)):
 
-Decision for v1: **no analytics backend**. Nothing leaves the device apart
-from purchases, which Apple and Google handle; that keeps the App Privacy answers in
-`docs/store/privacy-labels.md` and the privacy policy simple.
-`lib/core/analytics.dart` still defines the funnel events from the plan;
-they are printed in debug builds and dropped in release. Adding PostHog or
-Firebase later means one `Analytics` implementation plus updated privacy
-labels and policy.
+- **Product IDs:** Configured in [`lib/billing/billing_config.dart`](lib/billing/billing_config.dart) (e.g. `com.kahramanapp.startuptoolkit.premium.monthly`).
+- **Device-Side Entitlement:** StoreKit 2 transactions verified on iOS, active subscriptions verified on Android.
+- **Preview Store:** In Debug mode, a mock `PreviewBillingService` is active for fast paywall testing without needing StoreKit sandbox accounts.
+- **Legal Requirements:** Standard terms of use and privacy policy URLs are configured in [`lib/core/app_info.dart`](lib/core/app_info.dart) and [`docs/legal/`](docs/legal/).
 
-## Layout
+---
+
+## Architecture & Project Structure
 
 ```text
 lib/
-  core/       theme tokens (theme/), number formatting, key-value storage
-  engines/    CalcEngine (8 formulas), DocEngine (templates + {=expr}), ListEngine
-  core/widgets/  AppCard, RiseIn, CountUp, RingGauge (respect Reduce Motion)
-  tools/      ToolDef / FieldDef, catalog/ (45 tools, English), l10n/ (their
-              translations), providers, stores
-  core/bootstrap.dart  loads all state before the first frame; delete all data
-  project/    Project (13 fields), FieldMapper, launch_path (Home steps), store
-  billing/    Entitlement (trial, one tool per day, subscriber), providers
-  features/   onboarding, shell (tabs), home, project, favorites (My tools),
-              profile, catalog (Discover/search), tool (one screen, 45 tools)
-  l10n/       app_*.arb (5 languages), generated AppLocalizations, context.l10n,
-              language picker state
+├── billing/      # Entitlement logic, in_app_purchase integration, preview store
+├── core/         # Theme tokens (AppTheme), currency formatting (Fmt, CurrencyScope), storage
+├── engines/      # Pure calculation engines: CalcEngine, DocEngine, ListEngine
+├── features/     # Presentation layer (Home, Project, Catalog, Tools, Paywall, Profile)
+├── l10n/         # UI localization (.arb files and generated AppLocalizations)
+├── project/      # Master Project model (13 core fields), auto-mapping engine
+└── tools/        # 45 founder tools: ToolDef, Catalog, and category translations (l10n/)
+
+integration_test/
+└── app_preview_test.dart   # Automated script driving the 29.5s store tour
+
+tool/
+├── icon/              # App icon generator
+└── store_screenshots/ # Screenshot capture, PIL compositor, banner & preview scripts
 ```
 
-## Decisions (plan §14)
+---
 
-| # | Decision | Outcome | Where |
-| --- | --- | --- | --- |
-| 1 | App name | **Startup Toolkit**, icon in place | Info.plist, AndroidManifest |
-| 2 | Prices | **$6.99 / month, $49.99 / year** (yearly saves 40%), 14-day intro offer; local tiers come from the stores | App Store Connect / Play Console, `docs/store/app-store-listing.md`; preview store in `lib/billing/billing_service.dart` |
-| 3 | Trial type | In-app 14-day trial from first launch, as in the prototype (confirmed). The paywall also offers the store's intro trial when the user is eligible (its button text comes from the store). Switching to store-only means setting `Entitlement.trialLength` to zero | `lib/billing/entitlement.dart`, `lib/features/paywall/` |
-| 4 | Free plan | One tool per day, resets at local midnight (confirmed) | `lib/billing/entitlement.dart` |
-| 5 | Light theme | Designed (`AppTokens.light`); Profile → Appearance picks System / Dark / Light, default System. Every text color passes WCAG AA in both themes (`test/theme_test.dart`). Launch screens stay dark as a brand splash | `lib/core/theme/`, `lib/main.dart` |
-| 6 | Platforms | iOS and Android together (cross-platform) | project setup |
-| — | Analytics | None in v1 (see Analytics) | `lib/core/analytics.dart` |
+## License & Author
 
-Other choices:
-
-- Bundle id: `com.kahramanapp.startuptoolkit` (iOS and Android).
-- Tracker items are stored in shared_preferences as JSON (`ListStore`), not Hive/Isar; the store can be swapped without touching callers.
-- Tool texts live in Dart maps (`lib/tools/l10n/`), not .arb files: the
-  templates use `{placeholders}` that clash with ICU syntax.
-- Example data uses a fictional startup, Nimbly (bookkeeping for freelancers).
-
-## Known issue: building from an iCloud-synced folder
-
-If Desktop is synced with iCloud Drive, iOS builds fail with
-"resource fork, Finder information, or similar detritus not allowed".
-Move the project to a folder outside iCloud (for example `~/Developer`).
+Developed by **Kahraman App**  
+Support: `support@kahramanapp.com`
