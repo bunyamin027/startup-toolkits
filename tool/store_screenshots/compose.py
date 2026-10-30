@@ -13,14 +13,18 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 KIND = sys.argv[3] if len(sys.argv) > 3 else "iphone"
-IPAD = KIND == "ipad"
+# Google Play: "play" (phone, 1080 x 1920, from iPhone captures) and
+# "playtab" (tablet, 1600 x 2560, from iPad captures).
+IPAD = KIND in ("ipad", "playtab")
 # Tablet-like frame (no Dynamic Island, small status bar) for iPad and Duo.
-FLAT = KIND in ("ipad", "duo")
+FLAT = KIND in ("ipad", "duo", "playtab")
 # Canvas, headline size, device width, device corner radius (capture px).
 W, H, HEAD, DEVICE_W, CORNER = {
     "iphone": (1320, 2868, 124, 1010, 170),
     "ipad": (2064, 2752, 150, 1640, 36),
     "duo": (1398, 2034, 100, 1120, 90),
+    "play": (1080, 1920, 92, 760, 170),
+    "playtab": (1600, 2560, 118, 1300, 36),
 }[KIND]
 BG_TOP, BG_BOTTOM = (11, 16, 32), (24, 31, 58)
 LIME, BLUE, WHITE, MUTED = (184, 244, 106), (108, 147, 255), (242, 244, 250), (163, 172, 200)
@@ -65,7 +69,7 @@ def status_bar(shot):
     d = ImageDraw.Draw(shot)
     # (scale, time centre x, baseline y): iPhone inset is 62 pt at 3x,
     # iPad's 24 pt at 2x.
-    k, tx, y = {"iphone": (1.0, 150, 110), "ipad": (0.62, 90, 34), "duo": (0.8, 110, 66)}[KIND]
+    k, tx, y = {"iphone": (1.0, 150, 110), "play": (1.0, 150, 110), "ipad": (0.62, 90, 34), "playtab": (0.62, 90, 34), "duo": (0.8, 110, 66)}[KIND]
     d.text((tx, y - 18 * k), "9:41", font=font(int(52 * k), 600), fill=WHITE, anchor="mm")
     x = shot.width - int(120 * k)
     s = lambda v: int(v * k)
@@ -102,6 +106,12 @@ def phone(shot, width):
     frame.paste(inner, (bezel, bezel), mask)
     if FLAT:
         return frame
+    if KIND == "play":
+        # Android punch-hole camera instead of the Dynamic Island.
+        r = int(16 * 3 * scale)
+        cx, cy = fw // 2, bezel + int(25 * 3 * scale)
+        fd.ellipse((cx - r, cy - r, cx + r, cy + r), fill=(0, 0, 0))
+        return frame
     # Dynamic Island.
     iw, ih = int(126 * 3 * scale), int(37 * 3 * scale)
     ix, iy = (fw - iw) // 2, bezel + int(11 * 3 * scale)
@@ -116,14 +126,15 @@ def compose(raw, lines):
     max_w = W - 160
     size = min(fit(d, first, HEAD, 800, max_w).size, fit(d, second, HEAD, 800, max_w).size)
     head = font(size, 800)
-    d.text((W // 2, 250), first, font=head, fill=WHITE, anchor="mm")
-    d.text((W // 2, 250 + int(size * 1.12)), second, font=head, fill=LIME, anchor="mm")
-    d.text((W // 2, 250 + int(size * 2.25)), sub, font=fit(d, sub, int(HEAD * 0.44), 500, max_w), fill=MUTED, anchor="mm")
+    top = int(HEAD * 2)  # 248 on iPhone
+    d.text((W // 2, top), first, font=head, fill=WHITE, anchor="mm")
+    d.text((W // 2, top + int(size * 1.12)), second, font=head, fill=LIME, anchor="mm")
+    d.text((W // 2, top + int(size * 2.25)), sub, font=fit(d, sub, int(HEAD * 0.44), 500, max_w), fill=MUTED, anchor="mm")
 
     shot = raw.convert("RGB")
     status_bar(shot)
     device = phone(shot, DEVICE_W)
-    top = 250 + int(size * 2.25) + 110
+    top = top + int(size * 2.25) + int(HEAD * 0.9)
     shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(shadow).rounded_rectangle(
         ((W - device.width) // 2 + 10, top + 40, (W + device.width) // 2 - 10, H + 400), 160, fill=(0, 0, 0, 150)

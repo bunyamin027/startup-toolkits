@@ -1,4 +1,5 @@
-"""Product page header (3840 x 1646) and search results asset (1920 x 1280).
+"""App Store header (3840 x 1646) and search results asset (1920 x 1280),
+plus the Google Play feature graphic (1024 x 500) and 512 px icon.
 
 Usage: python3 -I tool/store_screenshots/banners.py RAW_DIR OUT_DIR
 RAW_DIR holds the iPhone captures from capture_test.dart.
@@ -98,10 +99,26 @@ def search_result(raw_dir, lang):
     return canvas
 
 
+def feature_graphic(raw_dir, lang):
+    """Google Play feature graphic, 1024 x 500."""
+    w, h = 1024, 500
+    canvas = background(w, h)
+    # Android-style frames (punch-hole camera) on Google Play.
+    compose.KIND = "play"
+    devices = phones(raw_dir, lang, 200)
+    compose.KIND = "iphone"
+    fan(canvas, devices, center_x=790, top=60, gap=150, angle=8)
+    text_block(canvas, 56, 92, lang, 44, 420)
+    return canvas
+
+
 def main():
     raw_dir, out_dir = Path(sys.argv[1]), Path(sys.argv[2])
+    icon = Image.open(ICON).convert("RGB").resize((512, 512), Image.LANCZOS)
+    (out_dir / "play-icon-512.png").parent.mkdir(parents=True, exist_ok=True)
+    icon.save(out_dir / "play-icon-512.png", optimize=True)
     for lang in TAGLINES:
-        for kind, make in (("header", header), ("search", search_result)):
+        for kind, make in (("header", header), ("search", search_result), ("play-feature", feature_graphic)):
             dest = out_dir / kind / f"{lang}.png"
             dest.parent.mkdir(parents=True, exist_ok=True)
             make(raw_dir, lang).convert("RGB").save(dest, optimize=True)
