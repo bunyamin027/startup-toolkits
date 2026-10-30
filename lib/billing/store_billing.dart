@@ -38,11 +38,11 @@ class StoreBillingService extends BillingService {
     _ready = await _iap.isAvailable();
   }
 
-  static PlanPeriod? _periodOf(String productId) => switch (productId) {
-    BillingConfig.yearlyId => PlanPeriod.yearly,
-    BillingConfig.monthlyId => PlanPeriod.monthly,
-    _ => null,
-  };
+  static PlanPeriod? _periodOf(String productId) {
+    if (productId == BillingConfig.yearlyId) return PlanPeriod.yearly;
+    if (productId == BillingConfig.monthlyId) return PlanPeriod.monthly;
+    return null;
+  }
 
   @override
   Future<List<PlanOffer>> offers() async {

@@ -12,9 +12,10 @@ URLs, decisions) · ⚠️ verify before submitting.
   licenses.
 - ✅ Bundle ID / application ID: `com.kahramanapp.startuptoolkit` on
   both platforms. It cannot change after the first upload.
-- ⬜ Android release signing: create an upload keystore and
-  `android/key.properties`, and point the `release` build type at it
-  (today it signs with the debug key).
+- ✅ Android release signing: upload keystore outside the repo
+  (`../android-keys/startup-toolkit-upload.jks`), read through the
+  git-ignored `android/key.properties`. Back up the keystore and its
+  password: losing them means asking Google for an upload key reset.
 
 ## 2. Accounts and products
 

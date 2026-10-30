@@ -101,7 +101,10 @@ Localized display name: "Startup Toolkit Pro". Description (≤55):
 
 Product IDs: `com.kahramanapp.startuptoolkit.pro.yearly` and
 `com.kahramanapp.startuptoolkit.pro.monthly` (no intro offer; the app has
-its own 14-day trial). A review screenshot of the paywall is required for
+its own 14-day trial). Google Play caps subscription IDs at 40
+characters, so Android uses `pro.yearly` (base plan `yearly`) and
+`pro.monthly` (base plan `monthly`); `BillingConfig` picks the IDs by
+platform. A review screenshot of the paywall is required for
 each product.
 
 ## App Review notes
