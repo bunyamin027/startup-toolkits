@@ -45,6 +45,11 @@ flutter test
 
 Ready-to-upload store graphics and preview videos are generated via automated test scripts in `docs/store/`:
 
+> The images and videos (about 270 MB) are **not in git**. They live in
+> `../startup-toolkit-store-assets/`, and `docs/store/{screenshots,play,banners,previews}`
+> are local symlinks to it (git-ignored). On a new machine, recreate the
+> symlinks or regenerate the assets with the tools below.
+
 ### 1. App Store Previews (Videos)
 Located in [`docs/store/previews/iphone/`](docs/store/previews/iphone/):
 - Conforms strictly to Apple App Store specifications: H.264, 30 fps, 29.5s duration, stereo silent AAC track, 886x1920 resolution.

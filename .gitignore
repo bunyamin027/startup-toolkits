@@ -48,6 +48,11 @@ app.*.map.json
 *.iml
 
 # Store screenshots and previews intermediate files
-docs/store/previews/**/raw/
 **/__pycache__/
 
+# Store graphics and videos live outside the repo
+# (../startup-toolkit-store-assets); these are local symlinks to it.
+/docs/store/screenshots
+/docs/store/play
+/docs/store/banners
+/docs/store/previews
