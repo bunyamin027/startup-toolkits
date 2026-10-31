@@ -51,8 +51,19 @@ app.*.map.json
 **/__pycache__/
 
 # Store graphics and videos live outside the repo
-# (../startup-toolkit-store-assets); these are local symlinks to it.
+# (startup-toolkit-store-assets/); these are local symlinks to it.
 /docs/store/screenshots
 /docs/store/play
 /docs/store/banners
 /docs/store/previews
+
+# Signing keys and their passwords never go in git.
+*.jks
+*.keystore
+key.properties*
+/android-keys/
+# Service account keys (Google Play API) never go in git.
+*.p8
+/android api/
+# Store graphics and videos (local only; docs/store/* link here).
+/startup-toolkit-store-assets/

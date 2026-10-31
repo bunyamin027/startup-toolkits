@@ -46,7 +46,7 @@ flutter test
 Ready-to-upload store graphics and preview videos are generated via automated test scripts in `docs/store/`:
 
 > The images and videos (about 270 MB) are **not in git**. They live in
-> `../startup-toolkit-store-assets/`, and `docs/store/{screenshots,play,banners,previews}`
+> `startup-toolkit-store-assets/` (git-ignored, in the project folder), and `docs/store/{screenshots,play,banners,previews}`
 > are local symlinks to it (git-ignored). On a new machine, recreate the
 > symlinks or regenerate the assets with the tools below.
 

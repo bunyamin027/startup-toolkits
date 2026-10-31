@@ -14,7 +14,9 @@ val keystoreProperties = Properties().apply {
 android {
     namespace = "com.kahramanapp.startuptoolkit"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // NDK 28.2 on this machine has llvm-strip replaced by a no-op script,
+    // which ships release builds without libflutter.so (crash on launch).
+    ndkVersion = "27.1.12297006"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -49,6 +51,11 @@ android {
             // without it, debug keys so `flutter run --release` still works.
             signingConfig = signingConfigs.findByName("release")
                 ?: signingConfigs.getByName("debug")
+            // No R8: shared_preferences_android calls its Java and Kotlin
+            // classes from Dart over JNI by name, and shrinking breaks those
+            // lookups (NoSuchMethodError, then missing kotlin.Result).
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
