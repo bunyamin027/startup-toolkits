@@ -1,0 +1,80 @@
+name: Android release
+
+# Builds the signed App Bundle and uploads it to Google Play. The upload
+# key and the Play service account come from repository secrets, so no
+# key ever lives on a laptop or in git. The version and build number
+# come from pubspec.yaml; bump the build number before each run.
+on:
+  workflow_dispatch:
+    inputs:
+      track:
+        description: Play track
+        type: choice
+        options: [internal, production]
+        default: internal
+      send_for_review:
+        description: Send the change for review (off when Play asks for a manual send)
+        type: boolean
+        default: true
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.44.1
+          channel: stable
+          cache: true
+
+      - name: Upload key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/upload.jks"
+          cat > android/key.properties <<EOF
+          storeFile=$RUNNER_TEMP/upload.jks
+          storePassword=$KEYSTORE_PASSWORD
+          keyAlias=$KEY_ALIAS
+          keyPassword=$KEY_PASSWORD
+          EOF
+
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build appbundle --release
+
+      - name: Check the bundle carries the engine
+        run: |
+          unzip -l build/app/outputs/bundle/release/app-release.aab \
+            | grep -q 'base/lib/arm64-v8a/libflutter.so'
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-release.aab
+          path: build/app/outputs/bundle/release/app-release.aab
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: com.kahramanapp.startuptoolkit
+          releaseFiles: build/app/outputs/bundle/release/app-release.aab
+          track: ${{ inputs.track || 'internal' }}
+          status: completed
+          # Tag runs always send; manual runs follow the input.
+          changesNotSentForReview: ${{ github.event_name == 'workflow_dispatch' && !inputs.send_for_review }}
+
+      - name: Remove the key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload.jks" android/key.properties
